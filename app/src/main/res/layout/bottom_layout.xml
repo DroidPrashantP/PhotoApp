@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/effects_holder"
+    android:layout_width="wrap_content"
+    android:layout_height="65dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:background="@color/primary"
+    android:clickable="true"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:background="@color/primary">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/toolLayout"
+                android:drawableTop="@drawable/ic_crop"
+                android:text="Tools"
+                android:onClick="MainLayoutContainer"
+                style="@style/btn_custom_style"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/backgroundLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/layout_48x48"
+                android:text="Background"
+                style="@style/btn_custom_style"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/crop_layout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_crop"
+                style="@style/btn_custom_style"
+                android:text="Crop" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/blurLayout"
+                style="@style/btn_custom_style"
+                android:drawableTop="@drawable/lib_tint"
+                android:text="Blur" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/frame_layout"
+                android:drawableTop="@drawable/ic_frame"
+                android:text="Frame" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/fxLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_frame"
+                android:text="Fx" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/textLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_text"
+                android:text="Text"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id ="@+id/strickerLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_text"
+                android:text="Sticker" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/filtersLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_frame"
+                android:text="Filter" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>

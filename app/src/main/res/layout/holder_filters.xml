@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/effects_holder"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/primary">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:fillViewport="true"
+        android:background="@color/primary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:background="@color/primary"
+            android:padding="@dimen/padding_small">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/toolLayout"
+                android:drawableTop="@drawable/ic_tools"
+                android:text="Tools"
+                android:onClick="MainLayoutContainer"
+                android:textSize="10sp"
+                style="@style/btn_custom_style"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/blurLayout"
+                style="@style/btn_custom_style"
+                android:textSize="10sp"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/square_blur_icon"
+                android:text="Blur" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/crop_layout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_crop"
+                style="@style/btn_custom_style"
+                android:textSize="10sp"
+                android:text="Crop" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/backgroundLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/layout_48x48"
+                android:text="Background"
+                android:textSize="10sp"
+                style="@style/btn_custom_style"/>
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/frame_layout"
+                android:drawableTop="@drawable/ic_frame"
+                style="@style/btn_custom_style"
+                android:textSize="10sp"
+                android:text="Frame" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/fxLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_frame"
+                style="@style/btn_custom_style"
+                android:textSize="10sp"
+                android:text="Fx" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/textLayout"
+                android:onClick="MainLayoutContainer"
+                style="@style/btn_custom_style"
+                android:textSize="10sp"
+                android:drawableTop="@drawable/text_48x48"
+                android:text="Text"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id ="@+id/strickerLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/ic_text"
+                style="@style/btn_custom_style"
+                android:textSize="10sp"
+                android:text="Sticker" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:id="@+id/filtersLayout"
+                android:onClick="MainLayoutContainer"
+                android:drawableTop="@drawable/filter_48x48"
+                style="@style/btn_custom_style"
+                android:textSize="10sp"
+                android:text="Filter" />
+
+
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:baselineAligned="false"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:visibility="gone">-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/toolLayout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:tag="boost" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img14"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:src="@drawable/ic_tools" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img14"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:paddingBottom="5dp"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Tools"-->
+                    <!--android:textColor="@color/text_white"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/blurLayout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:tag="cbalance" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img11"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_normal"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:src="@drawable/square_blur_icon" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img11"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Blur"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/frame_layout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:tag="contrast" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img19"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_normal"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:src="@drawable/lib_frame" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img19"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Frame"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/crop_layout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:tag="cdepth" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img12"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:src="@drawable/ic_crop" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img12"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Crop"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/fxLayout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:tag="emboss" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img13"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_normal"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:src="@drawable/lib_tint" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img13"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Fx"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/textLayout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:tag="flip" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img2"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:src="@drawable/ic_text" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img2"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Text"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/strickerLayout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:tag="gamma" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img5"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_normal"-->
+                    <!--android:src="@drawable/lib_highlight" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img5"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Stricker"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/filtersLayout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:tag="gaussian" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img10"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_normal"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:src="@drawable/lib_effect" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img10"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Filters"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/backgroundLayout"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!--android:onClick="MainLayoutContainer"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:tag="brightness" >-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/effect_img1"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:contentDescription="@string/img_desc"-->
+                    <!--android:src="@drawable/ic_background" />-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/effect_img1"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/padding_very_small"-->
+                    <!--android:text="Background"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:textSize="@dimen/text_size_medium" />-->
+            <!--</RelativeLayout>-->
+
+
+
+
+        <!--</LinearLayout>-->
+    </HorizontalScrollView>
+
+</LinearLayout>

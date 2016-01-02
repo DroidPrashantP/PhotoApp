@@ -1,0 +1,238 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomView">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/main_screen" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginBottom="10dp">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_xlarge"
+                android:src="@drawable/fb_48x48"/>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_xlarge"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/twitter_48x48"/>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_xlarge"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/insta_48x48"/>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_xlarge"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/gift_copy"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/bottomView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/top_holder"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_gallery"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:clickable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/gallery" />
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:clickable="false"-->
+                <!--android:text="GALLERY"-->
+                <!--android:padding="@dimen/padding_normal"-->
+                <!--android:textColor="@color/text_white"-->
+                <!--android:textSize="@dimen/text_size_medium" />-->
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_college"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clickable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/collage" />
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:clickable="false"-->
+                <!--android:text="COLLAGE"-->
+                <!--android:padding="@dimen/padding_normal"-->
+                <!--android:textColor="@color/text_white"-->
+                <!--android:textSize="@dimen/text_size_medium" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_mirror"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:clickable="true"
+                android:gravity="top|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clickable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/mirror" />
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:clickable="false"-->
+                <!--android:text="MIRROR"-->
+                <!--android:padding="@dimen/padding_normal"-->
+                <!--android:textColor="@color/text_white"-->
+                <!--android:textSize="@dimen/text_size_medium" />-->
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/bottom_holder"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_camera"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clickable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/camera" />
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:clickable="false"-->
+                <!--android:text="CAMERA"-->
+                <!--android:padding="@dimen/padding_normal"-->
+                <!--android:textColor="@color/text_white"-->
+                <!--android:textSize="@dimen/text_size_medium" />-->
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_blur"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:clickable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/blur" />
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:clickable="false"-->
+                <!--android:text="BLUR"-->
+                <!--android:padding="@dimen/padding_normal"-->
+                <!--android:textColor="@color/text_white"-->
+                <!--android:textSize="@dimen/text_size_medium" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_rate"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:clickable="true"
+                android:gravity="top|center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:clickable="false"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/rate" />
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:clickable="false"-->
+                <!--android:text="RATE"-->
+                <!--android:padding="@dimen/padding_normal"-->
+                <!--android:textColor="@color/text_white"-->
+                <!--android:textSize="@dimen/text_size_medium" />-->
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

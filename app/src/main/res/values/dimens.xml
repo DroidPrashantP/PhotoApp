@@ -1,0 +1,36 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_xlarge">20sp</dimen>
+    <dimen name="text_size_xxlarge">22sp</dimen>
+    <dimen name="text_size_user_profile_expanded_toolbar">28sp</dimen>
+    <dimen name="text_size_profile_counts">8sp</dimen>
+
+    <!-- padding values -->
+    <dimen name="padding_extra_normal">8dp</dimen>
+    <dimen name="padding_normal">5dp</dimen>
+    <dimen name="padding_very_small">3dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
+    <dimen name="padding_large">10dp</dimen>
+    <dimen name="padding_xlarge">15dp</dimen>
+    <dimen name="padding_xxlarge">30dp</dimen>
+
+    <!-- margin values -->
+    <dimen name="margin_very_small">3dp</dimen>
+    <dimen name="margin_small">5dp</dimen>
+    <dimen name="margin_normal">10dp</dimen>
+    <dimen name="margin_large">15dp</dimen>
+    <dimen name="margin_xlarge">25dp</dimen>
+    <dimen name="margin_xxlarge">30dp</dimen>
+    <dimen name="button_height">35dp</dimen>
+    <dimen name="button_width">50dp</dimen>
+    <dimen name="save_image_circle_item_size">70dp</dimen>
+    <dimen name="save_image_circle_image_view_padding">15dp</dimen>
+    <dimen name="save_image_circle_text_margin_top">10dp</dimen>
+</resources>

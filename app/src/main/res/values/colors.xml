@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1e9a8d</color>
+    <color name="primary_dark">#1e857b</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="accent">#FF4081</color>
+    <color name="bg">#58554e</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="primary_400">#5C6BC0</color>
+    <color name="screen_bg">#f2f2f2</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_white_grey">#FAFAFA</color>
+    <color name="cashback_textcolor">#FF9800</color>
+    <color name="horizontal_line_color">#dedede</color>
+    <color name="blue">#1ea0d7</color>
+
+    <!--categories color -->
+    <color name="category_color_one">#48b5b3</color>
+    <color name="category_color_two">#f79225</color>
+    <color name="category_color_three">#1ea0d7</color>
+    <color name="category_color_four">#6a8214</color>
+    <color name="category_color_five">#c0b34a</color>
+    <color name="category_color_six">#8f2f0d</color>
+    <color name="category_color_seven">#ba5fc8</color>
+    <color name="category_color_eight">#c54f99</color>
+    <color name="category_color_nine">#74b3b4</color>
+    <color name="category_color_ten">#444441</color>
+    <color name="default_card_bg">#FFFFFF</color>
+    <color name="divider_light">#E0E0E0</color>
+
+
+    <!--crop imageview color-->
+    <color name="base">#FFFFFB</color>
+    <color name="overlay">#AA1C1C1C</color>
+    <color name="text">#1C1C1C</color>
+    <color name="handle">#86C166</color>
+    <color name="frame">#86C166</color>
+    <color name="guide">#AA86C166</color>
+    <color name="menu_bg">#FFFFFB</color>
+
+
+</resources>
+
