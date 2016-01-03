@@ -96,7 +96,7 @@
                     android:layout_centerHorizontal="true"
                     android:padding="@dimen/padding_normal"
                     android:contentDescription="@string/img_desc"
-                    android:src="@drawable/lib_tint" />
+                    android:src="@drawable/ic_tint_48x48" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -181,7 +181,7 @@
                 android:gravity="center"
                 android:onClick="mToolLayoutHandler"
                 android:tag="gaussian"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/fix_img"
@@ -190,7 +190,7 @@
                     android:layout_centerHorizontal="true"
                     android:padding="@dimen/padding_normal"
                     android:tint="@color/primary_dark"
-                    android:src="@drawable/lib_effect" />
+                    android:src="@drawable/ic_effect_48x48" />
 
                 <TextView
                     android:layout_width="wrap_content"

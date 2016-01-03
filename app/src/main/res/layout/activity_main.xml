@@ -195,14 +195,6 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/blur" />
 
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:clickable="false"-->
-                <!--android:text="BLUR"-->
-                <!--android:padding="@dimen/padding_normal"-->
-                <!--android:textColor="@color/text_white"-->
-                <!--android:textSize="@dimen/text_size_medium" />-->
             </LinearLayout>
 
             <LinearLayout

@@ -116,13 +116,20 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
 
+        <RelativeLayout
+            android:id="@id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </RelativeLayout>
+
         <com.app.camera.utils.CustomViews.CustomImageView
             android:id="@+id/source_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout

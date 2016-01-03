@@ -30,7 +30,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -40,22 +40,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".PhotoActivity"
+            android:name=".activities.PhotoActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".CropActivity"
+            android:name=".activities.CropActivity"
             android:label="@string/title_activity_crop"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".SaveImageActivity"
+            android:name=".activities.SaveImageActivity"
             android:label="@string/title_activity_save_image" >
         </activity>
     </application>

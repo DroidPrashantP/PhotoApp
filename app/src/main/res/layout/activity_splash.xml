@@ -15,30 +15,4 @@
         android:scaleType="fitXY"
         android:src="@drawable/splash_one" />
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/logo_img"-->
-        <!--android:gravity="center" >-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/pro_txt"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:text="@string/app_name_pro"-->
-            <!--android:textColor="#ffffff"-->
-            <!--android:textSize="30sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/track_txt"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_toRightOf="@+id/pro_txt"-->
-            <!--android:text="@string/app_name_track"-->
-            <!--android:textColor="#3f51b5"-->
-            <!--android:textSize="30sp" />-->
-    <!--</RelativeLayout>-->
-
 </RelativeLayout>
