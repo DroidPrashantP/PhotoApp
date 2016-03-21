@@ -1,5 +1,6 @@
 package com.app.camera.utils.CustomViews;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -32,6 +33,15 @@ public class MultiTouchListener implements OnTouchListener {
     }
 
     private static void move(View view, TransformInfo info) {
+        Log.e("Scale",""+info.deltaScale);
+        Log.e("deltaAngle",""+info.deltaAngle);
+        Log.e("deltaX",""+info.deltaX);
+        Log.e("deltaY",""+info.deltaY);
+        Log.e("pivotX",""+info.pivotX);
+        Log.e("pivotY",""+info.pivotY);
+        Log.e("minimumScale",""+info.minimumScale);
+        Log.e("maximumScale",""+info.maximumScale);
+
         computeRenderOffset(view, info.pivotX, info.pivotY);
         adjustTranslation(view, info.deltaX, info.deltaY);
 
@@ -178,5 +188,19 @@ public class MultiTouchListener implements OnTouchListener {
         public float pivotY;
         public float minimumScale;
         public float maximumScale;
+    }
+
+    public void ScaleImage(View view){
+        TransformInfo info = new TransformInfo();
+        info.deltaScale = 2.4730778f;
+        info.deltaAngle = -0.18589346f;
+        info.deltaX =  -0.0026245117f;
+        info.deltaY = 0.07899475f;
+        info.pivotX = 269.80908f;
+        info.pivotY = 139.45111f;
+        info.minimumScale = 0.0f;
+        info.maximumScale = 10.0f;
+
+        move(view, info);
     }
 }

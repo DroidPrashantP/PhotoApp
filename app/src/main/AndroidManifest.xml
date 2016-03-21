@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".AppController"
@@ -33,16 +34,16 @@
             android:name=".activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.PhotoActivity"
@@ -57,6 +58,58 @@
         <activity
             android:name=".activities.SaveImageActivity"
             android:label="@string/title_activity_save_image" >
+        </activity>
+        <activity
+            android:name=".activities.BlurActivity"
+            android:label="@string/title_activity_blur" >
+        </activity>
+        <activity
+            android:name=".activities.MotionViewsActivity"
+            android:label="@string/title_activity_raw" >
+        </activity>
+        <activity
+            android:name=".activities.RawActivity"
+            android:label="@string/title_activity_text_view" >
+        </activity>
+        <activity
+            android:name=".activities.TextViewActivity"
+            android:label="@string/title_activity_text_view" >
+        </activity>
+        <activity
+            android:name=".multitouchview.PhotoSortrActivityStrip"
+            android:label="@string/title_activity_text_view" >
+        </activity>
+        <activity
+            android:name=".activities.StickerActivity"
+            android:label="@string/title_activity_stricker" >
+        </activity>
+        <activity
+            android:name=".activities.NewActivity"
+            android:label="@string/title_activity_new" >
+        </activity>
+        <activity
+            android:name=".activities.EffectActivity"
+            android:label="@string/title_activity_effect" >
+        </activity>
+
+        <!-- <meta-data -->
+        <!-- android:name="io.fabric.ApiKey" -->
+        <!-- android:value="739d74db64e52dd95e3ee8d463daac8d8169c16c" /> -->
+
+        <activity
+            android:name=".activities.MirrorActivity"
+            android:label="@string/title_activity_mirror" >
+        </activity>
+        <activity
+            android:name=".activities.SquareActivity"
+            android:label="@string/title_activity_square" >
+        </activity>
+        <activity
+            android:name=".collagelib.CollageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".mirror.MirrorNewActivity"
+            android:label="@string/title_activity_mirror_new" >
         </activity>
     </application>
 

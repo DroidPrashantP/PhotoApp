@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg"
+    android:fitsSystemWindows="true"
     android:keepScreenOn="true"
-    android:fitsSystemWindows="true">
+    android:id="@+id/parentLayout">
+
     <LinearLayout
         android:id="@+id/googleAdsLayout"
         android:layout_width="match_parent"
@@ -17,15 +19,15 @@
             android:layout_weight="1"
             android:gravity="center"
             android:onClick="CloseScreen">
+
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_ad_unit_id">
-            </com.google.android.gms.ads.AdView>
+                ads:adUnitId="@string/banner_ad_unit_id_two"></com.google.android.gms.ads.AdView>
         </LinearLayout>
 
     </LinearLayout>
@@ -34,8 +36,8 @@
         android:id="@+id/headerView"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/primary"
-        android:layout_below="@+id/googleAdsLayout">
+        android:layout_below="@+id/googleAdsLayout"
+        android:background="@color/primary">
 
         <LinearLayout
             android:id="@+id/closeScreen"
@@ -101,14 +103,61 @@
         <!--</LinearLayout>-->
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/strickerSelectionView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/googleAdsLayout"
+        android:background="@color/accent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/clearStricker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="ClearStricker">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Clear"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_size_large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/applyStricker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="SetStricker">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Set"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_size_large" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/headerView"
         android:layout_above="@+id/subBottomView"
-        android:background="@color/primary">
+        android:layout_below="@+id/headerView"
+        android:background="@color/primary"
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/background_image"
@@ -116,27 +165,30 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
 
-        <RelativeLayout
-            android:id="@id/container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </RelativeLayout>
-
         <com.app.camera.utils.CustomViews.CustomImageView
             android:id="@+id/source_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:layout_centerInParent="true"
-            android:visibility="gone"/>
+            android:scaleType="fitCenter"
+            android:layout_centerInParent="true" />
     </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/frameContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/subBottomView"
+        android:clickable="true"
+        android:layout_below="@+id/headerView"
+        android:visibility="gone">
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/subBottomView"
         android:layout_width="match_parent"
-        android:layout_above="@+id/bottomView"
         android:layout_height="80dp"
+        android:layout_above="@+id/bottomView"
         android:background="@color/bg"
         android:gravity="center"
         android:orientation="vertical">
@@ -145,15 +197,217 @@
 
         <include layout="@layout/layout_blur_seekbar" />
 
+        <RelativeLayout
+            android:id="@+id/backgroundLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottomView"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:background="@color/bg"
+            android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/backgroundRecyclerView"
+            android:layout_width="fill_parent"
+            android:layout_height="80dp"
+            android:padding="@dimen/padding_small"
+            android:layout_gravity="bottom"
+            android:scrollbars="horizontal" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/filterLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottomView"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:background="@color/bg"
+            android:visibility="gone">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/filterRecyclerView"
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:padding="@dimen/padding_small"
+                android:layout_gravity="bottom"
+                android:scrollbars="horizontal" />
+        </RelativeLayout>
+
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/bottomView"
-        android:layout_alignParentBottom="true"
+
+    <RelativeLayout
+        android:id="@+id/fxLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="130dp"
+        android:layout_above="@+id/bottomView"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
         android:background="@color/bg"
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fxRecyclerView"
+            android:layout_width="fill_parent"
+            android:layout_height="80dp"
+            android:padding="@dimen/padding_small"
+            android:layout_gravity="bottom"
+            android:scrollbars="horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fxRecyclerView"
+            >
+
+            <LinearLayout
+                android:id="@+id/closefx"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="FxSelection"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/close"
+                    android:tint="@color/text_white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="Fx"
+                    android:textColor="@color/text_white"
+                    android:textSize="@dimen/text_size_large" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/savefx"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="FxSelection"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:padding="10dp"
+                    android:src="@drawable/ok_white" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="130dp"
+        android:layout_above="@+id/bottomView"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:background="@color/bg"
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/frameRecyclerView"
+            android:layout_width="fill_parent"
+            android:layout_height="80dp"
+            android:padding="@dimen/padding_small"
+            android:layout_gravity="bottom"
+            android:scrollbars="horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/frameRecyclerView"
+            >
+
+            <LinearLayout
+                android:id="@+id/closeFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="FrameSelection"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/close"
+                    android:tint="@color/text_white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="Frame"
+                    android:textColor="@color/text_white"
+                    android:textSize="@dimen/text_size_large" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/saveFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="FrameSelection"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:padding="10dp"
+                    android:src="@drawable/ok_white" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <include layout="@layout/common_seekbar_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomView"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:background="@color/bg"/>
+    <RelativeLayout
+        android:id="@+id/bottomView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/holder_filters" />
-    </LinearLayout>
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:background="@color/primary">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/mainLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

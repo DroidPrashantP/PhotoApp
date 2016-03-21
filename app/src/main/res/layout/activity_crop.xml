@@ -89,14 +89,51 @@
 
                />
             <Button
-                android:id="@+id/button3_4"
+                android:id="@+id/button2_1"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:layout_width="@dimen/button_width"
                 android:layout_height="@dimen/button_height"
                 android:padding="8dp"
                 android:textSize="@dimen/text_size_medium"
-                android:text="3:4"
+                android:text="2:1"
+                android:textColor="@color/base"
+                style="@style/btn_custom_style"
+
+                />
+            <Button
+                android:id="@+id/button1_2"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:padding="8dp"
+                android:textSize="@dimen/text_size_medium"
+                android:text="1:2"
+                android:textColor="@color/base"
+                style="@style/btn_custom_style"
+
+                />
+            <Button
+                android:id="@+id/button3_2"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:padding="8dp"
+                android:textSize="@dimen/text_size_medium"
+                android:text="3:2"
+                android:textColor="@color/base"
+                style="@style/btn_custom_style"/>
+            <Button
+                android:id="@+id/button2_3"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:padding="8dp"
+                android:textSize="@dimen/text_size_medium"
+                android:text="2:3"
                 android:textColor="@color/base"
                 style="@style/btn_custom_style"/>
             <Button
@@ -111,27 +148,39 @@
                 android:textColor="@color/base"
                 style="@style/btn_custom_style"/>
             <Button
-                android:id="@+id/buttonCustom"
+                android:id="@+id/button3_4"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:layout_width="@dimen/button_width"
                 android:layout_height="@dimen/button_height"
                 android:padding="8dp"
                 android:textSize="@dimen/text_size_medium"
-                android:text="7:5"
+                android:text="3:4"
                 android:textColor="@color/base"
                 style="@style/btn_custom_style"/>
             <Button
-                android:id="@+id/button9_16"
+                android:id="@+id/button4_5"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:layout_width="@dimen/button_width"
                 android:layout_height="@dimen/button_height"
                 android:padding="8dp"
                 android:textSize="@dimen/text_size_medium"
-                android:text="9:16"
+                android:text="4:5"
                 android:textColor="@color/base"
                 style="@style/btn_custom_style"/>
+            <Button
+                android:id="@+id/button5_7"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height"
+                android:padding="8dp"
+                android:textSize="@dimen/text_size_medium"
+                android:text="5:7"
+                android:textColor="@color/base"
+                style="@style/btn_custom_style"/>
+
             <Button
                 android:id="@+id/button16_9"
                 android:layout_gravity="center_vertical"
@@ -144,18 +193,18 @@
                 android:textColor="@color/base"
                 style="@style/btn_custom_style"/>
 
-            <Button
-                android:id="@+id/buttonFree"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
-                android:padding="8dp"
-                android:textSize="@dimen/text_size_medium"
-                android:text="FREE"
-                android:textColor="@color/base"
-                style="@style/btn_custom_style"
-               />
+            <!--<Button-->
+                <!--android:id="@+id/buttonFree"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_margin="4dp"-->
+                <!--android:layout_width="@dimen/button_width"-->
+                <!--android:layout_height="@dimen/button_height"-->
+                <!--android:padding="8dp"-->
+                <!--android:textSize="@dimen/text_size_medium"-->
+                <!--android:text="FREE"-->
+                <!--android:textColor="@color/base"-->
+                <!--style="@style/btn_custom_style"-->
+               <!--/>-->
 
             <Button
                 android:id="@+id/buttonCircle"

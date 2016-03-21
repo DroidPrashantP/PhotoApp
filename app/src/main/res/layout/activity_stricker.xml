@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bg"
+    tools:context="com.zingoy.app.ui.activity.StoreActivity">
+    <LinearLayout
+        android:id="@+id/googleAdsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:onClick="CloseScreen">
+
+        <include layout="@layout/layout_toolbar"></include>
+
+        <!--<com.google.android.gms.ads.AdView-->
+            <!--android:id="@+id/adView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--ads:adSize="BANNER"-->
+            <!--ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>-->
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/googleAdsLayout"
+        android:layout_above="@+id/bottomLayout"
+        tools:context="com.zingoy.app.ui.activity.StoreFilterActivity">
+
+        <LinearLayout
+            android:layout_width="110dp"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/tabRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/divider_light" />
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+
+    </LinearLayout>
+
+    <TableRow
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/clearBtn"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/primary"
+            android:textColor="@color/text_white"
+            android:text="@string/cancel_btn"/>
+        <Button
+            android:id="@+id/applyBtn"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/primary"
+            android:textColor="@color/text_white"
+            android:text="@string/select_btn"/>
+    </TableRow>
+</RelativeLayout>

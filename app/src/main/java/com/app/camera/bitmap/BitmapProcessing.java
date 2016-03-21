@@ -391,7 +391,7 @@ public class BitmapProcessing {
 
 	// [0, 200] -> Default = 100
 	public static Bitmap saturation(Bitmap src, int value) {
-		float f_value = (float) (value / 100.0);
+		float f_value = (float) (value*2 / 100.0);
 
 		int w = src.getWidth();
 		int h = src.getHeight();
@@ -410,6 +410,75 @@ public class BitmapProcessing {
 		src = null;
 
 		return bitmapResult;
+	}
+
+	public static Bitmap doInvert(Bitmap src) {
+		// create new bitmap with the same settings as source bitmap
+		Bitmap bmOut = Bitmap.createBitmap(src.getWidth(), src.getHeight(), src.getConfig());
+		// color info
+		int A, R, G, B;
+		int pixelColor;
+		// image size
+		int height = src.getHeight();
+		int width = src.getWidth();
+
+		// scan through every pixel
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				// get one pixel
+				pixelColor = src.getPixel(x, y);
+				// saving alpha channel
+				A = Color.alpha(pixelColor);
+				// inverting byte for each R/G/B channel
+				R = 255 - Color.red(pixelColor);
+				G = 255 - Color.green(pixelColor);
+				B = 255 - Color.blue(pixelColor);
+				// set newly-inverted pixel to output image
+				bmOut.setPixel(x, y, Color.argb(A, R, G, B));
+			}
+		}
+
+		// return final bitmap
+		return bmOut;
+	}
+
+	public static Bitmap doGreyscale(Bitmap src) {
+		// constant factors
+		final double GS_RED = 0.299;
+		final double GS_GREEN = 0.587;
+		final double GS_BLUE = 0.114;
+
+		// create output bitmap
+		Bitmap bmOut = Bitmap.createBitmap(src.getWidth(), src.getHeight(), src.getConfig());
+		// pixel information
+		int A, R, G, B;
+		int pixel;
+
+		// get image size
+		int width = src.getWidth();
+		int height = src.getHeight();
+
+		// scan through every single pixel
+		for(int x = 0; x < width; ++x) {
+			for(int y = 0; y < height; ++y) {
+				// get one pixel color
+				pixel = src.getPixel(x, y);
+				// retrieve color of all channels
+				A = Color.alpha(pixel);
+				R = Color.red(pixel);
+				G = Color.green(pixel);
+				B = Color.blue(pixel);
+				// take conversion up to one single value
+				R = G = B = (int)(GS_RED * R + GS_GREEN * G + GS_BLUE * B);
+				// set new pixel color to output bitmap
+				bmOut.setPixel(x, y, Color.argb(A, R, G, B));
+			}
+		}
+
+		// return final image
+		return bmOut;
 	}
 
 	public static Bitmap grayscale(Bitmap src) {

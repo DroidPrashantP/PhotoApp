@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/mainLayout">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -46,6 +47,13 @@
                 android:src="@drawable/gift_copy"/>
 
         </LinearLayout>
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id_one" />
     </RelativeLayout>
 
 
@@ -227,4 +235,6 @@
         </LinearLayout>
 
     </LinearLayout>
+    <FrameLayout android:id="@+id/colmir_gallery_fragment_container" android:layout_width="match_parent" android:layout_height="match_parent" />
+
 </RelativeLayout>

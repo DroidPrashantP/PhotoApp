@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="grid_num_column">3</integer>
+    <integer name="colorGridColumnWidth">50</integer>
+    <integer name="default_ssize_value">3</integer>
+    <integer name="default_space_value">3</integer>
+</resources>

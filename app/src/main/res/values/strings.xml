@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ResizePhotosInstagram</string>
-    <string name="banner_ad_unit_id">ca-app-pub-7037705036334941/5908115312</string>
+    <!--<string name="banner_ad_unit_id_one">ca-app-pub-7037705036334941/5908115312</string>-->
+
+    <string name="banner_ad_unit_id_one">ca-app-pub-3796340875827275/5928932745</string>
+    <string name="banner_ad_unit_id_two">ca-app-pub-3796340875827275/7405665944</string>
+    <string name="banner_ad_unit_id_three">ca-app-pub-3796340875827275/8882399145</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -69,5 +73,90 @@
     <string name="no_instagram_app">No Instagram App</string>
     <string name="saved_image_message">Photo saved successfully</string>
     <string name="tab_title_stores">Share</string>
+    <string name="title_activity_blur">BlurActivity</string>
+    private static String[] mBtnNames = {"Tools", "Blur", "Crop", "Background", "Frame", "Fx", "Text", "Sticker", "Filter"};
+
+    <string-array name="photo_main_layout_array">
+        <item>Tools</item>
+        <item>Blur</item>
+        <item>Crop</item>
+        <item>Background</item>
+        <item>Frame</item>
+        <item>Sticker</item>
+        <item>Filter</item>
+        <item>Fx</item>
+        <item>Text</item>
+
+    </string-array>
+    <string-array name="blur_main_layout_array">
+        <item>Layout</item>
+        <item>Blur</item>
+        <item>Background</item>
+        <item>Space</item>
+        <item>Sticker</item>
+        <item>Filter</item>
+        <item>FX</item>
+        <item>Text</item>
+
+    </string-array>
+    <string name="title_activity_raw">RawActivity</string>
+    <string name="title_activity_text_view">TextViewActivity</string>
+    <string name="settings_default_color_confirm">Default Color</string>
+    <string name="settings_bg_color_confirm">Tap here to Confirm</string>
+    <string name="settings_bg_color_dialog">Pick a Color</string>
+    <string name="title_activity_stricker">StrickerActivity</string>
+    <string name="title_activity_image_main_filter">ImageMainFilter</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="select_btn">Select</string>
+
+    <!--sticker tab array-->
+    <string-array name="store_filter_tabs">
+        <item>Couple</item>
+        <item>Emoji</item>
+        <item>Love 1</item>
+        <item>Love 2</item>
+    </string-array>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_new">NewActivity</string>
+
+    <string name="title_activity_collage">CollageActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_effect">EffectActivity</string>
+    <string name="okay_text">Ok</string>
+    <string name="camera_permission_required_msg">Camera Permission Required</string>
+    <string name="camera_permission_granted_msg">Camera Permission Granted</string>
+    <string name="camera_permission_not_granted_msg">Camera permission not granted</string>
+    <string name="title_activity_mirror">MirrorActivity</string>
+    <string name="canvas_text_color">Color</string>
+    <string name="preview_text">Preview Text</string>
+    <string name="canvas_text_hint">Preview Text</string>
+    <string name="canvas_text_enter_text">Please enter text</string>
+    <string name="title_activity_square">SquareActivity</string>
+    <string name="admob_id">1111</string>
+    <string name="directory">/PhotoApp/</string>
+    <string name="select_more_apps">Select more apps</string>
+    <string name="save_image_directory_error_message">image errror</string>
+    <string name="loading_image">Loading image</string>
+    <string name="effect_parameter_bundle_name">global_parameter</string>
+    <string name="tilt_none">None</string>
+    <string name="tilt_radial">Radial</string>
+    <string name="tilt_linear">Linear</string>
+    <string name="gallery_select_an_album">Select Album</string>
+    <string name="gallery_no_more">No More item</string>
+    <string name="gallery_select_one">Select one</string>
+    <string name="changelog_full_title">Full Title</string>
+    <string name="changelog_title">Change Log</string>
+    <string name="changelog_show_full">Show Full</string>
+    <string name="changelog_ok_button">Ok</string>
+    <string name="sticker_items_selected_zero">0/12 items Selected</string>
+    <string name="sticker_items_selected">Selected items</string>
+    <string name="sticker_choose_limit">You can not choose more than 9 stickers</string>
+    <string name="title_activity_mirror_new">MirrorNewActivity</string>
+    <string name="crop_getting_image">Getting the cropped image!</string>
+    <string name="hashtag_twitter">#tag</string>
+
 
 </resources>

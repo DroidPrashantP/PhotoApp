@@ -11,6 +11,7 @@
     <dimen name="text_size_xxlarge">22sp</dimen>
     <dimen name="text_size_user_profile_expanded_toolbar">28sp</dimen>
     <dimen name="text_size_profile_counts">8sp</dimen>
+    <dimen name="text_size_very_small">10sp</dimen>
 
     <!-- padding values -->
     <dimen name="padding_extra_normal">8dp</dimen>
@@ -33,4 +34,25 @@
     <dimen name="save_image_circle_item_size">70dp</dimen>
     <dimen name="save_image_circle_image_view_padding">15dp</dimen>
     <dimen name="save_image_circle_text_margin_top">10dp</dimen>
+    <dimen name="myFontSize">14sp</dimen>
+    <dimen name="preview_text_view_height">50dp</dimen>
+    <dimen name="preview_text_size">30sp</dimen>
+    <dimen name="edittext_padding">10dp</dimen>
+    <dimen name="grid_margin_top">10dp</dimen>
+    <dimen name="grid_padding">8dp</dimen>
+    <dimen name="font_grid_row_text_size">15sp</dimen>
+    <dimen name="font_grid_row_height">50dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="colorGridColumnWidth">32.0dip</dimen>
+    <dimen name="square_recycler_view_height">75.0dip</dimen>
+    <dimen name="lib_thumb_save_size">36dp</dimen>
+    <dimen name="gllery_grid_item_image_size">120dp</dimen>
+    <dimen name="gallery_grid_item_selected_item_size">30dp</dimen>
+    <dimen name="gllery_grid_item_layout_size">90dp</dimen>
+    <dimen name="gallery_footer_image_size">80dp</dimen>
+    <dimen name="gallery_footer_delete_image_size">30dp</dimen>
+    <dimen name="lib_toolbar_height">40dp</dimen>
+    <dimen name="sticker_gallery_header_height">50dp</dimen>
+    <dimen name="lib_filter_horizontal_view_image_size">60.0dip</dimen>
+    <dimen name="collage_seek_bar_margin">10dp</dimen>
 </resources>

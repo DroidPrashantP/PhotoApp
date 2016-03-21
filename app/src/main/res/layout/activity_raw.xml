@@ -1,0 +1,20 @@
+<RelativeLayout
+    android:id="@+id/mainLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.camera.activities.RawActivity"
+    xmlns:soulwolf="http://schemas.android.com/apk/res-auto">
+
+    <com.app.camera.utils.CustomViews.CustomImageView
+        android:id="@+id/source_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:padding="2dp"
+        android:visibility="visible" />
+
+</RelativeLayout>

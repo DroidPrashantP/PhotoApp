@@ -16,6 +16,8 @@
     <color name="cashback_textcolor">#FF9800</color>
     <color name="horizontal_line_color">#dedede</color>
     <color name="blue">#1ea0d7</color>
+    <color name="bll">#1B8D78</color>
+    <color name="button_text_color">#ff919191</color>
 
     <!--categories color -->
     <color name="category_color_one">#48b5b3</color>
@@ -29,7 +31,7 @@
     <color name="category_color_nine">#74b3b4</color>
     <color name="category_color_ten">#444441</color>
     <color name="default_card_bg">#FFFFFF</color>
-    <color name="divider_light">#E0E0E0</color>
+    <color name="divider_light">#dddddd</color>
 
 
     <!--crop imageview color-->
@@ -40,6 +42,16 @@
     <color name="frame">#86C166</color>
     <color name="guide">#AA86C166</color>
     <color name="menu_bg">#FFFFFB</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="red">#FF0000</color>
+    <color name="gallery_header_color">#ffec4f4f</color>
+    <color name="view_flipper_bg_color">#ff535353</color>
+    <color name="footer_button_color_pressed">#ffdf5759</color>
+    <color name="lib_header_bg">#ff283240</color>
+    <color name="lib_footer_button_color_pressed">#ffdf5759</color>
+    <color name="gallery_count_color">#ff13cd61</color>
+    <color name="collage_tool_background_color">#ff535353</color>
 
 
 </resources>

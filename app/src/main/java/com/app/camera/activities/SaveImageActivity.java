@@ -20,6 +20,8 @@ import com.app.camera.R;
 import com.app.camera.bitmap.BitmapLoader;
 import com.app.camera.utils.Toaster;
 import com.app.camera.utils.UriToUrl;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.util.List;
@@ -43,12 +45,7 @@ public class SaveImageActivity extends AppCompatActivity {
         }
 
         shareImageview = (ImageView) findViewById(R.id.share_imageView);
-//        Bitmap shareImage = ((AppController) getApplication()).shareBitmap;
-//        if (shareImageview!= null){
-//            shareImageview.setImageBitmap(shareImage);
-//        }
         new BitmapWorkerTask().execute();
-
         // Set a toolbar to replace the action bar.
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -58,7 +55,13 @@ public class SaveImageActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-
+        try {
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

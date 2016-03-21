@@ -4,7 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,6 +22,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.app.camera.R;
+import com.app.camera.bitmap.BitmapWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -118,11 +126,11 @@ public class CommonActivity {
         // String root = Environment.getExternalStorageDirectory().toString();
         String[] allsdcardpath = CommonActivity.getStorageDirectories();
         File myDir;
-        // if (allsdcardpath[1] != null) {
-        // myDir = new File(allsdcardpath[1] + "/DCIM/Kissify"); // sdcard1
-        // } else {
+         if (allsdcardpath[1] != null) {
+         myDir = new File(allsdcardpath[1] + "/DCIM/CameraApp"); // sdcard1
+         } else {
         myDir = new File(allsdcardpath[0] + "/DCIM/CameraApp"); // sdcard0
-        // }
+         }
         myDir.mkdirs();
         Random generator = new Random();
         int n = 10000;
@@ -169,6 +177,50 @@ public class CommonActivity {
         return file.getAbsolutePath();
     }
 
+    public static String SaveNewImage(Context context,Bitmap saveBM) {
+        int counter = 0;
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fileName = "image-" + n + ".jpg";
+
+        File path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+
+        File file = new File(path, "ResizePhotoApp");
+
+        try {
+            file.mkdirs();
+        } catch(Exception e) {}
+
+        file = new File(path, "ResizePhotoApp/" + fileName + ".jpg");
+
+        while (file.exists()) {
+            counter++;
+            file = new File(path, "ResizePhotoApp/" + fileName + "(" + counter + ").jpg");
+        }
+        new BitmapWriterWorker(file, saveBM,context).execute();
+        return file.getAbsolutePath();
+    }
+
+    private static class BitmapWriterWorker extends BitmapWriter {
+
+        public BitmapWriterWorker(File input_file, Bitmap input_bitmap,Context context) {
+            super(input_file, input_bitmap,context);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+//            if (result) {
+//                Toaster.make(getApplicationContext(), getString(R.string.saved).replace(":url:", outputURL));
+//            } else {
+//                Toaster.make(getApplicationContext(), R.string.save_failed);
+//            }
+        }
+
+    }
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth, boolean willDelete) {
 
         int width = bm.getWidth();
@@ -249,5 +301,131 @@ public class CommonActivity {
             Collections.addAll(rv, rawSecondaryStorages);
         }
         return rv.toArray(new String[rv.size()]);
+    }
+
+
+
+    public static Bitmap doBrightness(Bitmap src, int value) {
+        // image size
+        int width = src.getWidth();
+        int height = src.getHeight();
+        // create output bitmap
+        Bitmap bmOut = Bitmap.createBitmap(width, height, src.getConfig());
+        // color information
+        int A, R, G, B;
+        int pixel;
+
+        // scan through all pixels
+        for(int x = 0; x < width; ++x) {
+            for(int y = 0; y < height; ++y) {
+                // get pixel color
+                pixel = src.getPixel(x, y);
+                A = Color.alpha(pixel);
+                R = Color.red(pixel);
+                G = Color.green(pixel);
+                B = Color.blue(pixel);
+
+                // increase/decrease each channel
+                R += value;
+                if(R > 255) { R = 255; }
+                else if(R < 0) { R = 0; }
+
+                G += value;
+                if(G > 255) { G = 255; }
+                else if(G < 0) { G = 0; }
+
+                B += value;
+                if(B > 255) { B = 255; }
+                else if(B < 0) { B = 0; }
+
+                // apply new pixel color to output bitmap
+                bmOut.setPixel(x, y, Color.argb(A, R, G, B));
+            }
+        }
+
+        // return final image
+        return bmOut;
+    }
+
+
+    public static Bitmap adjustedContrast(Bitmap src, double value)
+    {
+        // image size
+        int width = src.getWidth();
+        int height = src.getHeight();
+        // create output bitmap
+
+        // create a mutable empty bitmap
+        Bitmap bmOut = Bitmap.createBitmap(width, height, src.getConfig());
+
+        // create a canvas so that we can draw the bmOut Bitmap from source bitmap
+        Canvas c = new Canvas();
+        c.setBitmap(bmOut);
+
+        // draw bitmap to bmOut from src bitmap so we can modify it
+        c.drawBitmap(src, 0, 0, new Paint(Color.BLACK));
+
+
+        // color information
+        int A, R, G, B;
+        int pixel;
+        // get contrast value
+        double contrast = Math.pow((100 + value) / 100, 2);
+
+        // scan through all pixels
+        for(int x = 0; x < width; ++x) {
+            for(int y = 0; y < height; ++y) {
+                // get pixel color
+                pixel = src.getPixel(x, y);
+                A = Color.alpha(pixel);
+                // apply filter contrast for every channel R, G, B
+                R = Color.red(pixel);
+                R = (int)(((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if(R < 0) { R = 0; }
+                else if(R > 255) { R = 255; }
+
+                G = Color.green(pixel);
+                G = (int)(((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if(G < 0) { G = 0; }
+                else if(G > 255) { G = 255; }
+
+                B = Color.blue(pixel);
+                B = (int)(((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if(B < 0) { B = 0; }
+                else if(B > 255) { B = 255; }
+
+                // set new pixel color to output bitmap
+                bmOut.setPixel(x, y, Color.argb(A, R, G, B));
+            }
+        }
+        return bmOut;
+    }
+
+    /**
+     *
+     * @param bmp input bitmap
+     * @param contrast 0..10 1 is default
+     * @param brightness -255..255 0 is default
+     * @return new bitmap
+     */
+    public static Bitmap changeBitmapContrastBrightness(Bitmap bmp, float contrast, float brightness)
+    {
+        ColorMatrix cm = new ColorMatrix(new float[]
+                {
+                        contrast, 0, 0, 0, brightness,
+                        0, contrast, 0, 0, brightness,
+                        0, 0, contrast, 0, brightness,
+                        0, 0, 0, 1, 0
+                });
+
+        Bitmap ret = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+
+        Canvas canvas = new Canvas(ret);
+
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawBitmap(bmp, 0, 0, paint);
+
+        return ret;
     }
 }

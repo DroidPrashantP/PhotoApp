@@ -36,7 +36,7 @@ public class CropImageView extends ImageView {
     private static final int MIN_FRAME_SIZE_IN_DP = 50;
     private static final int FRAME_STROKE_WEIGHT_IN_DP = 1;
     private static final int GUIDE_STROKE_WEIGHT_IN_DP = 1;
-    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.75f;
+    private static final float DEFAULT_INITIAL_FRAME_SCALE = 1f;
 
     private final int TRANSPARENT;
     private final int TRANSLUCENT_WHITE = 0xBBFFFFFF;

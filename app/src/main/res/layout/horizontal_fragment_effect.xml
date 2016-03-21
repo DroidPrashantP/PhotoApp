@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:id="@+id/filter_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ViewSwitcher
+            android:id="@+id/viewswitcher"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <com.lyrebirdstudio.lyrebirdlibrary.MyViewFlipper
+                    android:id="@+id/control_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/category_color_two"
+                    android:gravity="bottom">
+
+                    <android.support.v7.widget.RecyclerView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/filter_RecyclerView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:scrollbars="horizontal" />
+
+                    <android.support.v7.widget.RecyclerView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/border_RecyclerView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:scrollbars="horizontal" />
+
+                    <android.support.v7.widget.RecyclerView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/overlay_RecyclerView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:scrollbars="horizontal" />
+
+                    <android.support.v7.widget.RecyclerView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/texture_RecyclerView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:scrollbars="horizontal" />
+
+                    <LinearLayout
+                        android:id="@+id/seekbar_container"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/seekbar_hint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textColor="#ffffffff" />
+
+                        <!--<com.lyrebirdstudio.lyrebirdlibrary.SeekBarHint-->
+                            <!--android:id="@+id/seek_bar_adjustment"-->
+                            <!--style="@style/effect_seek_bar_style"-->
+                            <!--android:padding="@dimen/lib_seek_bar_padding"-->
+                            <!--android:progress="50" />-->
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/lyrebird_lib_flipper_void"
+                        android:layout_width="0.0dip"
+                        android:layout_height="0.0dip" />
+                </com.lyrebirdstudio.lyrebirdlibrary.MyViewFlipper>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/button_lib_cancel"
+                        style="@style/effect_footer_imagebutton_style"
+                        android:src="@drawable/close" />
+
+                    <Button
+                        android:id="@+id/lib_current_adjustmen_label"
+                        style="@style/effect_footer_imagebutton_style"
+                        android:layout_height="fill_parent"
+                        android:background="@color/category_color_two"
+                        android:text="FX"
+                        android:textSize="@dimen/text_size_medium" />"
+
+                    <ImageButton
+                        android:id="@+id/button_lib_ok"
+                        style="@style/effect_footer_imagebutton_style"
+                        android:src="@drawable/ok_white" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/mini_header"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/button_filter_reset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/selector_btn_reset_lib"
+                        android:gravity="bottom|center"
+                        android:minHeight="@dimen/lib_button_style_min_height"
+                        android:minWidth="@dimen/lib_button_style_min_width"
+                        android:onClick="myClickHandler"
+                        android:paddingLeft="2.0dip"
+                        android:paddingRight="2.0dip"
+                        android:text="Reset"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size_medium" />
+
+                    <Button
+                        android:id="@+id/button_auto_set_parameters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/selector_btn_reset_lib"
+                        android:gravity="bottom|center"
+                        android:minHeight="@dimen/lib_button_style_min_height"
+                        android:minWidth="@dimen/lib_button_style_min_width"
+                        android:onClick="myClickHandler"
+                        android:paddingLeft="2.0dip"
+                        android:paddingRight="2.0dip"
+                        android:text="Auto"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size_medium" />
+                </RelativeLayout>
+
+                <HorizontalScrollView
+                    android:id="@+id/fx_footer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:fillViewport="true"
+                    android:measureAllChildren="false"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/button_fx"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_effect"
+                            android:text="Fx" />
+
+                        <Button
+                            android:id="@+id/button_frame"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_frame"
+                            android:text="Frame" />
+
+                        <Button
+                            android:id="@+id/button_light"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_light"
+                            android:text="Light" />
+
+                        <Button
+                            android:id="@+id/button_texture"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_texture"
+                            android:text="Texture" />
+
+                        <Button
+                            android:id="@+id/button_brightness"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_brightness"
+                            android:text="Brightness" />
+
+                        <Button
+                            android:id="@+id/button_temperature"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_warmth"
+                            android:text="Warmth" />
+
+                        <Button
+                            android:id="@+id/button_contrast"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_contrast"
+                            android:text="Contrast" />
+
+                        <Button
+                            android:id="@+id/button_saturation"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_saturation"
+                            android:text="Saturation" />
+
+                        <Button
+                            android:id="@+id/button_tint"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_tint"
+                            android:text="Tint" />
+
+                        <Button
+                            android:id="@+id/button_sharpen"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_sharpness"
+                            android:text="Sharpen" />
+
+                        <Button
+                            android:id="@+id/button_blur"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_blur"
+                            android:text="Blur" />
+
+                        <Button
+                            android:id="@+id/button_highlights"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_highlight"
+                            android:text="Highlight" />
+
+                        <Button
+                            android:id="@+id/button_shadows"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_shadows"
+                            android:text="Shadows" />
+
+                        <Button
+                            android:id="@+id/button_tilt_shift"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/lib_tilt_shift"
+                            android:text="Tilt Shift" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </LinearLayout>
+        </ViewSwitcher>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/lyrebird_lib_tilt_fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

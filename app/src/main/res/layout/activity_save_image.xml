@@ -16,18 +16,18 @@
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/save_image_ad_id"
+        android:id="@+id/adView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id" />
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id_three" />
 
     <View
         android:id="@+id/save_image_divider2"
         android:layout_width="fill_parent"
         android:layout_height="1.0dip"
-        android:layout_below="@+id/save_image_ad_id"
+        android:layout_below="@+id/adView"
         android:layout_marginTop="2.0dip"
         android:background="#ffe3e3e3" />
 

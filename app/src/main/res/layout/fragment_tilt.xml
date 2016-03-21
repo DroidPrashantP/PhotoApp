@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tilt_main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:id="@+id/tilt_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="0.0dip" />
+
+    <FrameLayout
+        android:id="@+id/tilt_view_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/tilt_footer"
+        android:layout_below="@+id/tilt_header" />
+
+    <LinearLayout
+        android:id="@+id/tilt_footer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tilt_ok_cancel_container">
+
+        <Button
+            android:id="@+id/tilt_button_none"
+            style="@style/btn_custom_style"
+            android:background="@drawable/selector_btn_tilt_mode"
+            android:drawableTop="@drawable/tilt_icon_none"
+            android:text="@string/tilt_none" />
+
+        <Button
+            android:id="@+id/tilt_button_radial"
+            style="@style/effect_footer_imagebutton_style"
+            android:background="@drawable/selector_btn_tilt_mode"
+            android:drawableTop="@drawable/tilt_icon_radial"
+            android:text="@string/tilt_radial" />
+
+        <Button
+            android:id="@+id/tilt_button_linear"
+            style="@style/effect_footer_imagebutton_style"
+            android:background="@drawable/selector_btn_tilt_mode"
+            android:drawableTop="@drawable/tilt_icon_parallel"
+            android:text="@string/tilt_linear" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tilt_ok_cancel_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/tilt_cancel"
+            style="@style/effect_footer_imagebutton_style"
+            android:src="@drawable/close" />
+
+        <Button
+            style="@style/effect_footer_imagebutton_style"
+            android:layout_height="fill_parent"
+            android:background="@color/category_color_two"
+            android:text="Tilt Shift"
+            android:textSize="@dimen/text_size_medium" />"
+
+        <ImageButton
+            android:id="@+id/tilt_ok"
+            style="@style/effect_footer_imagebutton_style"
+            android:src="@drawable/ok_white" />
+    </LinearLayout>
+</RelativeLayout>

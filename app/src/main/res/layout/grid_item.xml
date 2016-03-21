@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_height="120dp"
+    android:layout_width="120dp"
+    android:padding="@dimen/padding_small"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_height="@dimen/gllery_grid_item_image_size"
+        android:layout_width="@dimen/gllery_grid_item_image_size"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_logo" />
+
+    <LinearLayout
+        android:alpha="0.6"
+        android:background="#fff"
+        android:id="@+id/grid_item_text_container"
+        android:layout_alignLeft="@+id/imageView"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_path"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.0"
+            android:layout_width="0dp"
+            android:singleLine="true"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="italic" />
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/textViewCount"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:layout_width="0dp"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:background="@color/text_white"
+        android:gravity="center"
+        android:id="@+id/textViewSelectedItemCount"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
+        android:layout_height="@dimen/gallery_grid_item_selected_item_size"
+        android:layout_width="@dimen/gallery_grid_item_selected_item_size"
+        android:text=""
+        android:textColor="#fff"
+        android:textSize="@dimen/text_size_medium"
+        android:textStyle="bold"
+        android:visibility="gone" />
+</RelativeLayout>

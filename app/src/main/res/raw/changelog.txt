@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <style type='text/css'>
+      a            { color:#a0a0e0 }
+      div.title    { 
+          color:#C0F0C0; 
+          font-size:1.2em; 
+          font-weight:bold; 
+          margin-top:1em; 
+          margin-bottom:0.5em; 
+          text-align:center }
+      div.subtitle { 
+          color:#C0F0C0; 
+          font-size:0.8em; 
+          margin-bottom:1em; 
+          text-align:center }
+      div.freetext { color:#F0F0F0 }
+      div.list     { color:#C0C0F0 }
+    </style>
+  </head>
+  <body>
+$ 2.1.1
+_ 2015-12-03
+  * Rotate images with two fingers.
+  * Fixed layout for collages.
+_ 2015-09-22
+  * Minor bug fix.
+_ 2015-09-18
+  * Tens of frames and effects added.
+_ 2015-08-13
+  * Blur bug fix.
+_ 2015-07-25
+  * Bug fix.
+_ 2015-07-13
+  * Tens of new emoji and smiley stickers.
+  * New icon.
+_ 2015-07-06
+  * Bug fix.
+_ 2015-07-04
+  * MAJOR UPDATE
+  * Blur background for single collage images.
+  * Tilt Shift.
+  * Highlight adjustment.
+  * Shadows adjustment.
+  * Sharpen tool.
+  * Blur tool.
+  * Rotate, flip, zoom, and pan options added for collages.
+  _ 2015-06-11
+	* Small bug fix.
+  _ 2015-06-09
+	* Save screen redesigned.
+  _ 2015-05-11
+	* Move to sdcard option added.
+  _ 2015-05-03
+  	* MAJOR UPDATE:
+  	* Mirror photo added.
+  	* Shape photo added.
+  _ 2015-05-03
+  	* First releasse.
+
+$ END_OF_CHANGE_LOG
+  </body>
+</html>

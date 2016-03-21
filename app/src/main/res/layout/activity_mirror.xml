@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_mirror_activity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg">
+
+    <RelativeLayout
+        android:id="@+id/text_view_fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <LinearLayout
+        android:id="@+id/adWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_weight="1">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id_two"></com.google.android.gms.ads.AdView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mirror_header"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/adWrapper"
+        android:background="@color/primary"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/closeScreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="CloseScreen">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/close"
+                android:tint="@color/text_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Close"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_size_large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/saveImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="myClickHandler">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/save"
+                android:tint="@color/text_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Save"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_size_large" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/mirror_header"
+        android:orientation="horizontal">
+
+    </RelativeLayout>
+
+    <!--<LinearLayout--><!--android:id="@+id/mirror_header"--><!--android:layout_width="fill_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@color/primary"--><!--android:orientation="horizontal">-->
+
+    <!--<ImageButton--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:id="@+id/button_cancel_mirror_image"--><!--android:src="@drawable/close"--><!--android:text="CANCEL" />-->
+
+    <!--<ImageButton--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:id="@+id/button_save_mirror_image"--><!--android:src="@drawable/save"--><!--android:text="SAVE" />--><!--</LinearLayout>-->
+
+    <com.app.camera.utils.CustomViews.MyViewFlipper
+        android:id="@+id/mirror_view_flipper"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/mirror_footer"
+        android:background="@color/primary"
+        android:gravity="bottom">
+
+        <LinearLayout
+            android:id="@+id/mirror_combinations"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="bottom"
+            android:background="@color/primary"
+            android:orientation="horizontal"
+            android:paddingRight="10.0dip">
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primary"
+                android:padding="1.0dip"
+                android:paddingRight="0.0dip">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="1.0dip">
+
+                    <Button
+                        android:id="@+id/button_m1"
+                        style="@style/mirror_button_style"
+                        android:background="@color/primary"
+                        android:drawableTop="@drawable/m1"
+                        android:text="M-1" />
+
+                    <Button
+                        android:id="@+id/button_m2"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m2"
+                        android:text="M-2" />
+
+                    <Button
+                        android:id="@+id/button_m3"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m3"
+                        android:text="M-3" />
+
+                    <Button
+                        android:id="@+id/button_m4"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m4"
+                        android:text="M-4" />
+
+                    <Button
+                        android:id="@+id/button_m5"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m5"
+                        android:text="M-5" />
+
+                    <Button
+                        android:id="@+id/button_m6"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m6"
+                        android:text="M-6" />
+
+                    <Button
+                        android:id="@+id/button_m7"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m7"
+                        android:text="M-7" />
+
+                    <Button
+                        android:id="@+id/button_m8"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m8"
+                        android:text="M-8" />
+
+                    <Button
+                        android:id="@+id/button_m9"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m9"
+                        android:text="M-9" />
+
+                    <Button
+                        android:id="@+id/button_m10"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m10"
+                        android:text="M-10" />
+
+                    <Button
+                        android:id="@+id/button_m11"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m11"
+                        android:text="M-11" />
+
+                    <Button
+                        android:id="@+id/button_m12"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m12"
+                        android:text="M-12" />
+
+                    <Button
+                        android:id="@+id/button_m13"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m13"
+                        android:text="M-13" />
+
+                    <Button
+                        android:id="@+id/button_m14"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m14"
+                        android:text="M-14" />
+
+                    <Button
+                        android:id="@+id/button_m15"
+                        style="@style/mirror_button_style"
+                        android:drawableTop="@drawable/m15"
+                        android:text="M-15" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:padding="3.0dip"
+            android:paddingRight="0.0dip">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="1.0dip">
+
+                <Button
+                    android:id="@+id/button_3d_1"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_14_icon_left"
+                    android:text="3D-1" />
+
+                <Button
+                    android:id="@+id/button_3d_2"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_14_icon_right"
+                    android:text="3D-2" />
+
+                <Button
+                    android:id="@+id/button_3d_3"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_10_icon_left"
+                    android:text="3D-3" />
+
+                <Button
+                    android:id="@+id/button_3d_4"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_10_icon"
+                    android:text="3D-4" />
+
+                <Button
+                    android:id="@+id/button_3d_5"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_11_icon_left"
+                    android:text="3D-5" />
+
+                <Button
+                    android:id="@+id/button_3d_6"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_11_icon"
+                    android:text="3D-6" />
+
+                <Button
+                    android:id="@+id/button_3d_7"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_4_icon_left"
+                    android:text="3D-7" />
+
+                <Button
+                    android:id="@+id/button_3d_8"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_4_icon"
+                    android:text="3D-8" />
+
+                <Button
+                    android:id="@+id/button_3d_9"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_3_icon_left"
+                    android:text="3D-9" />
+
+                <Button
+                    android:id="@+id/button_3d_10"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_3_icon_right"
+                    android:text="3D-10" />
+
+                <Button
+                    android:id="@+id/button_3d_11"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_1_icon_left"
+                    android:text="3D-11" />
+
+                <Button
+                    android:id="@+id/button_3d_12"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_1_icon"
+                    android:text="3D-12" />
+
+                <Button
+                    android:id="@+id/button_3d_13"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_6_icon"
+                    android:text="3D-13" />
+
+                <Button
+                    android:id="@+id/button_3d_14"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_6_icon_left"
+                    android:text="3D-14" />
+
+                <Button
+                    android:id="@+id/button_3d_15"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_13_icon"
+                    android:text="3D-15" />
+
+                <Button
+                    android:id="@+id/button_3d_16"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_13_icon_right"
+                    android:text="3D-16" />
+
+                <Button
+                    android:id="@+id/button_3d_17"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_15_icon4"
+                    android:text="3D-17" />
+
+                <Button
+                    android:id="@+id/button_3d_18"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_15_icon2"
+                    android:text="3D-18" />
+
+                <Button
+                    android:id="@+id/button_3d_19"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_15_icon3"
+                    android:text="3D-19" />
+
+                <Button
+                    android:id="@+id/button_3d_20"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_15_icon"
+                    android:text="3D-20" />
+
+                <Button
+                    android:id="@+id/button_3d_21"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_16_icon4"
+                    android:text="3D-21" />
+
+                <Button
+                    android:id="@+id/button_3d_22"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_16_icon2"
+                    android:text="3D-22" />
+
+                <Button
+                    android:id="@+id/button_3d_23"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_16_icon3"
+                    android:text="3D-23" />
+
+                <Button
+                    android:id="@+id/button_3d_24"
+                    style="@style/mirror_button_style"
+                    android:drawableTop="@drawable/mirror_3d_16_icon"
+                    android:text="3D-24" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:id="@+id/mirror_ratios"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingRight="5.0dip">
+
+            <HorizontalScrollView
+                android:id="@+id/mirror_ratio_horizontalScrollView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="1.0dip"
+                android:paddingRight="0.0dip">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="1.0dip">
+
+                    <Button
+                        android:id="@+id/button11"
+                        style="@style/mirror_ratio_button_style"
+                        android:background="@drawable/ratio_bg_pressed"
+                        android:text="1:1" />
+
+                    <Button
+                        android:id="@+id/button21"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="2:1" />
+
+                    <Button
+                        android:id="@+id/button12"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="1:2" />
+
+                    <Button
+                        android:id="@+id/button32"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="3:2" />
+
+                    <Button
+                        android:id="@+id/button23"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="2:3" />
+
+                    <Button
+                        android:id="@+id/button43"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="4:3" />
+
+                    <Button
+                        android:id="@+id/button34"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="3:4" />
+
+                    <Button
+                        android:id="@+id/button45"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="4:5" />
+
+                    <Button
+                        android:id="@+id/button57"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="5:7" />
+
+                    <Button
+                        android:id="@+id/button169"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="16:9" />
+
+                    <Button
+                        android:id="@+id/button916"
+                        style="@style/mirror_ratio_button_style"
+                        android:text="9:16" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/mirror_effect_fragment_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/mirror_footer" />
+
+        <View
+            android:layout_width="1.0dip"
+            android:layout_height="1.0dip" />
+    </com.app.camera.utils.CustomViews.MyViewFlipper>
+
+    <LinearLayout
+        android:id="@+id/mirror_footer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_mirror"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/m0"
+            android:text="Mirror" />
+
+        <Button
+            android:id="@+id/button_mirror_3d"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/d3"
+            android:text="Shape" />
+
+        <Button
+            android:id="@+id/button_mirror_ratio"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/mirror_ratio"
+            android:text="Ratio" />
+
+        <Button
+            android:id="@+id/button_mirror_effect"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/mirror_effect"
+            android:text="Effect"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/button_mirror_frame"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/mirror_frame"
+            android:text="Frame"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/button_mirror_text"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/mirror_text_icon"
+            android:text="Text"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/button_mirror_sticker"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/sticker_icon"
+            android:text="Sticker"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/button_mirror_adj"
+            style="@style/mirror_footer_imagebutton_style"
+            android:drawableTop="@drawable/mirror_adjustment"
+            android:text="Edit"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/sticker_grid_fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <FrameLayout
+        android:id="@+id/sticker_view_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/mirror_header">
+
+
+    </FrameLayout>
+</RelativeLayout>

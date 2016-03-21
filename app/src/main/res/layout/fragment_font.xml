@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/font_fragment_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_text_color"
+            style="@style/canvas_text_toolbar_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="@string/canvas_text_color"
+            android:textColor="#ffffffff" />
+
+        <Button
+            android:id="@+id/button_font_ok"
+            style="@style/canvas_text_toolbar_button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="@android:string/ok"
+            android:textColor="#ffffffff" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textview_font"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/preview_text_view_height"
+        android:background="#ff333333"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="5dp"
+        android:lines="1"
+        android:text="@string/preview_text"
+        android:textColor="#ffffffff"
+        android:textSize="@dimen/preview_text_size" />
+
+    <EditText
+        android:id="@+id/edittext_font"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="1"
+        android:hint="@string/canvas_text_hint"
+        android:gravity="center"
+        android:imeOptions="actionDone"
+        android:inputType="textNoSuggestions"
+        android:padding="@dimen/edittext_padding"
+        android:singleLine="true"
+        android:textColor="#ffffffff" />
+
+    <GridView
+        android:id="@+id/gridview_font"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/grid_margin_top"
+        android:padding="@dimen/edittext_padding"
+        android:cacheColorHint="#00000000"
+        android:numColumns="@integer/grid_num_column" />
+</LinearLayout>

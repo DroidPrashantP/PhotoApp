@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_gallery_fragment_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:id="@+id/grid_header"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/sticker_gallery_header_height"
+        android:background="@color/gallery_header_color"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_header"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/sticker_gallery_header_height"
+            android:background="@color/gallery_header_color"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_left_arrow"
+            android:gravity="center_vertical"
+            android:text="@string/sticker_items_selected_zero"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#ffffffff"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/sticker_gallery_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/gallery_count_color"
+            android:paddingLeft="15.0dip"
+            android:paddingRight="15.0dip"
+            android:src="@drawable/ok_white"
+            android:text="OK" />
+    </RelativeLayout>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/layout_gallery_fragment_drawer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/grid_header">
+
+        <LinearLayout
+            android:id="@+id/grid_content_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#fff0f0f0"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_weight="4.8"
+                android:columnWidth="80dp"
+                android:gravity="center"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/drawer"
+            android:layout_width="240.0dip"
+            android:layout_height="fill_parent"
+            android:layout_gravity="left"
+            android:background="@color/bg"
+            android:cacheColorHint="#00000000"
+            android:choiceMode="singleChoice"
+            android:divider="#ffd3d3d3"
+            android:dividerHeight="2.0px" />
+    </android.support.v4.widget.DrawerLayout>
+
+    <ImageView
+        android:id="@+id/toggle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="#ff13cd61"
+        android:paddingBottom="15.0dip"
+        android:paddingLeft="5.0dip"
+        android:paddingRight="5.0dip"
+        android:paddingTop="15.0dip"
+        android:src="@drawable/swipe_right" />
+</RelativeLayout>

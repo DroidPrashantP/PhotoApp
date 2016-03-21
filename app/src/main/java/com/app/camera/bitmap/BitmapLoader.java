@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 
 import com.app.camera.utils.MemoryManagement;
 import com.app.camera.utils.UriToUrl;
@@ -15,7 +16,7 @@ public class BitmapLoader {
 		bitmapOptions.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(image_url, bitmapOptions);
 
-		int inSampleSize = 1;
+		int inSampleSize = 2;
 
 		final int outWidth = bitmapOptions.outWidth;
 		final int outHeight = bitmapOptions.outHeight;
@@ -33,6 +34,7 @@ public class BitmapLoader {
 			}
 		}
 
+		Log.e("Sample Size", inSampleSize+"");
 		bitmapOptions.inSampleSize = inSampleSize;
 
 		// Decoding bitmap
