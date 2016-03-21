@@ -492,10 +492,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mRateLayout == v) {
             CurrentSelectionTab = Constants.CurrentFunction.RATE;
             Toast.makeText(this, "Comming soon", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent();
-//            intent.setType("image/*");
-//            intent.setAction("android.intent.action.GET_CONTENT");
-//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE_SQUARE);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction("android.intent.action.GET_CONTENT");
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE_SQUARE);
         }
     }
 

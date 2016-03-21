@@ -156,6 +156,7 @@ public class SquareActivity extends FragmentActivity {
     View[] tabButtonList;
     ArrayList<TextData> textDataList;
     ViewFlipper viewFlipper;
+    private RecyclerView recyclerViewColor;
 
     /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.6 */
     class C05926 implements Runnable {
@@ -890,7 +891,7 @@ public class SquareActivity extends FragmentActivity {
         this.mainLayout = (RelativeLayout) findViewById(R.id.nocrop_main_layout);
         this.mSqView = new SquareView(this, width, height);
         this.mainLayout.addView(this.mSqView);
-        RecyclerView recyclerViewColor = (RecyclerView) findViewById(R.id.recyclerView_color);
+        recyclerViewColor = (RecyclerView) findViewById(R.id.recyclerView_color);
         int colorDefault = getResources().getColor(R.color.view_flipper_bg_color);
         int colorSelected = getResources().getColor(R.color.footer_button_color_pressed);
         new LinearLayoutManager(this.context).setOrientation(TAB_INDEX_SQUARE);
@@ -902,7 +903,25 @@ public class SquareActivity extends FragmentActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         this.colorContainer = (LinearLayout) findViewById(R.id.color_container);
         recyclerViewPattern.setLayoutManager(linearLayoutManager);
-        recyclerViewPattern.setAdapter(new BackgroundPatternAdapter(Utility.patternResIdList3, new C09584(recyclerViewColor), colorDefault, colorSelected, false, false));
+        recyclerViewPattern.setAdapter(new BackgroundPatternAdapter(Utility.patternResIdList3, new CurrentSquareIndexChangedListener() {
+            @Override
+            public void onIndexChanged(int position) {
+                SquareActivity.this.mSqView.backgroundMode = 0;
+                if (position == 0) {
+                    SquareActivity.this.mSqView.setPatternPaint(R.drawable.effect_0_thumb);
+                    return;
+                }
+                int newPos = position - 1;
+                if (patternAdapterList.get(newPos) != recyclerViewColor.getAdapter()) {
+                    recyclerViewColor.setAdapter(patternAdapterList.get(newPos));
+                    (patternAdapterList.get(newPos)).setSelectedPositinVoid();
+                } else {
+                    (patternAdapterList.get(newPos)).setSelectedPositinVoid();
+                    (patternAdapterList.get(newPos)).notifyDataSetChanged();
+                }
+                SquareActivity.this.colorContainer.setVisibility(SquareActivity.TAB_INDEX_SQUARE);
+            }
+        }, colorDefault, colorSelected, false, false));
         recyclerViewPattern.setItemAnimator(new DefaultItemAnimator());
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this.context);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -970,7 +989,7 @@ public class SquareActivity extends FragmentActivity {
         int size = Utility.patternResIdList2.length;
         this.patternAdapterList.clear();
         this.patternAdapterList.add(new SquareColorPickerAdapter(new C09595(), colorDefault, colorSelected));
-        for (int i = TAB_INDEX_SQUARE; i < size; i += TAB_INDEX_SQUARE_BACKGROUND) {
+        for (int i = TAB_INDEX_SQUARE; i < size; i ++) {
             this.patternAdapterList.add(new BackgroundPatternAdapter(Utility.patternResIdList2[i], new CurrentSquareIndexChangedListener() {
                 public void onIndexChanged(int positionOrColor) {
                     SquareActivity.this.mSqView.setPatternPaint(positionOrColor);
