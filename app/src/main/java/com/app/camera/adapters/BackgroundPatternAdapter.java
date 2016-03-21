@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8e. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.geocities.com/kpdus/jad.html
-// Decompiler options: braces fieldsfirst space lnc 
-
 package com.app.camera.adapters;
 
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +8,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.app.camera.R;
+import com.app.camera.activities.CurrentSquareIndexChangedListener;
+import com.app.camera.activities.SquareActivity;
 
-public class MyAdapter extends MyRecylceAdapterBase
+/**
+ * Created by Prashant on 21/3/16.
+ */
+public class BackgroundPatternAdapter extends MyRecylceAdapterBase
         implements View.OnClickListener
 {
+
+
+    public BackgroundPatternAdapter(int[] ai, com.app.camera.activities.CurrentSquareIndexChangedListener currentSquareIndexChangedListener, int colorDefault, int colorSelected, boolean flag, boolean flag1) {
+
+    }
+
     public static interface CurrentCollageIndexChangedListener
     {
 
@@ -60,7 +67,7 @@ public class MyAdapter extends MyRecylceAdapterBase
     private static final String TAG = "Adapter";
     int colorDefault;
     int colorSelected;
-    CurrentCollageIndexChangedListener currentIndexlistener;
+    SquareActivity.C09584 currentIndexlistener;
     public int iconList[];
     boolean isPattern;
     PatternResIdChangedListener patternResIdListener;
@@ -69,7 +76,7 @@ public class MyAdapter extends MyRecylceAdapterBase
     int selectedPosition;
     boolean setSelectedView;
 
-    public MyAdapter(int ai[], int i, int j, boolean flag, boolean flag1)
+    public BackgroundPatternAdapter(int ai[], int i, int j, boolean flag, boolean flag1)
     {
         isPattern = false;
         setSelectedView = true;
@@ -80,12 +87,12 @@ public class MyAdapter extends MyRecylceAdapterBase
         setSelectedView = flag1;
     }
 
-    public MyAdapter(int ai[], CurrentSquareIndexChangedListener currentcollageindexchangedlistener, int i, int j, boolean flag, boolean flag1)
+    public BackgroundPatternAdapter(int ai[], SquareActivity.C09584 currentcollageindexchangedlistener, int i, int j, boolean flag, boolean flag1)
     {
         isPattern = false;
         setSelectedView = true;
         iconList = ai;
-        currentIndexlistener = (CurrentCollageIndexChangedListener) currentcollageindexchangedlistener;
+        currentIndexlistener = currentcollageindexchangedlistener;
         colorDefault = i;
         colorSelected = j;
         isPattern = flag;

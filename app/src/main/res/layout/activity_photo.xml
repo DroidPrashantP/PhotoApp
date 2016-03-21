@@ -165,13 +165,13 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
 
-        <com.app.camera.utils.CustomViews.CustomImageView
-            android:id="@+id/source_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:layout_centerInParent="true" />
+        <!--<com.app.camera.activities.PhotoActivity.CustomImageView-->
+            <!--android:id="@+id/source_image"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:adjustViewBounds="true"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:layout_centerInParent="true" />-->
     </RelativeLayout>
     <FrameLayout
         android:id="@+id/frameContainer"

@@ -3,6 +3,7 @@ package com.app.camera.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -41,11 +43,11 @@ import com.app.camera.adapters.MaskLayoutAdapter;
 import com.app.camera.adapters.ToolLayoutAdapter;
 import com.app.camera.bitmap.BitmapLoader;
 import com.app.camera.bitmap.BitmapProcessing;
+import com.app.camera.canvastext.TextData;
 import com.app.camera.multitouchview.StickerCustomView;
 import com.app.camera.utils.CommonActivity;
 import com.app.camera.utils.Constants;
 import com.app.camera.utils.CustomFrameLayout.RatioDatumMode;
-import com.app.camera.utils.CustomViews.CustomImageView;
 import com.app.camera.utils.CustomViews.MultiTouchListener;
 import com.app.camera.utils.CustomViews.ZoomableView;
 import com.app.camera.utils.ImageMainFilter;
@@ -1244,4 +1246,39 @@ public class BlurActivity extends Activity implements View.OnClickListener {
         }
     }
 
+
+    public class CustomImageView extends ImageView {
+
+        private static final int PADDING = 8;
+
+        private Paint mBorderPaint;
+        private Matrix textMatrix;
+        private Matrix mainMatrix;
+
+        public CustomImageView(Context context) {
+            this(context, null);
+        }
+
+        public CustomImageView(Context context, AttributeSet attrs) {
+            this(context, attrs, 0);
+            setPadding(PADDING, PADDING, PADDING, PADDING);
+            textMatrix = new Matrix();
+            mainMatrix = new Matrix();
+        }
+
+        public CustomImageView(Context context, AttributeSet attrs, int defStyle) {
+            super(context, attrs, defStyle);
+            initBorderPaint();
+        }
+
+        private void initBorderPaint() {
+            mBorderPaint = new Paint();
+            mBorderPaint.setAntiAlias(true);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+        }
+    }
 }

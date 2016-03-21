@@ -1447,7 +1447,7 @@ public class EffectFragment extends Fragment {
         libLoadIsFailed = false;
         Log.e(TAG, "static loadLibrary");
         try {
-            System.loadLibrary("filter");
+           // System.loadLibrary("filter");
             libLoadIsFailed = false;
         } catch (Exception er) {
             Log.e(TAG, er.toString());

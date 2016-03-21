@@ -6,7 +6,7 @@ package com.app.camera.adapters;
 
 import android.view.ViewGroup;
 
-public class MyRecylceAdapterBase extends android.support.v7.widget.RecyclerView.Adapter
+public class MyRecylceAdapterBase<V> extends android.support.v7.widget.RecyclerView.Adapter
 {
 
     public MyRecylceAdapterBase()

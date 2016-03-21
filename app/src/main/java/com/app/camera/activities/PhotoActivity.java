@@ -1,7 +1,6 @@
 package com.app.camera.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -68,7 +67,6 @@ import com.app.camera.sticker.Utility;
 import com.app.camera.utils.CommonActivity;
 import com.app.camera.utils.Constants;
 import com.app.camera.utils.CustomViews.BlurBuilderNormal;
-import com.app.camera.utils.CustomViews.CustomImageView;
 import com.app.camera.utils.CustomViews.MultiTouchListener;
 import com.app.camera.utils.CustomViews.RotationGestureDetector;
 import com.app.camera.utils.ImageMainFilter;
@@ -198,9 +196,17 @@ public class PhotoActivity extends FragmentActivity implements View.OnClickListe
         stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
         mParentLayout = (RelativeLayout)findViewById(R.id.parentLayout);
         frameContainer = (FrameLayout) findViewById(R.id.frameContainer);
-        image_holder = (CustomImageView) findViewById(R.id.source_image);
+        //image_holder = (CustomImageView) findViewById(R.id.source_image);
+        image_holder = new CustomImageView(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        image_holder.setLayoutParams(lp);
+
         background_image = (ImageView) findViewById(R.id.background_image);
         mMainContainer = (RelativeLayout) findViewById(R.id.container);
+        mMainContainer.addView(image_holder);
         image_holder.setOnTouchListener(new MultiTouchListener());
 //        textViewMsg1 = (TextView)findViewById(R.id.textViewMoveable1);
         TextContainer = (FrameLayout)findViewById(R.id.frameContainer);
@@ -1569,6 +1575,54 @@ public class PhotoActivity extends FragmentActivity implements View.OnClickListe
 
         @Override
         protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+        }
+    }
+
+    public class CustomImageView extends ImageView {
+
+        private static final int PADDING = 8;
+
+        private Paint mBorderPaint;
+        private Matrix textMatrix;
+        private Matrix mainMatrix;
+
+        public CustomImageView(Context context) {
+            this(context, null);
+        }
+
+        public CustomImageView(Context context, AttributeSet attrs) {
+            this(context, attrs, 0);
+            setPadding(PADDING, PADDING, PADDING, PADDING);
+            textMatrix = new Matrix();
+            mainMatrix = new Matrix();
+        }
+
+        public CustomImageView(Context context, AttributeSet attrs, int defStyle) {
+            super(context, attrs, defStyle);
+            initBorderPaint();
+        }
+
+        private void initBorderPaint() {
+            mBorderPaint = new Paint();
+            mBorderPaint.setAntiAlias(true);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            if (showText) {
+                for (int i = 0; i < textDataList.size(); i ++) {
+                    textMatrix.set((textDataList.get(i)).imageSaveMatrix);
+                    textMatrix.postConcat(identityMatrix);
+                    canvas.setMatrix(textMatrix);
+                    canvas.drawText(((TextData) textDataList.get(i)).message, ((TextData) textDataList.get(i)).xPos, ((TextData) textDataList.get(i)).yPos, ((TextData) textDataList.get(i)).textPaint);
+                    canvas.setMatrix(identityMatrix);
+//                    canvas.drawRect(0.0f, 0.0f, this.mirrorModeList[this.currentModeIndex].rectTotalArea.left, (float) screenHeightPixels, this.textRectPaint);
+//                    canvas.drawRect(0.0f, 0.0f, (float) screenWidthPixels, this.mirrorModeList[this.currentModeIndex].rectTotalArea.top, this.textRectPaint);
+//                    canvas.drawRect(this.mirrorModeList[this.currentModeIndex].rectTotalArea.right, 0.0f, (float) screenWidthPixels, (float) screenHeightPixels, this.textRectPaint);
+//                    canvas.drawRect(0.0f, this.mirrorModeList[this.currentModeIndex].rectTotalArea.bottom, (float) screenWidthPixels, (float) screenHeightPixels, this.textRectPaint);
+                }
+            }
             super.onDraw(canvas);
         }
     }

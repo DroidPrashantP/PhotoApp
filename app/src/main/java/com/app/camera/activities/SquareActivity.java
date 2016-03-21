@@ -1,6 +1,5 @@
 package com.app.camera.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -37,9 +36,7 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -49,7 +46,6 @@ import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -61,9 +57,10 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.app.camera.R;
+import com.app.camera.adapters.BackgroundPatternAdapter;
 import com.app.camera.adapters.MyAdapter;
 import com.app.camera.adapters.MyRecylceAdapterBase;
-import com.app.camera.bitmap.BitmapLoader;
+import com.app.camera.adapters.SquareColorPickerAdapter;
 import com.app.camera.canvastext.ApplyTextInterface;
 import com.app.camera.canvastext.CustomRelativeLayout;
 import com.app.camera.canvastext.SingleTap;
@@ -82,7 +79,6 @@ import com.app.camera.sticker.StickerView;
 import com.app.camera.utils.CustomViews.BlurBuilder;
 import com.app.camera.utils.CustomViews.BlurBuilderNormal;
 import com.app.camera.utils.CustomViews.RotationGestureDetector;
-import com.app.camera.utils.UriToUrl;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -529,7 +525,7 @@ public class SquareActivity extends FragmentActivity {
 
         void setPatternPaint(int resId) {
             if (this.patternPaint == null) {
-                this.patternPaint = new Paint(INVALID_POINTER_ID);
+                this.patternPaint = new Paint(1);
                 this.patternPaint.setColor(PATTERN_SENTINEL);
             }
             if (resId == PATTERN_SENTINEL) {
@@ -739,7 +735,7 @@ public class SquareActivity extends FragmentActivity {
 //        }
 //    }
 
-    class C09584 implements CurrentSquareIndexChangedListener {
+    public class C09584 implements CurrentSquareIndexChangedListener {
         private final RecyclerView val$recyclerViewColor;
 
         C09584(RecyclerView recyclerView) {
@@ -747,25 +743,25 @@ public class SquareActivity extends FragmentActivity {
         }
 
         public void onIndexChanged(int position) {
-            SquareActivity.this.mSqView.backgroundMode = SquareActivity.TAB_INDEX_SQUARE;
+            SquareActivity.this.mSqView.backgroundMode = 0;
             if (position == 0) {
-                SquareActivity.this.mSqView.setPatternPaint(-1);
+                SquareActivity.this.mSqView.setPatternPaint(R.drawable.effect_0_thumb);
                 return;
             }
             int newPos = position - 1;
-            if (SquareActivity.this.patternAdapterList.get(newPos) != this.val$recyclerViewColor.getAdapter()) {
-                this.val$recyclerViewColor.setAdapter(SquareActivity.this.patternAdapterList.get(newPos));
-                ((MyRecylceAdapterBase) SquareActivity.this.patternAdapterList.get(newPos)).setSelectedPositinVoid();
+            if (patternAdapterList.get(newPos) != this.val$recyclerViewColor.getAdapter()) {
+                this.val$recyclerViewColor.setAdapter(patternAdapterList.get(newPos));
+                (patternAdapterList.get(newPos)).setSelectedPositinVoid();
             } else {
-                ((MyRecylceAdapterBase) SquareActivity.this.patternAdapterList.get(newPos)).setSelectedPositinVoid();
-                ((MyRecylceAdapterBase) SquareActivity.this.patternAdapterList.get(newPos)).notifyDataSetChanged();
+                (patternAdapterList.get(newPos)).setSelectedPositinVoid();
+                (patternAdapterList.get(newPos)).notifyDataSetChanged();
             }
             SquareActivity.this.colorContainer.setVisibility(SquareActivity.TAB_INDEX_SQUARE);
         }
     }
 
     /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.5 */
-    class C09595 implements MyAdapter.CurrentSquareIndexChangedListener {
+    public class C09595 implements MyAdapter.CurrentSquareIndexChangedListener {
         C09595() {
         }
 
@@ -906,12 +902,12 @@ public class SquareActivity extends FragmentActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         this.colorContainer = (LinearLayout) findViewById(R.id.color_container);
         recyclerViewPattern.setLayoutManager(linearLayoutManager);
-       // recyclerViewPattern.setAdapter(new MyAdapter(Utility.patternResIdList3,  new C09584(recyclerViewColor), colorDefault, colorSelected, false, false));
+        recyclerViewPattern.setAdapter(new BackgroundPatternAdapter(Utility.patternResIdList3, new C09584(recyclerViewColor), colorDefault, colorSelected, false, false));
         recyclerViewPattern.setItemAnimator(new DefaultItemAnimator());
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this.context);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewColor.setLayoutManager(linearLayoutManager1);
-        recyclerViewColor.setAdapter(new ColorPickerAdapter((com.app.camera.collagelib.MyAdapter.CurrentCollageIndexChangedListener) new C09595(), colorDefault, colorSelected));
+        recyclerViewColor.setAdapter(new SquareColorPickerAdapter(new C09595(), colorDefault, colorSelected));
         recyclerViewColor.setItemAnimator(new DefaultItemAnimator());
         HorizontalScrollView horizontalScrollView = (HorizontalScrollView) findViewById(R.id.square_footer);
         horizontalScrollView.bringToFront();
@@ -922,7 +918,7 @@ public class SquareActivity extends FragmentActivity {
         this.slideLeftOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_left);
         this.slideRightIn = AnimationUtils.loadAnimation(this.activity, R.anim.slide_in_right);
         this.slideRightOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_right);
-        addEffectFragment();
+        //addEffectFragment();
 //        if (!CommonLibrary.isAppPro(this.context)) {
 //            this.adWhirlLayout = (AdView) findViewById(R.id.square_edit_ad_id);
 //            this.adWhirlLayout.bringToFront();
@@ -973,14 +969,14 @@ public class SquareActivity extends FragmentActivity {
     private void createAdapterList(int colorDefault, int colorSelected) {
         int size = Utility.patternResIdList2.length;
         this.patternAdapterList.clear();
-//        this.patternAdapterList.add(new ColorPickerAdapter(new C09609(), colorDefault, colorSelected));
-//        for (int i = TAB_INDEX_SQUARE; i < size; i += TAB_INDEX_SQUARE_BACKGROUND) {
-//            this.patternAdapterList.add(new MyAdapter(Utility.patternResIdList2[i], new CurrentSquareIndexChangedListener() {
-//                public void onIndexChanged(int positionOrColor) {
-//                    SquareActivity.this.mSqView.setPatternPaint(positionOrColor);
-//                }
-//            }, colorDefault, colorSelected, true, true));
-//        }
+        this.patternAdapterList.add(new SquareColorPickerAdapter(new C09595(), colorDefault, colorSelected));
+        for (int i = TAB_INDEX_SQUARE; i < size; i += TAB_INDEX_SQUARE_BACKGROUND) {
+            this.patternAdapterList.add(new BackgroundPatternAdapter(Utility.patternResIdList2[i], new CurrentSquareIndexChangedListener() {
+                public void onIndexChanged(int positionOrColor) {
+                    SquareActivity.this.mSqView.setPatternPaint(positionOrColor);
+                }
+            }, colorDefault, colorSelected, true, true));
+        }
     }
 
     void addCanvasTextView() {
@@ -1096,7 +1092,7 @@ public class SquareActivity extends FragmentActivity {
 
     void setSelectedTab(int index) {
         if (this.viewFlipper != null) {
-            setTabBg(TAB_INDEX_SQUARE);
+            setTabBg(0);
             int displayedChild = this.viewFlipper.getDisplayedChild();
             if (displayedChild != TAB_INDEX_SQUARE_BACKGROUND) {
                 hideColorContainer();
@@ -1110,9 +1106,9 @@ public class SquareActivity extends FragmentActivity {
                     return;
                 }
             }
-            if (index == TAB_INDEX_SQUARE_BACKGROUND) {
-                setTabBg(TAB_INDEX_SQUARE_BACKGROUND);
-                if (displayedChild != TAB_INDEX_SQUARE_BACKGROUND) {
+            if (index == 1) {
+                setTabBg(1);
+                if (displayedChild != 1) {
                     if (displayedChild == 0) {
                         this.viewFlipper.setInAnimation(this.slideRightIn);
                         this.viewFlipper.setOutAnimation(this.slideLeftOut);
@@ -1120,17 +1116,17 @@ public class SquareActivity extends FragmentActivity {
                         this.viewFlipper.setInAnimation(this.slideLeftIn);
                         this.viewFlipper.setOutAnimation(this.slideRightOut);
                     }
-                    this.viewFlipper.setDisplayedChild(TAB_INDEX_SQUARE_BACKGROUND);
+                    this.viewFlipper.setDisplayedChild(1);
                 } else {
                     return;
                 }
             }
-            if (index == TAB_INDEX_SQUARE_BLUR) {
-                setTabBg(TAB_INDEX_SQUARE_BLUR);
-                if (displayedChild != TAB_INDEX_SQUARE_BLUR) {
+            if (index == 2) {
+                setTabBg(2);
+                if (displayedChild != 2) {
                     this.viewFlipper.setInAnimation(this.slideRightIn);
                     this.viewFlipper.setOutAnimation(this.slideLeftOut);
-                    this.viewFlipper.setDisplayedChild(TAB_INDEX_SQUARE_BLUR);
+                    this.viewFlipper.setDisplayedChild(2);
                 } else {
                     return;
                 }
@@ -1192,13 +1188,13 @@ public class SquareActivity extends FragmentActivity {
     private void setTabBg(int index) {
         this.currentSelectedTabIndex = index;
         if (this.tabButtonList == null) {
-            this.tabButtonList = new View[TAB_SIZE];
-            this.tabButtonList[TAB_INDEX_SQUARE] = findViewById(R.id.button_square_layout);
-            this.tabButtonList[TAB_INDEX_SQUARE_BACKGROUND] = findViewById(R.id.button_square_background);
-            this.tabButtonList[TAB_INDEX_SQUARE_BLUR] = findViewById(R.id.button_square_blur);
-            this.tabButtonList[TAB_INDEX_SQUARE_FRAME] = findViewById(R.id.button_square_frame);
-            this.tabButtonList[TAB_INDEX_SQUARE_FX] = findViewById(R.id.button_square_fx);
-            this.tabButtonList[TAB_INDEX_SQUARE_ADJ] = findViewById(R.id.button_square_adj);
+            this.tabButtonList = new View[6];
+            this.tabButtonList[0] = findViewById(R.id.button_square_layout);
+            this.tabButtonList[1] = findViewById(R.id.button_square_background);
+            this.tabButtonList[2] = findViewById(R.id.button_square_blur);
+            this.tabButtonList[3] = findViewById(R.id.button_square_frame);
+            this.tabButtonList[4] = findViewById(R.id.button_square_fx);
+            this.tabButtonList[5] = findViewById(R.id.button_square_adj);
         }
         for (int i = TAB_INDEX_SQUARE; i < this.tabButtonList.length; i += TAB_INDEX_SQUARE_BACKGROUND) {
             this.tabButtonList[i].setBackgroundResource(R.drawable.square_footer_button);
@@ -1396,7 +1392,7 @@ public class SquareActivity extends FragmentActivity {
             setSelectedTab(TAB_INDEX_SQUARE_FX);
             addStickerGalleryFragment();
         } else if (id == R.id.button_square_background) {
-            setSelectedTab(TAB_INDEX_SQUARE_BACKGROUND);
+            setSelectedTab(1);
         }
         if (id == R.id.button_square_layout) {
             setSelectedTab(TAB_INDEX_SQUARE);
