@@ -24,6 +24,7 @@ import android.graphics.Shader.TileMode;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Environment;
@@ -69,6 +70,7 @@ import com.app.camera.collagelib.ColorPickerAdapter;
 import com.app.camera.collagelib.Utility;
 import com.app.camera.common_lib.MyAsyncTask2;
 import com.app.camera.common_lib.Parameter;
+import com.app.camera.cropimages.FragmentCrop;
 import com.app.camera.fragments.EffectFragment;
 import com.app.camera.fragments.FontFragment;
 import com.app.camera.imagesavelib.ImageUtility;
@@ -79,6 +81,7 @@ import com.app.camera.sticker.StickerView;
 import com.app.camera.utils.CustomViews.BlurBuilder;
 import com.app.camera.utils.CustomViews.BlurBuilderNormal;
 import com.app.camera.utils.CustomViews.RotationGestureDetector;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -91,6 +94,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SquareActivity extends FragmentActivity {
+    private static final String TAG = SquareActivity.class.getSimpleName();
     public static final int INDEX_SQUARE = 0;
     public static final int INDEX_SQUARE_ADJ = 3;
     public static final int INDEX_SQUARE_BACKGROUND = 1;
@@ -113,52 +117,173 @@ public class SquareActivity extends FragmentActivity {
     public static final int TAB_INDEX_SQUARE_FRAME = 3;
     public static final int TAB_INDEX_SQUARE_FX = 4;
     public static final int TAB_SIZE = 6;
-    private static final String TAG;
-    int SAVE_FINISH;
-    int SAVE_INSTAGRAM;
-    int SAVE_NORMAL;
-    Activity activity;
-    AdView adWhirlLayout;
-    TextView blurText;
-    CustomRelativeLayout canvasText;
-    LinearLayout colorContainer;
-    Context context;
-    //FragmentCrop cropFragment;
-    //CropListener cropListener;
-    int currentSelectedTabIndex;
-    int currentStickerIndex;
-    EffectFragment effectFragment;
-    FontFragment.FontChoosedListener fontChoosedListener;
-    FontFragment fontFragment;
-    StickerGalleryFragment galleryFragment;
-    InterstitialAd interstitial;
+    public int SAVE_FINISH;
+    public int SAVE_INSTAGRAM;
+    public int SAVE_NORMAL;
+    public Activity activity;
+    public AdView adWhirlLayout;
+    public TextView blurText;
+    public CustomRelativeLayout canvasText;
+    public LinearLayout colorContainer;
+    public Context context;
+    public FragmentCrop cropFragment;
+    public FragmentCrop.CropListener cropListener;
+    public int currentSelectedTabIndex;
+    public int currentStickerIndex;
+    public EffectFragment effectFragment;
+    public FontFragment.FontChoosedListener fontChoosedListener;
+    public FontFragment fontFragment;
+    public StickerGalleryFragment galleryFragment;
+    public InterstitialAd interstitial;
     private ScaleGestureDetector mScaleDetector;
-    SquareView mSqView;
-    RelativeLayout mainLayout;
-    ArrayList<MyRecylceAdapterBase> patternAdapterList;
-    Bitmap removeBitmap;
-    AlertDialog saveImageAlert;
-    Bitmap scaleBitmap;
-    SeekBar seekBarBlur;
-    View selectFilterTextView;
+    public SquareView mSqView;
+    public RelativeLayout mainLayout;
+    public ArrayList<MyRecylceAdapterBase> patternAdapterList;
+    public Bitmap removeBitmap;
+    public AlertDialog saveImageAlert;
+    public Bitmap scaleBitmap;
+    public SeekBar seekBarBlur;
+    public View selectFilterTextView;
     boolean selectImageForAdj;
-    View selectSwapTextView;
+    public View selectSwapTextView;
     boolean showText;
     private Animation slideLeftIn;
     private Animation slideLeftOut;
     private Animation slideRightIn;
     private Animation slideRightOut;
-    Bitmap sourceBitmap;
-    StickerGalleryListener stickerGalleryListener;
-    ArrayList<StickerView> stickerList;
-    FrameLayout stickerViewContainer;
-    StickerView.StickerViewSelectedListener stickerViewSelectedListner;
-    View[] tabButtonList;
-    ArrayList<TextData> textDataList;
-    ViewFlipper viewFlipper;
+    public Bitmap sourceBitmap;
+    public StickerGalleryListener stickerGalleryListener;
+    public ArrayList<StickerView> stickerList;
+    public FrameLayout stickerViewContainer;
+    public StickerView.StickerViewSelectedListener stickerViewSelectedListner;
+    public View[] tabButtonList;
+    public ArrayList<TextData> textDataList;
+    public ViewFlipper viewFlipper;
     private RecyclerView recyclerViewColor;
 
-    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.6 */
+    public SquareActivity() {
+        this.activity = this;
+        this.context = this;
+        this.selectImageForAdj = false;
+        this.patternAdapterList = new ArrayList();
+        this.textDataList = new ArrayList();
+        this.showText = false;
+        this.fontChoosedListener = new C09551();
+        this.currentStickerIndex = TAB_INDEX_SQUARE;
+        this.stickerViewSelectedListner = new C09562();
+        this.currentSelectedTabIndex = TAB_INDEX_SQUARE;
+        this.SAVE_NORMAL = TAB_INDEX_SQUARE_FRAME;
+        this.SAVE_FINISH = TAB_INDEX_SQUARE_FX;
+        this.SAVE_INSTAGRAM = TAB_INDEX_SQUARE_ADJ;
+        this.cropListener = new C09573();
+    }
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(TAB_INDEX_SQUARE_BACKGROUND);
+        getWindow().addFlags(AccessibilityNodeInfoCompat.ACTION_NEXT_HTML_ELEMENT);
+        Bundle extras = getIntent().getExtras();
+        String selectedImagePath = extras.getString("selectedImagePath");
+        this.sourceBitmap = ImageUtility.decodeBitmapFromFile(selectedImagePath, extras.getInt("MAX_SIZE"));
+        if (this.sourceBitmap == null) {
+            Toast msg = Toast.makeText(this.context, "Could not load the photo, please use another GALLERY app!", TAB_INDEX_SQUARE_BACKGROUND);
+            msg.setGravity(17, msg.getXOffset() / TAB_INDEX_SQUARE_BLUR, msg.getYOffset() / TAB_INDEX_SQUARE_BLUR);
+            msg.show();
+            finish();
+            return;
+        }
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        setContentView(R.layout.activity_square);
+        this.mainLayout = (RelativeLayout) findViewById(R.id.nocrop_main_layout);
+        this.mSqView = new SquareView(this, width, height);
+        this.mainLayout.addView(this.mSqView);
+        recyclerViewColor = (RecyclerView) findViewById(R.id.recyclerView_color);
+        int colorDefault = getResources().getColor(R.color.view_flipper_bg_color);
+        int colorSelected = getResources().getColor(R.color.footer_button_color_pressed);
+        new LinearLayoutManager(this.context).setOrientation(LinearLayoutManager.HORIZONTAL);
+        this.viewFlipper = (ViewFlipper) findViewById(R.id.square_view_flipper);
+        this.viewFlipper.setDisplayedChild(TAB_INDEX_SQUARE_FX);
+        createAdapterList(colorDefault, colorSelected);
+        RecyclerView recyclerViewPattern = (RecyclerView) findViewById(R.id.recyclerView_pattern);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        this.colorContainer = (LinearLayout) findViewById(R.id.color_container);
+        recyclerViewPattern.setLayoutManager(linearLayoutManager);
+        recyclerViewPattern.setAdapter(new BackgroundPatternAdapter(Utility.patternResIdList3, new BackgroundPatternAdapter.CurrentSquareIndexChangedListener() {
+            @Override
+            public void onIndexChanged(int position) {
+                mSqView.backgroundMode = 0;
+                if (position == 0) {
+                    mSqView.setPatternPaint(-1);
+                    return;
+                }
+                int newPos = position - 1;
+                if (patternAdapterList.get(newPos) != recyclerViewColor.getAdapter()) {
+                    recyclerViewColor.setAdapter(patternAdapterList.get(newPos));
+                    (patternAdapterList.get(newPos)).setSelectedPositinVoid();
+                } else {
+                    (patternAdapterList.get(newPos)).setSelectedPositinVoid();
+                    (patternAdapterList.get(newPos)).notifyDataSetChanged();
+                }
+                colorContainer.setVisibility(View.VISIBLE);
+            }
+        }, colorDefault, colorSelected, false, false));
+        recyclerViewPattern.setItemAnimator(new DefaultItemAnimator());
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this.context);
+        linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewColor.setLayoutManager(linearLayoutManager1);
+        recyclerViewColor.setAdapter(new SquareColorPickerAdapter(new BackgroundPatternAdapter.CurrentSquareIndexChangedListener() {
+            @Override
+            public void onIndexChanged(int color) {
+                mSqView.setPatternPaintColor(color);
+            }
+        }, colorDefault, colorSelected));
+        recyclerViewColor.setItemAnimator(new DefaultItemAnimator());
+        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) findViewById(R.id.square_footer);
+        horizontalScrollView.bringToFront();
+        horizontalScrollView.postDelayed(new C05926(horizontalScrollView), 50);
+        horizontalScrollView.postDelayed(new C05937(horizontalScrollView), 600);
+        this.viewFlipper.bringToFront();
+        this.slideLeftIn = AnimationUtils.loadAnimation(this.activity, R.anim.slide_in_left);
+        this.slideLeftOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_left);
+        this.slideRightIn = AnimationUtils.loadAnimation(this.activity, R.anim.slide_in_right);
+        this.slideRightOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_right);
+        addEffectFragment();
+
+        this.stickerList = new ArrayList();
+        this.stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
+        this.stickerViewContainer.bringToFront();
+        this.viewFlipper = (ViewFlipper) findViewById(R.id.square_view_flipper);
+        this.viewFlipper.bringToFront();
+        horizontalScrollView.bringToFront();
+        findViewById(R.id.square_header).bringToFront();
+        this.blurText = (TextView) findViewById(R.id.square_blur_text_view);
+        findViewById(R.id.sticker_grid_fragment_container).bringToFront();
+        this.seekBarBlur = (SeekBar) findViewById(R.id.nocrop_blur_seek_bar);
+        this.seekBarBlur.setOnSeekBarChangeListener(new C05948());
+        if (savedInstanceState != null) {
+            FragmentManager fm = getSupportFragmentManager();
+            this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
+            if (this.galleryFragment != null) {
+                fm.beginTransaction().hide(this.galleryFragment).commit();
+                this.galleryFragment.setGalleryListener(createGalleryListener());
+            }
+        }
+        if (this.mSqView != null) {
+            this.mSqView.setBlurBitmap(this.mSqView.blurRadius);
+        }
+
+        try {
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     class C05926 implements Runnable {
         private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
 
@@ -171,7 +296,6 @@ public class SquareActivity extends FragmentActivity {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.7 */
     class C05937 implements Runnable {
         private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
 
@@ -197,7 +321,7 @@ public class SquareActivity extends FragmentActivity {
             if (radius < 0.0f) {
                 radius = 0.0f;
             }
-            SquareActivity.this.blurText.setText(((int) radius));
+            SquareActivity.this.blurText.setText("" + ((int) radius));
             Log.e(SquareActivity.TAG, "blur radius " + radius);
             SquareActivity.this.mSqView.setBlurBitmap((int) radius);
         }
@@ -206,7 +330,7 @@ public class SquareActivity extends FragmentActivity {
         }
 
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            SquareActivity.this.blurText.setText(((int) (((float) progress) / 4.0f)));
+            SquareActivity.this.blurText.setText("" + ((int) (((float) progress) / 4.0f)));
         }
     }
 
@@ -555,6 +679,7 @@ public class SquareActivity extends FragmentActivity {
             }
             this.backgroundMode = INVALID_POINTER_ID;
             this.blurBitmap = this.blurBuilderNormal.createBlurBitmapNDK(SquareActivity.this.sourceBitmap, radius);
+
             this.blurRadius = this.blurBuilderNormal.getBlur();
             setMatrixCenter(this.blurBitmapMatrix, (float) this.blurBitmap.getWidth(), (float) this.blurBitmap.getHeight());
             postInvalidate();
@@ -691,7 +816,6 @@ public class SquareActivity extends FragmentActivity {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.1 */
     class C09551 implements FontFragment.FontChoosedListener {
         C09551() {
         }
@@ -703,12 +827,12 @@ public class SquareActivity extends FragmentActivity {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.2 */
     class C09562 implements StickerView.StickerViewSelectedListener {
         C09562() {
         }
 
         public void setSelectedView(StickerView stickerView) {
+            Log.e("Sticker", "Coming here");
             stickerView.bringToFront();
             stickerView.bringToFront();
             if (VERSION.SDK_INT < 19) {
@@ -717,71 +841,27 @@ public class SquareActivity extends FragmentActivity {
         }
 
         public void onTouchUp(StickerData data) {
+            Log.e("Sticker", "onTouchUp");
         }
     }
 
-//    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.3 */
-//    class C09573 implements CropListener {
-//        C09573() {
-//        }
-//
-//        public void cropCancelled() {
-//            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
-//        }
-//
-//        public void cropApply(int leftPos, int topPos, int rightPos, int bottomPos) {
-//            SquareActivity.this.mSqView.setCropBitmap(leftPos, topPos, rightPos, bottomPos);
-//            SquareActivity.this.cropFragment.setBitmap(null);
-//            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
-//        }
-//    }
-
-    public class C09584 implements CurrentSquareIndexChangedListener {
-        private final RecyclerView val$recyclerViewColor;
-
-        C09584(RecyclerView recyclerView) {
-            this.val$recyclerViewColor = recyclerView;
+    class C09573 implements FragmentCrop.CropListener {
+        C09573() {
         }
 
-        public void onIndexChanged(int position) {
-            SquareActivity.this.mSqView.backgroundMode = 0;
-            if (position == 0) {
-                SquareActivity.this.mSqView.setPatternPaint(R.drawable.effect_0_thumb);
-                return;
-            }
-            int newPos = position - 1;
-            if (patternAdapterList.get(newPos) != this.val$recyclerViewColor.getAdapter()) {
-                this.val$recyclerViewColor.setAdapter(patternAdapterList.get(newPos));
-                (patternAdapterList.get(newPos)).setSelectedPositinVoid();
-            } else {
-                (patternAdapterList.get(newPos)).setSelectedPositinVoid();
-                (patternAdapterList.get(newPos)).notifyDataSetChanged();
-            }
-            SquareActivity.this.colorContainer.setVisibility(SquareActivity.TAB_INDEX_SQUARE);
+        public void cropCancelled() {
+            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
+        }
+
+        public void cropApply(int leftPos, int topPos, int rightPos, int bottomPos) {
+            SquareActivity.this.mSqView.setCropBitmap(leftPos, topPos, rightPos, bottomPos);
+            SquareActivity.this.cropFragment.setBitmap(null);
+            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.5 */
-    public class C09595 implements MyAdapter.CurrentSquareIndexChangedListener {
-        C09595() {
-        }
 
-        public void onIndexChanged(int color) {
-            SquareActivity.this.mSqView.setPatternPaintColor(color);
-        }
-    }
-
-    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.9 */
-    class C09609 implements CurrentSquareIndexChangedListener {
-        C09609() {
-        }
-
-        public void onIndexChanged(int color) {
-            SquareActivity.this.mSqView.setPatternPaintColor(color);
-        }
-    }
-
-    private class SaveImageTask extends MyAsyncTask2<Object, Object, Object> {
+    private class SaveImageTask extends AsyncTask<Object, Object, Object> {
         ProgressDialog progressDialog;
         String resultPath;
         int saveMode;
@@ -849,130 +929,6 @@ public class SquareActivity extends FragmentActivity {
         return super.onCreateView(str, context, attributeSet);
     }
 
-    public SquareActivity() {
-        this.activity = this;
-        this.context = this;
-        this.selectImageForAdj = false;
-        this.patternAdapterList = new ArrayList();
-        this.textDataList = new ArrayList();
-        this.showText = false;
-        this.fontChoosedListener = new C09551();
-        this.currentStickerIndex = TAB_INDEX_SQUARE;
-        this.stickerViewSelectedListner = new C09562();
-        this.currentSelectedTabIndex = TAB_INDEX_SQUARE;
-        this.SAVE_NORMAL = TAB_INDEX_SQUARE_FRAME;
-        this.SAVE_FINISH = TAB_INDEX_SQUARE_FX;
-        this.SAVE_INSTAGRAM = TAB_INDEX_SQUARE_ADJ;
-       // this.cropListener = new C09573();
-    }
-
-    static {
-        TAG = SquareActivity.class.getSimpleName();
-    }
-
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(TAB_INDEX_SQUARE_BACKGROUND);
-        getWindow().addFlags(AccessibilityNodeInfoCompat.ACTION_NEXT_HTML_ELEMENT);
-        Bundle extras = getIntent().getExtras();
-        String selectedImagePath = extras.getString("selectedImagePath");
-        this.sourceBitmap = ImageUtility.decodeBitmapFromFile(selectedImagePath, extras.getInt("MAX_SIZE"));
-        if (this.sourceBitmap == null) {
-            Toast msg = Toast.makeText(this.context, "Could not load the photo, please use another GALLERY app!", TAB_INDEX_SQUARE_BACKGROUND);
-            msg.setGravity(17, msg.getXOffset() / TAB_INDEX_SQUARE_BLUR, msg.getYOffset() / TAB_INDEX_SQUARE_BLUR);
-            msg.show();
-            finish();
-            return;
-        }
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        setContentView(R.layout.activity_square);
-        this.mainLayout = (RelativeLayout) findViewById(R.id.nocrop_main_layout);
-        this.mSqView = new SquareView(this, width, height);
-        this.mainLayout.addView(this.mSqView);
-        recyclerViewColor = (RecyclerView) findViewById(R.id.recyclerView_color);
-        int colorDefault = getResources().getColor(R.color.view_flipper_bg_color);
-        int colorSelected = getResources().getColor(R.color.footer_button_color_pressed);
-        new LinearLayoutManager(this.context).setOrientation(TAB_INDEX_SQUARE);
-        this.viewFlipper = (ViewFlipper) findViewById(R.id.square_view_flipper);
-        this.viewFlipper.setDisplayedChild(TAB_INDEX_SQUARE_FX);
-        createAdapterList(colorDefault, colorSelected);
-        RecyclerView recyclerViewPattern = (RecyclerView) findViewById(R.id.recyclerView_pattern);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        this.colorContainer = (LinearLayout) findViewById(R.id.color_container);
-        recyclerViewPattern.setLayoutManager(linearLayoutManager);
-        recyclerViewPattern.setAdapter(new BackgroundPatternAdapter(Utility.patternResIdList3, new CurrentSquareIndexChangedListener() {
-            @Override
-            public void onIndexChanged(int position) {
-                SquareActivity.this.mSqView.backgroundMode = 0;
-                if (position == 0) {
-                    SquareActivity.this.mSqView.setPatternPaint(R.drawable.effect_0_thumb);
-                    return;
-                }
-                int newPos = position - 1;
-                if (patternAdapterList.get(newPos) != recyclerViewColor.getAdapter()) {
-                    recyclerViewColor.setAdapter(patternAdapterList.get(newPos));
-                    (patternAdapterList.get(newPos)).setSelectedPositinVoid();
-                } else {
-                    (patternAdapterList.get(newPos)).setSelectedPositinVoid();
-                    (patternAdapterList.get(newPos)).notifyDataSetChanged();
-                }
-                SquareActivity.this.colorContainer.setVisibility(SquareActivity.TAB_INDEX_SQUARE);
-            }
-        }, colorDefault, colorSelected, false, false));
-        recyclerViewPattern.setItemAnimator(new DefaultItemAnimator());
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this.context);
-        linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewColor.setLayoutManager(linearLayoutManager1);
-        recyclerViewColor.setAdapter(new SquareColorPickerAdapter(new C09595(), colorDefault, colorSelected));
-        recyclerViewColor.setItemAnimator(new DefaultItemAnimator());
-        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) findViewById(R.id.square_footer);
-        horizontalScrollView.bringToFront();
-        horizontalScrollView.postDelayed(new C05926(horizontalScrollView), 50);
-        horizontalScrollView.postDelayed(new C05937(horizontalScrollView), 600);
-        this.viewFlipper.bringToFront();
-        this.slideLeftIn = AnimationUtils.loadAnimation(this.activity, R.anim.slide_in_left);
-        this.slideLeftOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_left);
-        this.slideRightIn = AnimationUtils.loadAnimation(this.activity, R.anim.slide_in_right);
-        this.slideRightOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_right);
-        //addEffectFragment();
-//        if (!CommonLibrary.isAppPro(this.context)) {
-//            this.adWhirlLayout = (AdView) findViewById(R.id.square_edit_ad_id);
-//            this.adWhirlLayout.bringToFront();
-//            Log.e(TAG, "admob id = " + this.adWhirlLayout.getAdUnitId());
-//            this.adWhirlLayout.loadAd(new Builder().build());
-//            if (this.context.getResources().getBoolean(R.bool.showInterstitialAds)) {
-//                this.interstitial = new InterstitialAd(this.context);
-//                this.interstitial.setAdUnitId(getString(R.string.interstital_ad_id));
-//                this.interstitial.loadAd(new Builder().build());
-//            }
-//        }
-        this.stickerList = new ArrayList();
-        this.stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
-        this.stickerViewContainer.bringToFront();
-        this.viewFlipper = (ViewFlipper) findViewById(R.id.square_view_flipper);
-        this.viewFlipper.bringToFront();
-        horizontalScrollView.bringToFront();
-        findViewById(R.id.square_header).bringToFront();
-        this.blurText = (TextView) findViewById(R.id.square_blur_text_view);
-        findViewById(R.id.sticker_grid_fragment_container).bringToFront();
-        this.seekBarBlur = (SeekBar) findViewById(R.id.nocrop_blur_seek_bar);
-        this.seekBarBlur.setOnSeekBarChangeListener(new C05948());
-        if (savedInstanceState != null) {
-            FragmentManager fm = getSupportFragmentManager();
-            this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
-            if (this.galleryFragment != null) {
-                fm.beginTransaction().hide(this.galleryFragment).commit();
-                this.galleryFragment.setGalleryListener(createGalleryListener());
-            }
-        }
-        if (this.mSqView != null) {
-            this.mSqView.setBlurBitmap(this.mSqView.blurRadius);
-        }
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -987,12 +943,17 @@ public class SquareActivity extends FragmentActivity {
 
     private void createAdapterList(int colorDefault, int colorSelected) {
         int size = Utility.patternResIdList2.length;
-        this.patternAdapterList.clear();
-        this.patternAdapterList.add(new SquareColorPickerAdapter(new C09595(), colorDefault, colorSelected));
-        for (int i = TAB_INDEX_SQUARE; i < size; i ++) {
-            this.patternAdapterList.add(new BackgroundPatternAdapter(Utility.patternResIdList2[i], new CurrentSquareIndexChangedListener() {
+        patternAdapterList.clear();
+        patternAdapterList.add(new SquareColorPickerAdapter(new BackgroundPatternAdapter.CurrentSquareIndexChangedListener() {
+            @Override
+            public void onIndexChanged(int color) {
+                mSqView.setPatternPaintColor(color);
+            }
+        }, colorDefault, colorSelected));
+        for (int i = 0; i < size; i++) {
+            this.patternAdapterList.add(new BackgroundPatternAdapter(Utility.patternResIdList2[i], new BackgroundPatternAdapter.CurrentSquareIndexChangedListener() {
                 public void onIndexChanged(int positionOrColor) {
-                    SquareActivity.this.mSqView.setPatternPaint(positionOrColor);
+                    mSqView.setPatternPaint(positionOrColor);
                 }
             }, colorDefault, colorSelected, true, true));
         }
@@ -1059,7 +1020,7 @@ public class SquareActivity extends FragmentActivity {
         this.galleryFragment.setTotalImage(this.stickerViewContainer.getChildCount());
     }
 
-    StickerGalleryListener createGalleryListener() {
+    public StickerGalleryListener createGalleryListener() {
         if (this.stickerGalleryListener == null) {
             this.stickerGalleryListener = new StickerGalleryListener() {
                 public void onGalleryOkSingleImage(int resId) {
@@ -1084,8 +1045,8 @@ public class SquareActivity extends FragmentActivity {
                 }
 
                 public void onGalleryOkImageArray(int[] ImageIdList) {
-                    Bitmap removeBitmap = BitmapFactory.decodeResource(SquareActivity.this.getResources(), R.drawable.remove_text);
-                    Bitmap scaleBitmap = BitmapFactory.decodeResource(SquareActivity.this.getResources(), R.drawable.scale_text);
+                    removeBitmap = BitmapFactory.decodeResource(SquareActivity.this.getResources(), R.drawable.remove_text);
+                    scaleBitmap = BitmapFactory.decodeResource(SquareActivity.this.getResources(), R.drawable.scale_text);
                     for (int i = SquareActivity.TAB_INDEX_SQUARE; i < ImageIdList.length; i += SquareActivity.TAB_INDEX_SQUARE_BACKGROUND) {
                         StickerView stickerView = new StickerView(SquareActivity.this.context, BitmapFactory.decodeResource(SquareActivity.this.getResources(), ImageIdList[i]), null, removeBitmap, scaleBitmap, ImageIdList[i]);
                         stickerView.setStickerViewSelectedListener(SquareActivity.this.stickerViewSelectedListner);
@@ -1168,7 +1129,7 @@ public class SquareActivity extends FragmentActivity {
             }
             if (index == TAB_SIZE) {
                 setTabBg(TAB_INDEX_SQUARE_FRAME);
-                this.effectFragment.setSelectedTabIndex(TAB_INDEX_SQUARE_BACKGROUND);
+                this.effectFragment.setSelectedTabIndex(1);
                 if (displayedChild != TAB_INDEX_SQUARE_FRAME) {
                     if (displayedChild == TAB_INDEX_SQUARE_BLUR) {
                         this.viewFlipper.setInAnimation(this.slideLeftIn);
@@ -1249,8 +1210,8 @@ public class SquareActivity extends FragmentActivity {
         }
         StickerData[] stickerDataArray = StickerData.toStickerData(savedInstanceState.getParcelableArray("sticker_data_array"));
         if (stickerDataArray != null) {
-            Bitmap removeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.remove_text);
-            Bitmap scaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.scale_text);
+            removeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.remove_text);
+            scaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ok_white);
             for (int i = TAB_INDEX_SQUARE; i < stickerDataArray.length; i += TAB_INDEX_SQUARE_BACKGROUND) {
                 StickerView stickerView = new StickerView(this.context, BitmapFactory.decodeResource(getResources(), stickerDataArray[i].getResId()), stickerDataArray[i], removeBitmap, scaleBitmap, stickerDataArray[i].getResId());
                 stickerView.setStickerViewSelectedListener(this.stickerViewSelectedListner);
@@ -1271,7 +1232,7 @@ public class SquareActivity extends FragmentActivity {
         if (this.colorContainer == null) {
             this.colorContainer = (LinearLayout) findViewById(R.id.color_container);
         }
-        this.colorContainer.setVisibility(TAB_INDEX_SQUARE_FX);
+        this.colorContainer.setVisibility(View.INVISIBLE);
     }
 
     void addEffectFragment() {
@@ -1279,13 +1240,11 @@ public class SquareActivity extends FragmentActivity {
             this.effectFragment = (EffectFragment) getSupportFragmentManager().findFragmentByTag("MY_FRAGMENT");
             if (this.effectFragment == null) {
                 this.effectFragment = new EffectFragment();
-                this.effectFragment.isAppPro(false);
                 this.effectFragment.setBitmap(this.sourceBitmap);
                 this.effectFragment.setArguments(getIntent().getExtras());
                 getSupportFragmentManager().beginTransaction().add(R.id.square_effect_fragment_container, this.effectFragment, "MY_FRAGMENT").commit();
             } else {
                 this.effectFragment.setBitmap(this.sourceBitmap);
-                this.effectFragment.isAppPro(false);
                 this.effectFragment.setSelectedTabIndex(TAB_INDEX_SQUARE);
             }
             this.effectFragment.setBitmapReadyListener(new EffectFragment.BitmapReady() {
@@ -1309,11 +1268,9 @@ public class SquareActivity extends FragmentActivity {
     }
 
     public void onBackPressed() {
-//        if (this.cropFragment != null && this.cropFragment.isVisible()) {
-//            this.cropFragment.onBackPressed();
-//        } else
-
-        if (this.fontFragment != null && this.fontFragment.isVisible()) {
+        if (this.cropFragment != null && this.cropFragment.isVisible()) {
+            this.cropFragment.onBackPressed();
+        } else if (this.fontFragment != null && this.fontFragment.isVisible()) {
             getSupportFragmentManager().beginTransaction().remove(this.fontFragment).commit();
         } else if (this.galleryFragment != null && this.galleryFragment.isVisible()) {
             this.galleryFragment.backtrace();
@@ -1449,17 +1406,17 @@ public class SquareActivity extends FragmentActivity {
     }
 
     void addCropFragment() {
-//        ((FrameLayout) findViewById(R.id.crop_fragment_container)).bringToFront();
-//        this.cropFragment = (FragmentCrop) getSupportFragmentManager().findFragmentByTag("crop_fragment");
-//        if (this.cropFragment == null) {
-//            this.cropFragment = new FragmentCrop();
-//            this.cropFragment.setCropListener(this.cropListener);
-//            this.cropFragment.setBitmap(this.sourceBitmap);
-//            this.cropFragment.setArguments(getIntent().getExtras());
-//            getSupportFragmentManager().beginTransaction().add(R.id.crop_fragment_container, this.cropFragment, "crop_fragment").commit();
-//            return;
-//        }
-//        this.cropFragment.setCropListener(this.cropListener);
-//        this.cropFragment.setBitmap(this.sourceBitmap);
+        ((FrameLayout) findViewById(R.id.crop_fragment_container)).bringToFront();
+        this.cropFragment = (FragmentCrop) getSupportFragmentManager().findFragmentByTag("crop_fragment");
+        if (this.cropFragment == null) {
+            this.cropFragment = new FragmentCrop();
+            this.cropFragment.setCropListener(this.cropListener);
+            this.cropFragment.setBitmap(this.sourceBitmap);
+            this.cropFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().add(R.id.crop_fragment_container, this.cropFragment, "crop_fragment").commit();
+            return;
+        }
+        this.cropFragment.setCropListener(this.cropListener);
+        this.cropFragment.setBitmap(this.sourceBitmap);
     }
 }

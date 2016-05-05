@@ -5,9 +5,14 @@
 package com.app.camera.utils.CustomViews;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.os.Build;
+
+import com.app.camera.fragments.EffectFragment;
+import com.commit451.nativestackblur.NativeStackBlur;
 
 // Referenced classes of package com.lyrebirdstudio.lyrebirdlibrary:
 //            EffectFragment
@@ -15,107 +20,94 @@ import android.graphics.Paint;
 public class BlurBuilderNormal
 {
 
-    private static final float BITMAP_SCALE = 0.4F;
+    private static final float BITMAP_SCALE = 0.4f;
     public static final int BLUR_RADIUS_DEFAULT = 14;
     public static final int BLUR_RADIUS_MAX = 25;
     public static final int BLUR_RADIUS_SENTINEL = -1;
-    private static final String TAG = BlurBuilderNormal.class.getName();
+    private static final String TAG;
     Bitmap inputBitmap;
     int lastBlurRadius;
     Matrix matrixBlur;
     Bitmap outputBitmap;
     Paint paintBlur;
 
-    public BlurBuilderNormal()
-    {
-        lastBlurRadius = -1;
-        paintBlur = new Paint(2);
-        matrixBlur = new Matrix();
+    public BlurBuilderNormal() {
+        this.lastBlurRadius = BLUR_RADIUS_SENTINEL;
+        this.paintBlur = new Paint(2);
+        this.matrixBlur = new Matrix();
     }
 
-    public static Bitmap createCroppedBitmap(Bitmap bitmap, int i, int j, int k, int l, boolean flag)
-    {
-        Bitmap bitmap1 = Bitmap.createBitmap(k, l, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap1);
+    static {
+        TAG = BlurBuilderNormal.class.getSimpleName();
+    }
+
+    public Bitmap createBlurBitmapNDK(Bitmap sourceBitmap, int radius) {
+        if (radius <= 2) {
+            radius = 2;
+        }
+        if (this.lastBlurRadius == radius && this.outputBitmap != null) {
+            return this.outputBitmap;
+        }
+        if (this.inputBitmap == null) {
+            int width = Math.round(((float) sourceBitmap.getWidth()) * BITMAP_SCALE);
+            int height = Math.round(((float) sourceBitmap.getHeight()) * BITMAP_SCALE);
+            if (width % 2 == 1) {
+                width++;
+            }
+            if (height % 2 == 1) {
+                height++;
+            }
+            if (Build.VERSION.SDK_INT < 12) {
+                BitmapFactory.Options myOptions = new BitmapFactory.Options();
+                myOptions.inDither = true;
+                myOptions.inScaled = false;
+                myOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                myOptions.inPurgeable = true;
+                this.inputBitmap = createScaledBitmap(sourceBitmap, width, height, false);
+            } else {
+                this.inputBitmap = Bitmap.createScaledBitmap(sourceBitmap, width, height, false);
+            }
+        }
+        if (this.outputBitmap == null) {
+            this.outputBitmap = this.inputBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        } else {
+            new Canvas(this.outputBitmap).drawBitmap(this.inputBitmap, 0.0f, 0.0f, this.paintBlur);
+        }
+        //EffectFragment.functionToBlur(this.outputBitmap, radius);
+        outputBitmap = NativeStackBlur.process(sourceBitmap, radius * 2);
+        this.lastBlurRadius = radius;
+        return this.outputBitmap;
+    }
+
+    public void destroy() {
+        this.outputBitmap.recycle();
+        this.outputBitmap = null;
+        this.inputBitmap.recycle();
+        this.inputBitmap = null;
+    }
+
+    public int getBlur() {
+        return this.lastBlurRadius;
+    }
+
+    public static Bitmap createScaledBitmap(Bitmap src, int dstWidth, int dstHeight, boolean filter) {
+        Matrix m = new Matrix();
+        m.setScale(((float) dstWidth) / ((float) src.getWidth()), ((float) dstHeight) / ((float) src.getHeight()));
+        Bitmap result = Bitmap.createBitmap(dstWidth, dstHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
-        paint.setFilterBitmap(flag);
-        canvas.drawBitmap(bitmap, -i, -j, paint);
-        return bitmap1;
+        paint.setFilterBitmap(filter);
+        canvas.drawBitmap(src, m, paint);
+        return result;
     }
 
-    public static Bitmap createScaledBitmap(Bitmap bitmap, int i, int j, boolean flag)
-    {
-        Matrix matrix = new Matrix();
-        matrix.setScale((float)i / (float)bitmap.getWidth(), (float)j / (float)bitmap.getHeight());
-        Bitmap bitmap1 = Bitmap.createBitmap(i, j, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap1);
+    public static Bitmap createCroppedBitmap(Bitmap src, int left, int top, int width, int height, boolean filter) {
+        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
-        paint.setFilterBitmap(flag);
-        canvas.drawBitmap(bitmap, matrix, paint);
-        return bitmap1;
-    }
-
-    public Bitmap createBlurBitmapNDK(Bitmap bitmap, int i)
-    {
-        int j = i;
-        if (i <= 2)
-        {
-            j = 2;
-        }
-        if (lastBlurRadius == j && outputBitmap != null)
-        {
-            return outputBitmap;
-        }
-        if (inputBitmap == null)
-        {
-            int k = Math.round((float)bitmap.getWidth() * 0.4F);
-            int l = Math.round((float)bitmap.getHeight() * 0.4F);
-            i = k;
-            if (k % 2 == 1)
-            {
-                i = k + 1;
-            }
-            k = l;
-            if (l % 2 == 1)
-            {
-                k = l + 1;
-            }
-            if (android.os.Build.VERSION.SDK_INT < 12)
-            {
-                android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
-                options.inDither = true;
-                options.inScaled = false;
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                options.inPurgeable = true;
-                inputBitmap = createScaledBitmap(bitmap, i, k, false);
-            } else
-            {
-                inputBitmap = Bitmap.createScaledBitmap(bitmap, i, k, false);
-            }
-        }
-        if (outputBitmap == null)
-        {
-            outputBitmap = inputBitmap.copy(Bitmap.Config.ARGB_8888, true);
-        } else
-        {
-            (new Canvas(outputBitmap)).drawBitmap(inputBitmap, 0.0F, 0.0F, paintBlur);
-        }
-       // EffectFragment.functionToBlur(outputBitmap, j);
-        lastBlurRadius = j;
-        return outputBitmap;
-    }
-
-    public void destroy()
-    {
-        outputBitmap.recycle();
-        outputBitmap = null;
-        inputBitmap.recycle();
-        inputBitmap = null;
-    }
-
-    public int getBlur()
-    {
-        return lastBlurRadius;
+        paint.setFilterBitmap(filter);
+        canvas.drawBitmap(src, (float) (-left), (float) (-top), paint);
+        return result;
     }
 
 }

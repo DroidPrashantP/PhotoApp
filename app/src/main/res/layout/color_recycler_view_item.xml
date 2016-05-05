@@ -10,5 +10,6 @@
     <View
         android:id="@+id/color_picker_view"
         android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:layout_height="50dp"
+        android:background="@color/accent"/>
 </LinearLayout>

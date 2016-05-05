@@ -46,6 +46,13 @@ public class ImageLoader {
     String loadImageMessage;
     public String selectedImagePath;
 
+    public ImageLoader(Context context) {
+        this.TAG = "ImageLoader";
+        this.count = 0;
+        this.loadImageMessage = "Loading image!";
+        this.context = context;
+    }
+
     /* renamed from: com.lyrebirdstudio.imagesavelib.ImageLoader.1 */
     class C05851 implements OnClickListener {
         C05851() {
@@ -107,13 +114,6 @@ public class ImageLoader {
 
     public void setListener(ImageLoaded l) {
         this.imageLoadedListener = l;
-    }
-
-    public ImageLoader(Context context) {
-        this.TAG = "ImageLoader";
-        this.count = 0;
-        this.loadImageMessage = "Loading image!";
-        this.context = context;
     }
 
     public void getImageFromIntent(Intent intent) {

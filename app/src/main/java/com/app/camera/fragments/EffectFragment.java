@@ -28,7 +28,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +40,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
 
@@ -58,6 +56,7 @@ import com.app.camera.adapters.MyRecyclerViewAdapter.RecyclerAdapterIndexChanged
 import com.app.camera.adapters.MyRecyclerViewAdapter.SelectedIndexChangedListener;
 import com.app.camera.utils.CustomViews.BlurBuilderNormal;
 import com.app.camera.utils.LibUtility;
+import com.commit451.nativestackblur.NativeStackBlur;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -105,7 +104,7 @@ public class EffectFragment extends Fragment {
     Bitmap filterBitmap;
     HorizontalScrollView filterHS;
     LibUtility.FooterVisibilityListener footerListener;
- //   FilterAndAdjustmentTask ft;
+    FilterAndAdjustmentTask ft;
     FullEffectFragment.HideHeaderListener hideHeaderListener;
     boolean inFilterAndAdjustment;
     OnSeekBarChangeListener mySeekBarListener;
@@ -131,7 +130,6 @@ public class EffectFragment extends Fragment {
     ViewFlipper viewFlipper;
     private ViewSwitcher viewSwitcher;
     private int r0;
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.1 */
     class C05951 implements OnSeekBarChangeListener {
         C05951() {
         }
@@ -189,7 +187,6 @@ public class EffectFragment extends Fragment {
         void onBitmapReady(Bitmap bitmap);
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.10 */
     class AnonymousClass10 implements TiltFragment.TiltListener {
         private final /* synthetic */ FragmentManager val$fm;
 
@@ -217,7 +214,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.2 */
     class C09632 implements RecyclerAdapterIndexChangedListener {
         C09632() {
         }
@@ -231,7 +227,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.3 */
     class C09643 implements SelectedIndexChangedListener {
         C09643() {
         }
@@ -242,7 +237,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.4 */
     class C09654 implements RecyclerAdapterIndexChangedListener {
         C09654() {
         }
@@ -256,7 +250,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.5 */
     class C09665 implements SelectedIndexChangedListener {
         C09665() {
         }
@@ -266,7 +259,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.6 */
     class C09676 implements RecyclerAdapterIndexChangedListener {
         C09676() {
         }
@@ -280,7 +272,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.7 */
     class C09687 implements SelectedIndexChangedListener {
         C09687() {
         }
@@ -290,7 +281,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.8 */
     class C09698 implements RecyclerAdapterIndexChangedListener {
         C09698() {
         }
@@ -304,7 +294,6 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.9 */
     class C09709 implements SelectedIndexChangedListener {
         C09709() {
         }
@@ -314,7 +303,7 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    class FilterAndAdjustmentTask extends MyAsyncTask<Void, Void, Void> {
+    class FilterAndAdjustmentTask extends AsyncTask<Void, Void, Void> {
         Bitmap bitmapBlur;
         int lastBlurRadius;
         Matrix matrixBlur;
@@ -372,7 +361,7 @@ public class EffectFragment extends Fragment {
             if (EffectFragment.this.parameterGlobal.sharpen > 0.0f) {
                 long nanoTime = System.nanoTime();
                 nanoTime = System.nanoTime();
-             //   EffectFragment.sharpen6(btmPipe, 18, EffectFragment.this.parameterGlobal.sharpen);
+//                EffectFragment.sharpen6(btmPipe, 18, EffectFragment.this.parameterGlobal.sharpen);
                 Log.e(EffectFragment.TAG, "sharpen6  " + (((float) (System.nanoTime() - nanoTime)) / 1000000.0f));
             }
             Bitmap overlayBitmap = EffectFragment.this.getOverlayBitmap(EffectFragment.this.parameterGlobal.selectedOverlayIndex);
@@ -443,6 +432,7 @@ public class EffectFragment extends Fragment {
                 canvasSmall.drawBitmap(EffectFragment.this.sourceBitmap, this.matrixBlur, this.paintBlur);
             }
           //  EffectFragment.functionToBlur(this.smallBitmap, radius);
+            smallBitmap = NativeStackBlur.process(sourceBitmap, radius);
             this.lastBlurRadius = radius;
             return this.smallBitmap;
         }
@@ -854,8 +844,8 @@ public class EffectFragment extends Fragment {
         if (this.footerListener != null) {
             this.footerListener.setVisibility();
         }
-//        this.seekBarAdjustment = (SeekBar) getView().findViewById(R.id.seek_bar_adjustment);
-//        this.seekBarAdjustment.setOnSeekBarChangeListener(this.mySeekBarListener);
+        this.seekBarAdjustment = (SeekBar) getView().findViewById(R.id.seek_bar_adjustment);
+        this.seekBarAdjustment.setOnSeekBarChangeListener(this.mySeekBarListener);
     }
 
     public void setBorderIndexChangedListener(RecyclerAdapterIndexChangedListener l) {
@@ -870,35 +860,35 @@ public class EffectFragment extends Fragment {
         } else {
             borderL = c09632;
         }
-        this.borderAdapter = new MyRecyclerViewAdapter(LibUtility.borderResThumb, borderL, R.color.primary_text, R.color.bg, 100, LibUtility.shouldShowAds(this.activity));
+        this.borderAdapter = new MyRecyclerViewAdapter(LibUtility.borderResThumb, borderL, R.color.bg, R.color.primary, 100, LibUtility.shouldShowAds(this.activity));
         this.borderAdapter.setSelectedIndexChangedListener(new C09643());
-        this.textureAdapter = new MyRecyclerViewAdapter(LibUtility.textureResThumb, new C09654(), R.color.primary_text, R.color.bg, 100, LibUtility.shouldShowAds(this.activity));
+        this.textureAdapter = new MyRecyclerViewAdapter(LibUtility.textureResThumb, new C09654(), R.color.bg, R.color.primary, 100, LibUtility.shouldShowAds(this.activity));
         this.textureAdapter.setSelectedIndexChangedListener(new C09665());
-        this.overlayAdapter = new MyRecyclerViewAdapter(LibUtility.overlayResThumb, new C09676(), R.color.primary_text, R.color.bg, 100, LibUtility.shouldShowAds(this.activity));
+        this.overlayAdapter = new MyRecyclerViewAdapter(LibUtility.overlayResThumb, new C09676(), R.color.bg, R.color.primary, 100, LibUtility.shouldShowAds(this.activity));
         this.overlayAdapter.setSelectedIndexChangedListener(new C09687());
-        this.filterAdapter = new MyRecyclerViewAdapter(LibUtility.filterResThumb, new C09698(), R.color.primary_text, R.color.bg, 100, LibUtility.shouldShowAds(this.activity));
+        this.filterAdapter = new MyRecyclerViewAdapter(LibUtility.filterResThumb, new C09698(), R.color.bg, R.color.primary, 100, LibUtility.shouldShowAds(this.activity));
         this.filterAdapter.setSelectedIndexChangedListener(new C09709());
         RecyclerView borderRecyclerView = (RecyclerView) getView().findViewById(R.id.border_RecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         borderRecyclerView.setLayoutManager(linearLayoutManager);
         borderRecyclerView.setAdapter(this.borderAdapter);
         borderRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView textureRecyclerView = (RecyclerView) getView().findViewById(R.id.texture_RecyclerView);
         linearLayoutManager = new LinearLayoutManager(this.context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         textureRecyclerView.setLayoutManager(linearLayoutManager);
         textureRecyclerView.setAdapter(this.textureAdapter);
         textureRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView overlayRecyclerView = (RecyclerView) getView().findViewById(R.id.overlay_RecyclerView);
         linearLayoutManager = new LinearLayoutManager(this.context);
-        linearLayoutManager.setOrientation(INDEX_FX);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         overlayRecyclerView.setLayoutManager(linearLayoutManager);
         overlayRecyclerView.setAdapter(this.overlayAdapter);
         overlayRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView filterRecyclerView = (RecyclerView) getView().findViewById(R.id.filter_RecyclerView);
         linearLayoutManager = new LinearLayoutManager(this.context);
-        linearLayoutManager.setOrientation(INDEX_FX);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         filterRecyclerView.setLayoutManager(linearLayoutManager);
         filterRecyclerView.setAdapter(this.filterAdapter);
         filterRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -1233,7 +1223,7 @@ public class EffectFragment extends Fragment {
                 this.titlFragment.setTiltContext(this.parameterGlobal.tiltContext);
                 this.titlFragment.setTiltListener(new AnonymousClass10(fm));
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.add(R.id.lyrebird_lib_tilt_fragment_container, this.titlFragment, "my_tilt_fragment");
+                ft.add(R.id.lib_tilt_fragment_container, this.titlFragment, "my_tilt_fragment");
                 ft.commit();
                 return;
             }
@@ -1242,7 +1232,7 @@ public class EffectFragment extends Fragment {
             }
             getChildFragmentManager().beginTransaction().show(this.titlFragment).commit();
         } else if (id == R.id.button_auto_set_parameters) {
-            autoSetParameters();
+           // autoSetParameters();
             Log.e(TAG, "autosave");
         } else if (id == R.id.button_lib_cancel) {
             cancelViewSwitcher();
@@ -1434,8 +1424,7 @@ public class EffectFragment extends Fragment {
     }
 
     public void execQueue() {
-        FilterAndAdjustmentTask ft = null;
-        ft = new FilterAndAdjustmentTask();
+        FilterAndAdjustmentTask ft = new FilterAndAdjustmentTask();
         try {
             ft.execute(new Void[INDEX_FX]);
         } catch (Exception e) {
@@ -1871,6 +1860,6 @@ public class EffectFragment extends Fragment {
         android.util.Log.i(r17, r18);
         goto L_0x00dd;
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.lyrebirdstudio.lyrebirdlibrary.EffectFragment.autoSetParameters():void");
+        throw new UnsupportedOperationException("EffectFragment.autoSetParameters():void");
     }
 }

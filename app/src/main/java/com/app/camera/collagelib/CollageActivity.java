@@ -215,7 +215,6 @@ public class CollageActivity extends FragmentActivity {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.7 */
     class C05717 implements Runnable {
         private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
 
@@ -228,7 +227,6 @@ public class CollageActivity extends FragmentActivity {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.8 */
     class C05728 implements Runnable {
         private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
 
@@ -500,7 +498,7 @@ public class CollageActivity extends FragmentActivity {
             this.epsilon = 4.0f;
             this.rotateListener = new C09472();
             this.values = new float[9];
-            this.blurRadius = 14;
+            this.blurRadius = 10;
             this.backgroundMode = 0;
             this.blurRectSrc = new Rect();
             this.maskBitmapArray = new Bitmap[this.maskResIdList.length];
@@ -1428,12 +1426,12 @@ public class CollageActivity extends FragmentActivity {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.2 */
     class C09422 implements StickerView.StickerViewSelectedListener {
         C09422() {
         }
 
         public void setSelectedView(StickerView stickerView) {
+            Log.e("Sticker", "Coming here");
             stickerView.bringToFront();
             stickerView.bringToFront();
             if (VERSION.SDK_INT < 19) {
@@ -1442,6 +1440,7 @@ public class CollageActivity extends FragmentActivity {
         }
 
         public void onTouchUp(StickerData data) {
+            Log.e("Sticker", "onTouchUp");
         }
     }
 
@@ -1606,7 +1605,7 @@ public class CollageActivity extends FragmentActivity {
             slideLeftOut = AnimationUtils.loadAnimation(activity, R.anim.slide_out_left);
             slideRightIn = AnimationUtils.loadAnimation(activity, R.anim.slide_in_right);
             slideRightOut = AnimationUtils.loadAnimation(activity, R.anim.slide_out_right);
-           // addEffectFragment();
+            addEffectFragment();
             if (arraySize == CollageActivity.INDEX_COLLAGE_BACKGROUND) {
                 setVisibilityForSingleImage();
             }
@@ -1891,7 +1890,7 @@ public class CollageActivity extends FragmentActivity {
         }
         this.collageView.setBlurBitmap(this.collageView.blurRadius);
         if (!this.isScrapBook) {
-            setSelectedTab(INDEX_COLLAGE_SPACE);
+            setSelectedTab(INDEX_COLLAGE_BLUR);
         }
     }
 
@@ -2201,14 +2200,14 @@ public class CollageActivity extends FragmentActivity {
         } else if (id == R.id.button_collage_space) {
             setSelectedTab(INDEX_COLLAGE_SPACE);
         } else if (id == R.id.button_collage_adj) {
-            if (((ShapeLayout) this.collageView.shapeLayoutList.get(INDEX_COLLAGE)).shapeArr.length == INDEX_COLLAGE_BACKGROUND) {
-                this.collageView.shapeIndex = INDEX_COLLAGE;
-                this.collageView.openFilterFragment();
-            } else if (this.collageView.shapeIndex >= 0) {
+            if ((collageView.shapeLayoutList.get(0)).shapeArr.length == INDEX_COLLAGE_BACKGROUND) {
+                collageView.shapeIndex = 0;
+                collageView.openFilterFragment();
+            } else if (collageView.shapeIndex >= 0) {
                 this.collageView.openFilterFragment();
                 Log.e(TAG, "collageView.shapeIndex>=0 openFilterFragment");
             } else {
-                setSelectedTab(INDEX_COLLAGE_INVISIBLE_VIEW);
+                setSelectedTab(5);
                 this.selectFilterTextView.setVisibility(View.VISIBLE);
                 this.selectImageForAdj = true;
             }
@@ -2405,9 +2404,11 @@ public class CollageActivity extends FragmentActivity {
             this.ratioButtonArray[10] = (Button) findViewById(R.id.button916);
         }
         for (int i = INDEX_COLLAGE; i < this.RATIO_BUTTON_SIZE; i += INDEX_COLLAGE_BACKGROUND) {
-            this.ratioButtonArray[i].setBackgroundResource(R.drawable.selector_collage_ratio_button);
+            this.ratioButtonArray[i].setBackgroundResource(R.drawable.crop_border);
+            this.ratioButtonArray[i].setTextColor(ViewCompat.MEASURED_STATE_MASK);
         }
-        this.ratioButtonArray[index].setBackgroundResource(R.drawable.selector_collage_ratio_button);
+        this.ratioButtonArray[index].setBackgroundResource(R.drawable.crop_border_selected);
+        this.ratioButtonArray[index].setTextColor(-1);
     }
 
     void addEffectFragment() {

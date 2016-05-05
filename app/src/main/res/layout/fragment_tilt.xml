@@ -29,23 +29,23 @@
 
         <Button
             android:id="@+id/tilt_button_none"
-            style="@style/btn_custom_style"
+            style="@style/effect_footer_imagebutton_style"
             android:background="@drawable/selector_btn_tilt_mode"
-            android:drawableTop="@drawable/tilt_icon_none"
+            android:drawableTop="@drawable/filter_tilt_icon_none"
             android:text="@string/tilt_none" />
 
         <Button
             android:id="@+id/tilt_button_radial"
             style="@style/effect_footer_imagebutton_style"
             android:background="@drawable/selector_btn_tilt_mode"
-            android:drawableTop="@drawable/tilt_icon_radial"
+            android:drawableTop="@drawable/filter_tilt_icon_radial"
             android:text="@string/tilt_radial" />
 
         <Button
             android:id="@+id/tilt_button_linear"
             style="@style/effect_footer_imagebutton_style"
             android:background="@drawable/selector_btn_tilt_mode"
-            android:drawableTop="@drawable/tilt_icon_parallel"
+            android:drawableTop="@drawable/filter_tilt_icon_parallel"
             android:text="@string/tilt_linear" />
     </LinearLayout>
 
@@ -65,9 +65,9 @@
         <Button
             style="@style/effect_footer_imagebutton_style"
             android:layout_height="fill_parent"
-            android:background="@color/category_color_two"
+            android:background="@color/bg"
             android:text="Tilt Shift"
-            android:textSize="@dimen/text_size_medium" />"
+            android:textSize="@dimen/text_size_large" />"
 
         <ImageButton
             android:id="@+id/tilt_ok"

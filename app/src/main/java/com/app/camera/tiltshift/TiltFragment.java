@@ -25,7 +25,6 @@ public class TiltFragment extends Fragment {
     Button[] tiltModeButtonArray;
     TiltView tiltView;
 
-    /* renamed from: com.lyrebirdstudio.tiltshift.TiltFragment.1 */
     class C06231 implements OnClickListener {
         C06231() {
         }

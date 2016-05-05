@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nocrop_main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -14,7 +14,7 @@
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/square_edit_ad_id"
+        android:id="@+id/adView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -22,31 +22,33 @@
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_ad_unit_id_two" />
 
+
     <LinearLayout
         android:id="@+id/square_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/square_edit_ad_id"
+        android:layout_below="@+id/adView"
         android:background="@color/primary"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/button_cancel_square_image"
             style="@style/square_footer_imagebutton_style"
-            android:src="@drawable/square_cancel"
+            android:src="@drawable/close"
             android:text="CANCEL" />
 
         <ImageButton
             android:id="@+id/button_save_square_image"
             style="@style/square_footer_imagebutton_style"
-            android:src="@drawable/square_save"
+            android:src="@drawable/save"
             android:text="SAVE" />
 
         <ImageButton
             android:id="@+id/button_save_square_instagram"
             style="@style/square_footer_imagebutton_style"
             android:src="@drawable/square_save_for_instagram"
-            android:text="SAVE" />
+            android:text="SAVE"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <com.app.camera.utils.CustomViews.MyViewFlipper
@@ -163,15 +165,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="8.0"
                 android:max="100"
-                android:progress="56" />
+                android:progress="56"
+                android:layout_marginBottom="@dimen/margin_small"/>
 
             <TextView
                 android:id="@+id/square_blur_text_view"
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:textColor="@color/text_white"
                 android:gravity="center_vertical"
-                android:text="14" />"
+                android:text="14" />
         </LinearLayout>
 
         <FrameLayout

@@ -74,7 +74,6 @@
             android:layout_height="64dp"
             android:orientation="horizontal">
 
-
             <Button
                 android:id="@+id/button1_1"
                 android:layout_gravity="center_vertical"

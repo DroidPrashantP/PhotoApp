@@ -6,6 +6,12 @@
     android:layout_height="fill_parent"
     android:background="#ff777777">
 
+    <RelativeLayout
+        android:id="@+id/collage_text_view_fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"/>
+
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/collage_edit_ad_id"
@@ -14,12 +20,6 @@
         android:layout_alignParentTop="true"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/admob_id" />
-
-    <RelativeLayout
-        android:id="@+id/collage_text_view_fragment_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal"/>
 
     <LinearLayout
         android:id="@+id/collage_header"
@@ -200,58 +200,57 @@
 
                 <Button
                     android:id="@+id/button11"
-                    style="@style/collage_ratio_button_style"
-                    android:background="@drawable/selector_square_ratio_button"
+                    style="@style/custom_ratio_button_style"
                     android:text="1:1" />
 
                 <Button
                     android:id="@+id/button21"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="2:1" />
 
                 <Button
                     android:id="@+id/button12"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="1:2" />
 
                 <Button
                     android:id="@+id/button32"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="3:2" />
 
                 <Button
                     android:id="@+id/button23"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="2:3" />
 
                 <Button
                     android:id="@+id/button43"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="4:3" />
 
                 <Button
                     android:id="@+id/button34"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="3:4" />
 
                 <Button
                     android:id="@+id/button45"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="4:5" />
 
                 <Button
                     android:id="@+id/button57"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="5:7" />
 
                 <Button
                     android:id="@+id/button169"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="16:9" />
 
                 <Button
                     android:id="@+id/button916"
-                    style="@style/collage_ratio_button_style"
+                    style="@style/custom_ratio_button_style"
                     android:text="9:16" />
             </LinearLayout>
         </HorizontalScrollView>
@@ -308,7 +307,7 @@
             <Button
                 android:id="@+id/button_collage_blur"
                 style="@style/collage_footer_imagebutton_style"
-                android:drawableTop="@drawable/collage_icon_48x48"
+                android:drawableTop="@drawable/blur_48x48"
                 android:text="Blur"
                 android:visibility="gone" />
 
@@ -321,6 +320,8 @@
 
             <Button
                 android:id="@+id/button_collage_space"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
                 style="@style/collage_footer_imagebutton_style"
                 android:drawableTop="@drawable/space"
                 android:text="Space" />
@@ -349,7 +350,7 @@
                 style="@style/collage_footer_imagebutton_style"
                 android:drawableTop="@drawable/square_adjustment"
                 android:text="Filter"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
         </LinearLayout>
     </HorizontalScrollView>
@@ -604,6 +605,5 @@
     <FrameLayout
         android:id="@+id/sticker_view_container"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/collage_header"/>
+        android:layout_height="fill_parent"/>
 </RelativeLayout>

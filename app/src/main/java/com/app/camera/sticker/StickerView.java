@@ -365,9 +365,10 @@ public class StickerView extends View {
                         this.viewSelectedListener.setSelectedView(this);
                         break;
                     }
-                }
+                }else {
                 ((ViewGroup) getParent()).removeView(this);
                 onDestroy();
+                }
                 break;
             case MirrorActivity.INDEX_MIRROR_3D /*1*/:
                 this.orthogonal = false;

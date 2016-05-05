@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_GET_CAMERA = 0;
     private static final int REQUEST_GET_GALALRY = 1;
     private static final int REQUEST_GET_MIRROR = 2;
+    private static final int SELECT_IMAGE_SQUARE = 5;
     private static final String TAG = MainActivity.class.getName();
     private static final String FILES_AUTHORITY = "file";
     private static final int TAKE_PICTURE_COLLAGE = 42;
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GalleryFragment galleryFragment;
     private InterstitialAd interstitial;
     private ImageLoader imageLoader;
-    private int SELECT_IMAGE_SQUARE = 5;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +123,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+        if (mGalleryLayout == v) {
+            CurrentSelectionTab = Constants.CurrentFunction.GALLERY;
+            displayGallery();
+        }
+        if (mCameraLayout == v) {
+            CurrentSelectionTab = Constants.CurrentFunction.CAMERA;
+            displayCamera();
+        }
+        if (mCollegeLayout == v) {
+            CurrentSelectionTab = Constants.CurrentFunction.COLLAGE;
+            this.galleryFragment = CollageHelper.addGalleryFragment(this, R.id.colmir_gallery_fragment_container, null, false);
+        }
+        if (mMirrorLayout == v) {
+            CurrentSelectionTab = Constants.CurrentFunction.MIRROR;
+            displayMirror();
+        }
+        if (mBlurLayout == v) {
+            CurrentSelectionTab = Constants.CurrentFunction.BLUR;
+            this.galleryFragment = CollageHelper.addGalleryFragment(this, R.id.colmir_gallery_fragment_container, null, false);
+            this.galleryFragment.setCollageSingleMode(true);
+        }
+        if (mRateLayout == v) {
+            CurrentSelectionTab = Constants.CurrentFunction.RATE;
+            Toast.makeText(this, "Comming soon", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void fileSizeAlertDialogBuilder() {
         Point p = BitmapResizer.decodeFileSize(new File(imageLoader.selectedImagePath), Utility.maxSizeForDimension(this, 1, 1500.0f));
         if (p == null || p.x != -1) {
@@ -135,10 +167,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int maxSize = Utility.maxSizeForDimension(this, 1, 1500.0f);
         if (CurrentSelectionTab == Constants.CurrentFunction.MIRROR) {
             shaderIntent = new Intent(getApplicationContext(), MirrorNewActivity.class);
-        } else if (CurrentSelectionTab == Constants.CurrentFunction.RATE) {
+        } else if (CurrentSelectionTab == Constants.CurrentFunction.GALLERY || CurrentSelectionTab == Constants.CurrentFunction.CAMERA) {
             shaderIntent = new Intent(getApplicationContext(), SquareActivity.class);
         }
-
 
         shaderIntent.putExtra("selectedImagePath", this.imageLoader.selectedImagePath);
         shaderIntent.putExtra("isSession", false);
@@ -175,10 +206,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 != PackageManager.PERMISSION_GRANTED) {
             requestGallaryPermission();
         } else {
-            Intent galleryIntent = new Intent();
-            galleryIntent.setType("image/*");
-            galleryIntent.setAction("android.intent.action.GET_CONTENT");
-            startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), Constants.REQUEST_GALLERY);
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction("android.intent.action.GET_CONTENT");
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_GET_GALALRY);
+
+            if (Build.VERSION.SDK_INT <19){
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_GET_GALALRY);
+            } else {
+                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent1.addCategory(Intent.CATEGORY_OPENABLE);
+                intent1.setType("image/*");
+                startActivityForResult(intent1, REQUEST_GET_GALALRY);
+            }
         }
     }
 
@@ -226,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void requestGallaryPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Snackbar.make(mMainLayout, R.string.camera_permission_required_msg,
+            Snackbar.make(mMainLayout, R.string.galary_permission_required_msg,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.okay_text), new View.OnClickListener() {
                         @Override
@@ -296,10 +339,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     != PackageManager.PERMISSION_GRANTED) {
                 requestGallaryPermission();
             } else {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+                try {
+                    Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                    Uri imageUri = getImageUri();
+                    intent.putExtra("output", imageUri);
+                    Log.e("is imageUri null xx", String.valueOf(imageUri == null));
+                    startActivityForResult(intent, REQUEST_GET_CAMERA);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "There is no Camera app to handle this request!", 1).show();
+                }
             }
         }
     }
@@ -311,7 +359,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         // save file url in bundle as it will be null on scren orientation
         // changes
         outState.putParcelable("file_uri", fileUri);
@@ -320,7 +367,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
         // get the file url
         fileUri = savedInstanceState.getParcelable("file_uri");
     }
@@ -334,17 +380,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void displayPhotoActivity(int source_id) {
         if (CurrentSelectionTab.equalsIgnoreCase(Constants.CurrentFunction.CAMERA) || CurrentSelectionTab.equalsIgnoreCase(Constants.CurrentFunction.GALLERY)) {
-            Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-            intent.putExtra(Constants.EXTRA_KEY_IMAGE_SOURCE, source_id);
-            intent.setData(fileUri);
-            startActivity(intent);
-//            int maxSize = Utility.maxSizeForDimension(this, 1, 1500.0f);
-//            Intent  shaderIntent = new Intent(getApplicationContext(), SquareActivity.class);
-//            shaderIntent.putExtra("selectedImagePath", fileUri.getPath());
-//            shaderIntent.putExtra("isSession", false);
-//            shaderIntent.putExtra("MAX_SIZE", maxSize);
-//            Utility.logFreeMemory(this);
-//            startActivity(shaderIntent);
+//            Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+//            intent.putExtra(Constants.EXTRA_KEY_IMAGE_SOURCE, source_id);
+//            intent.setData(fileUri);
+//            startActivity(intent);
+
+            int maxSize = Utility.maxSizeForDimension(this, 1, 1500.0f);
+            Intent shaderIntent = new Intent(getApplicationContext(), SquareActivity.class);
+            shaderIntent.putExtra("selectedImagePath", this.imageLoader.selectedImagePath);
+            shaderIntent.putExtra("isSession", false);
+            shaderIntent.putExtra("MAX_SIZE", maxSize);
+            Utility.logFreeMemory(this);
+            startActivityForResult(shaderIntent, 422);
+
             overridePendingTransition(0, 0);
         } else if (CurrentSelectionTab.equalsIgnoreCase(Constants.CurrentFunction.BLUR)) {
             Intent intent = new Intent(getApplicationContext(), BlurActivity.class);
@@ -377,41 +425,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-            if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-                if (resultCode == RESULT_OK) {
-                    // successfully captured the image
-                    // display it in image view
-                    previewCapturedImage();
-                    displayPhotoActivity(1);
-                } else if (resultCode == RESULT_CANCELED) {
-                    // user cancelled Image capture
-                    Toast.makeText(getApplicationContext(),
-                            "User cancelled image capture", Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    // failed to capture image
-                    Toast.makeText(getApplicationContext(),
-                            "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
-                            .show();
+            if (requestCode == REQUEST_GET_CAMERA && resultCode == RESULT_OK) {
+                Uri selectedImage = getImageUri();
+                imageLoader.selectedImagePath = selectedImage.getPath();
+                if (this.imageLoader.selectedImagePath != null) {
+                    Utility.decodeImageFileSize(imageLoader.selectedImagePath);
+                    startShaderActivity();
                 }
-            } else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_GALLERY) {
+            } else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_GALALRY) {
                 try {
-                    fileUri = data.getData();
-                    if (fileUri != null) {
-                        previewCapturedImage();
-                        displayPhotoActivity(2);
-                    }
+                    this.imageLoader.getImageFromIntent(data);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toaster.make(getApplicationContext(), R.string.error_img_not_found);
                 }
             } else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_MIRROR) {
                 try {
-//                    fileUri = data.getData();
-//                    if (fileUri!= null) {
-//                        previewCapturedImage();
-//                        displayPhotoActivity(3);
-//                    }
                     imageLoader.getImageFromIntent(data);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -440,7 +469,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private Uri getImageUri() {
-        return Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "pic.jpg"));
+        return Uri.fromFile(new File( Environment
+                .getExternalStorageDirectory(), "pic.jpg"));
     }
 
     /**
@@ -463,39 +493,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } catch (NullPointerException e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        if (mGalleryLayout == v) {
-            CurrentSelectionTab = Constants.CurrentFunction.GALLERY;
-            displayGallery();
-        }
-        if (mCameraLayout == v) {
-            CurrentSelectionTab = Constants.CurrentFunction.CAMERA;
-            displayCamera();
-        }
-        if (mCollegeLayout == v) {
-            CurrentSelectionTab = Constants.CurrentFunction.COLLAGE;
-            this.galleryFragment = CollageHelper.addGalleryFragment(this, R.id.colmir_gallery_fragment_container, null, false);
-        }
-        if (mMirrorLayout == v) {
-            CurrentSelectionTab = Constants.CurrentFunction.MIRROR;
-            displayMirror();
-        }
-        if (mBlurLayout == v) {
-            CurrentSelectionTab = Constants.CurrentFunction.BLUR;
-            displayGallery();
-        }
-        if (mRateLayout == v) {
-            CurrentSelectionTab = Constants.CurrentFunction.RATE;
-            Toast.makeText(this, "Comming soon", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction("android.intent.action.GET_CONTENT");
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE_SQUARE);
         }
     }
 

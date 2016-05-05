@@ -137,7 +137,6 @@ public class BitmapResizer {
             return null;
         }
     }
-
     public static Point getFileSize(File f, int requiredSize) {
         try {
             Options o = new Options();

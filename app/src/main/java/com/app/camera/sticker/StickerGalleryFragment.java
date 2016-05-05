@@ -58,12 +58,9 @@ public class StickerGalleryFragment extends Fragment implements OnItemClickListe
     ImageView toggleButton;
     int totalImage;
 
-
-
     class C06141 implements OnClickListener {
         C06141() {
         }
-
         public void onClick(View view) {
             int id = view.getId();
             if (id == R.id.textView_header) {

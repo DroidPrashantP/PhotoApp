@@ -77,7 +77,6 @@ public class CustomRelativeLayout extends RelativeLayout implements OnItemSelect
         void onRemove();
     }
 
-    /* renamed from: com.lyrebirdstudio.canvastext.CustomRelativeLayout.1 */
     class RemoveText implements RemoveTextListener {
         RemoveText() {
         }
@@ -96,7 +95,6 @@ public class CustomRelativeLayout extends RelativeLayout implements OnItemSelect
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.canvastext.CustomRelativeLayout.2 */
     class ViewSelector implements ViewSelectedListener {
         ViewSelector() {
         }

@@ -313,8 +313,9 @@ public class CanvasTextView extends View {
                         this.viewSelectedListener.setSelectedView(this);
                         break;
                     }
+                }else {
+                    this.removeTextListener.onRemove();
                 }
-                //  this.removeTextListener.onRemove();
                 return false;
             case MirrorActivity.INDEX_MIRROR_3D:
                 this.isOnTouch = false;

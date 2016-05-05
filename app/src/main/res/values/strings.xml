@@ -157,6 +157,8 @@
     <string name="title_activity_mirror_new">MirrorNewActivity</string>
     <string name="crop_getting_image">Getting the cropped image!</string>
     <string name="hashtag_twitter">#tag</string>
+    <string name="title_activity_new_crop">newCropActivity</string>
+    <string name="galary_permission_required_msg">Gallery  permission required</string>
 
 
 </resources>

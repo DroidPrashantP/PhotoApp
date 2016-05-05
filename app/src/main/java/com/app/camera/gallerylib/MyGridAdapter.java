@@ -125,7 +125,7 @@ public class MyGridAdapter extends BaseAdapter {
                 viewHolder.textContainer.setVisibility(View.INVISIBLE);
             }
             if (((GridViewItem) this.items.get(position)).selectedItemCount > 0) {
-                viewHolder.selectedCount.setText(((GridViewItem) this.items.get(position)).selectedItemCount);
+                viewHolder.selectedCount.setText(""+((GridViewItem) this.items.get(position)).selectedItemCount);
                 if (viewHolder.selectedCount.getVisibility() == View.INVISIBLE) {
                     viewHolder.selectedCount.setVisibility(View.VISIBLE);
                 }
@@ -136,8 +136,8 @@ public class MyGridAdapter extends BaseAdapter {
             if (viewHolder.textContainer.getVisibility() == View.INVISIBLE) {
                 viewHolder.textContainer.setVisibility(View.VISIBLE);
             }
-            viewHolder.textPath.setText(((GridViewItem) this.items.get(position)).getFolderName());
-            viewHolder.textCount.setText(((GridViewItem) this.items.get(position)).count);
+            viewHolder.textPath.setText(""+((GridViewItem) this.items.get(position)).getFolderName());
+            viewHolder.textCount.setText(""+((GridViewItem) this.items.get(position)).count);
             if (viewHolder.selectedCount.getVisibility() == View.VISIBLE) {
                 viewHolder.selectedCount.setVisibility(View.INVISIBLE);
             }

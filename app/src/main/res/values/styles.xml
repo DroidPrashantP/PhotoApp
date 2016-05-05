@@ -72,6 +72,9 @@
     <dimen name="lib_button_style_min_width">80dp</dimen>
     <dimen name="lib_button_style_min_height">47dp</dimen>
     <dimen name="collage_context_button_style_min_width">60dp</dimen>
+    <dimen name="ratio_text_size">14sp</dimen>
+    <dimen name="ratio_button_width">60dp</dimen>
+    <dimen name="ratio_button_height">60dp</dimen>
 
     <style name="mirror_ratio_button_style">
         <item name="android:textSize">@dimen/text_size_very_small</item>
@@ -126,7 +129,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#ffffffff</item>
-        <item name="android:background">@drawable/selector_btn_footer</item>
+        <item name="android:background">@color/bg</item>
         <item name="android:paddingTop">@dimen/lib_footer_button_padding</item>
         <item name="android:paddingBottom">@dimen/lib_footer_button_padding</item>
         <item name="android:layout_width">0.0dip</item>
@@ -172,5 +175,45 @@
         <item name="android:layout_height">70dp</item>
         <item name="android:layout_weight">1.0</item>
         <item name="android:onClick">myClickHandler</item>
+    </style>
+
+    <style name="custom_ratio_button_style">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8.0dip</item>
+        <item name="android:layout_margin">4.0dip</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:onClick">myClickHandler</item>
+    </style>
+
+    <style name="header_button_style">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff919191</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1.0</item>
+    </style>
+
+    <style name="ratio_button_style">
+        <item name="android:textSize">@dimen/ratio_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">@dimen/ratio_button_width</item>
+        <item name="android:layout_height">@dimen/ratio_button_height</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_weight">1.0</item>
+    </style>
+
+    <style name="effect_seek_bar_style">
+        <item name="android:paddingLeft">18.0dip</item>
+        <item name="android:paddingRight">18.0dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxHeight">12.0dip</item>
+        <item name="android:progress">50</item>
+        <item name="android:minHeight">12.0dip</item>
     </style>
 </resources>

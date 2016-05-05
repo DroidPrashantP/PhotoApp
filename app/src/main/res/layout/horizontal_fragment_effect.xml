@@ -22,18 +22,18 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <com.lyrebirdstudio.lyrebirdlibrary.MyViewFlipper
+                <com.app.camera.utils.CustomViews.MyViewFlipper
                     android:id="@+id/control_container"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/category_color_two"
+                    android:background="@color/bg"
                     android:gravity="bottom">
 
                     <android.support.v7.widget.RecyclerView
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/filter_RecyclerView"
                         android:layout_width="fill_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="@dimen/lib_view_item_image_size"
                         android:layout_gravity="bottom"
                         android:scrollbars="horizontal" />
 
@@ -41,7 +41,7 @@
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/border_RecyclerView"
                         android:layout_width="fill_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="@dimen/lib_view_item_image_size"
                         android:layout_gravity="bottom"
                         android:scrollbars="horizontal" />
 
@@ -49,7 +49,7 @@
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/overlay_RecyclerView"
                         android:layout_width="fill_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="@dimen/lib_view_item_image_size"
                         android:layout_gravity="bottom"
                         android:scrollbars="horizontal" />
 
@@ -57,7 +57,7 @@
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/texture_RecyclerView"
                         android:layout_width="fill_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="@dimen/lib_view_item_image_size"
                         android:layout_gravity="bottom"
                         android:scrollbars="horizontal" />
 
@@ -76,18 +76,18 @@
                             android:singleLine="true"
                             android:textColor="#ffffffff" />
 
-                        <!--<com.lyrebirdstudio.lyrebirdlibrary.SeekBarHint-->
-                            <!--android:id="@+id/seek_bar_adjustment"-->
-                            <!--style="@style/effect_seek_bar_style"-->
-                            <!--android:padding="@dimen/lib_seek_bar_padding"-->
-                            <!--android:progress="50" />-->
+                        <com.app.camera.common_lib.SeekBarHint
+                            android:id="@+id/seek_bar_adjustment"
+                            style="@style/effect_seek_bar_style"
+                            android:padding="@dimen/padding_normal"
+                            android:progress="50" />
                     </LinearLayout>
 
                     <View
                         android:id="@+id/lyrebird_lib_flipper_void"
                         android:layout_width="0.0dip"
                         android:layout_height="0.0dip" />
-                </com.lyrebirdstudio.lyrebirdlibrary.MyViewFlipper>
+                </com.app.camera.utils.CustomViews.MyViewFlipper>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -104,9 +104,9 @@
                         android:id="@+id/lib_current_adjustmen_label"
                         style="@style/effect_footer_imagebutton_style"
                         android:layout_height="fill_parent"
-                        android:background="@color/category_color_two"
+                        android:background="@color/bg"
                         android:text="FX"
-                        android:textSize="@dimen/text_size_medium" />"
+                        android:textSize="@dimen/text_size_large" />"
 
                     <ImageButton
                         android:id="@+id/button_lib_ok"
@@ -131,15 +131,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:background="@drawable/selector_btn_reset_lib"
                         android:gravity="bottom|center"
-                        android:minHeight="@dimen/lib_button_style_min_height"
-                        android:minWidth="@dimen/lib_button_style_min_width"
+                        android:minHeight="@dimen/lib_reset_button_min_height"
+                        android:minWidth="@dimen/lib_reset_button_min_width"
                         android:onClick="myClickHandler"
                         android:paddingLeft="2.0dip"
                         android:paddingRight="2.0dip"
                         android:text="Reset"
-                        android:textColor="@color/primary_text"
+                        android:textColor="@color/text_white"
                         android:textSize="@dimen/text_size_medium" />
 
                     <Button
@@ -147,16 +146,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:background="@drawable/selector_btn_reset_lib"
                         android:gravity="bottom|center"
-                        android:minHeight="@dimen/lib_button_style_min_height"
-                        android:minWidth="@dimen/lib_button_style_min_width"
+                        android:minHeight="@dimen/lib_reset_button_min_height"
+                        android:minWidth="@dimen/lib_reset_button_min_width"
                         android:onClick="myClickHandler"
                         android:paddingLeft="2.0dip"
                         android:paddingRight="2.0dip"
                         android:text="Auto"
-                        android:textColor="@color/primary_text"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textColor="@color/text_white"
+                        android:textSize="@dimen/text_size_medium"
+                        android:visibility="gone"/>
                 </RelativeLayout>
 
                 <HorizontalScrollView
@@ -174,87 +173,95 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:id="@+id/button_fx"
-                            style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_effect"
-                            android:text="Fx" />
-
-                        <Button
                             android:id="@+id/button_frame"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_frame"
+                            android:drawableTop="@drawable/filter_frame"
                             android:text="Frame" />
 
                         <Button
                             android:id="@+id/button_light"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_light"
+                            android:drawableTop="@drawable/filter_light"
                             android:text="Light" />
 
                         <Button
                             android:id="@+id/button_texture"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_texture"
+                            android:drawableTop="@drawable/filter_texture"
                             android:text="Texture" />
+                        <Button
+                            android:id="@+id/button_fx"
+                            style="@style/effect_footer_imagebutton_style"
+                            android:drawableTop="@drawable/filter_effect"
+                            android:text="Fx" />
 
                         <Button
                             android:id="@+id/button_brightness"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_brightness"
-                            android:text="Brightness" />
+                            android:drawableTop="@drawable/fliter_brightness"
+                            android:text="Brightness"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_temperature"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_warmth"
-                            android:text="Warmth" />
+                            android:drawableTop="@drawable/filter_warmth"
+                            android:text="Warmth"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_contrast"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_contrast"
-                            android:text="Contrast" />
+                            android:drawableTop="@drawable/filter_contrast"
+                            android:text="Contrast"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_saturation"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_saturation"
-                            android:text="Saturation" />
+                            android:drawableTop="@drawable/filter_saturation"
+                            android:text="Saturation"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_tint"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_tint"
-                            android:text="Tint" />
+                            android:drawableTop="@drawable/filter_tint"
+                            android:text="Tint"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_sharpen"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_sharpness"
-                            android:text="Sharpen" />
+                            android:drawableTop="@drawable/filter_sharpness"
+                            android:text="Sharpen"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_blur"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_blur"
-                            android:text="Blur" />
+                            android:drawableTop="@drawable/filter_blur"
+                            android:text="Blur"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_highlights"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_highlight"
-                            android:text="Highlight" />
+                            android:drawableTop="@drawable/filter_highlight"
+                            android:text="Highlight"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_shadows"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_shadows"
-                            android:text="Shadows" />
+                            android:drawableTop="@drawable/filter_shadows"
+                            android:text="Shadows"
+                            android:visibility="gone"/>
 
                         <Button
                             android:id="@+id/button_tilt_shift"
                             style="@style/effect_footer_imagebutton_style"
-                            android:drawableTop="@drawable/lib_tilt_shift"
+                            android:drawableTop="@drawable/filter_tilt_shift"
                             android:text="Tilt Shift" />
                     </LinearLayout>
                 </HorizontalScrollView>
@@ -263,7 +270,7 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/lyrebird_lib_tilt_fragment_container"
+        android:id="@+id/lib_tilt_fragment_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 </RelativeLayout>

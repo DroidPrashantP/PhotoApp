@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -134,7 +135,6 @@ public class MirrorNewActivity extends AppCompatActivity {
     ViewFlipper viewFlipper;
 
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.9 */
     class C06009 implements DialogInterface.OnClickListener {
         C06009() {
         }
@@ -719,7 +719,6 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
     }
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.1 */
     class C09731 implements FontFragment.FontChoosedListener {
         C09731() {
         }
@@ -731,7 +730,6 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
     }
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.2 */
     class C09742 implements StickerView.StickerViewSelectedListener {
         C09742() {
         }
@@ -748,7 +746,6 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
     }
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.3 */
     class C09753 implements SingleTap {
         C09753() {
         }
@@ -764,7 +761,6 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
     }
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.4 */
     class C09764 implements ApplyTextInterface {
         C09764() {
         }
@@ -790,57 +786,6 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
     }
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.5 */
-    class C09775 implements StickerGalleryListener {
-        C09775() {
-        }
-
-        public void onGalleryOkSingleImage(int resId) {
-            Bitmap bitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), resId);
-            if (MirrorNewActivity.this.removeBitmap == null) {
-                MirrorNewActivity.this.removeBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.remove_text);
-            }
-            if (MirrorNewActivity.this.scaleBitmap == null) {
-                MirrorNewActivity.this.scaleBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.scale_text);
-            }
-            StickerView stickerView = new StickerView(MirrorNewActivity.this.context, bitmap, null, MirrorNewActivity.this.removeBitmap, MirrorNewActivity.this.scaleBitmap, resId);
-            stickerView.setStickerViewSelectedListener(MirrorNewActivity.this.stickerViewSelectedListner);
-            if (MirrorNewActivity.this.stickerViewContainer == null) {
-                MirrorNewActivity.this.stickerViewContainer = (FrameLayout) MirrorNewActivity.this.findViewById(R.id.sticker_view_container);
-            }
-            MirrorNewActivity.this.stickerViewContainer.addView(stickerView);
-            Utility.logFreeMemory(MirrorNewActivity.this);
-            FragmentManager fm = MirrorNewActivity.this.getSupportFragmentManager();
-            if (MirrorNewActivity.this.galleryFragment == null) {
-                MirrorNewActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
-            }
-            fm.beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
-        }
-
-        public void onGalleryOkImageArray(int[] ImageIdList) {
-            Bitmap removeBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.remove_text);
-            Bitmap scaleBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.scale_text);
-            for (int i = MirrorNewActivity.INDEX_MIRROR; i < ImageIdList.length; i += MirrorNewActivity.INDEX_MIRROR_3D) {
-                StickerView stickerView = new StickerView(MirrorNewActivity.this.context, BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), ImageIdList[i]), null, removeBitmap, scaleBitmap, ImageIdList[i]);
-                stickerView.setStickerViewSelectedListener(MirrorNewActivity.this.stickerViewSelectedListner);
-                if (MirrorNewActivity.this.stickerViewContainer == null) {
-                    MirrorNewActivity.this.stickerViewContainer = (FrameLayout) MirrorNewActivity.this.findViewById(R.id.sticker_view_container);
-                }
-                MirrorNewActivity.this.stickerViewContainer.addView(stickerView);
-            }
-            FragmentManager fm = MirrorNewActivity.this.getSupportFragmentManager();
-            if (MirrorNewActivity.this.galleryFragment == null) {
-                MirrorNewActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myFragmentTag");
-            }
-            fm.beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
-        }
-
-        public void onGalleryCancel() {
-            MirrorNewActivity.this.getSupportFragmentManager().beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
-        }
-    }
-
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.6 */
     class C09786 implements EffectFragment.BitmapReady {
         C09786() {
         }
@@ -851,7 +796,6 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
     }
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.7 */
     class C09797 implements LibUtility.BuyProVersion {
         C09797() {
         }
@@ -860,7 +804,6 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
     }
 
-    /* renamed from: paddy.com.lyrebirdstudio.mirror.MirrorNewActivity.8 */
     class C09808 implements MyRecyclerViewAdapter.RecyclerAdapterIndexChangedListener {
         C09808() {
         }
@@ -1438,7 +1381,51 @@ public class MirrorNewActivity extends AppCompatActivity {
 
     StickerGalleryListener createGalleryListener() {
         if (this.stickerGalleryListener == null) {
-            this.stickerGalleryListener = new C09775();
+            this.stickerGalleryListener = new StickerGalleryListener() {
+                public void onGalleryOkSingleImage(int resId) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), resId);
+                    if (MirrorNewActivity.this.removeBitmap == null) {
+                        MirrorNewActivity.this.removeBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.remove_text);
+                    }
+                    if (MirrorNewActivity.this.scaleBitmap == null) {
+                        MirrorNewActivity.this.scaleBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.scale_text);
+                    }
+                    StickerView stickerView = new StickerView(MirrorNewActivity.this.context, bitmap, null, MirrorNewActivity.this.removeBitmap, MirrorNewActivity.this.scaleBitmap, resId);
+                    stickerView.setStickerViewSelectedListener(MirrorNewActivity.this.stickerViewSelectedListner);
+                    if (MirrorNewActivity.this.stickerViewContainer == null) {
+                        MirrorNewActivity.this.stickerViewContainer = (FrameLayout) MirrorNewActivity.this.findViewById(R.id.sticker_view_container);
+                    }
+                    MirrorNewActivity.this.stickerViewContainer.addView(stickerView);
+                    Utility.logFreeMemory(MirrorNewActivity.this);
+                    FragmentManager fm = MirrorNewActivity.this.getSupportFragmentManager();
+                    if (MirrorNewActivity.this.galleryFragment == null) {
+                        MirrorNewActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
+                    }
+                    fm.beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
+                }
+                @Override
+                public void onGalleryOkImageArray(int[] ImageIdList) {
+                    Bitmap removeBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.remove_text);
+                    Bitmap scaleBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.scale_text);
+                    for (int i = MirrorNewActivity.INDEX_MIRROR; i < ImageIdList.length; i += MirrorNewActivity.INDEX_MIRROR_3D) {
+                        StickerView stickerView = new StickerView(MirrorNewActivity.this.context, BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), ImageIdList[i]), null, removeBitmap, scaleBitmap, ImageIdList[i]);
+                        stickerView.setStickerViewSelectedListener(MirrorNewActivity.this.stickerViewSelectedListner);
+                        if (MirrorNewActivity.this.stickerViewContainer == null) {
+                            MirrorNewActivity.this.stickerViewContainer = (FrameLayout) MirrorNewActivity.this.findViewById(R.id.sticker_view_container);
+                        }
+                        MirrorNewActivity.this.stickerViewContainer.addView(stickerView);
+                    }
+                    FragmentManager fm = MirrorNewActivity.this.getSupportFragmentManager();
+                    if (MirrorNewActivity.this.galleryFragment == null) {
+                        MirrorNewActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myFragmentTag");
+                    }
+                    fm.beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
+                }
+                @Override
+                public void onGalleryCancel() {
+                    MirrorNewActivity.this.getSupportFragmentManager().beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
+                }
+            };
         }
         return this.stickerGalleryListener;
     }
@@ -1567,9 +1554,11 @@ public class MirrorNewActivity extends AppCompatActivity {
             ratioButtonArray[10] = (Button) findViewById(R.id.button916);
         }
         for (int i = INDEX_MIRROR; i < RATIO_BUTTON_SIZE; i += INDEX_MIRROR_3D) {
-            ratioButtonArray[i].setBackgroundResource(R.drawable.border_background);
+            ratioButtonArray[i].setBackgroundResource(R.drawable.crop_border);
+            ratioButtonArray[i].setTextColor(ViewCompat.MEASURED_STATE_MASK);
         }
-        ratioButtonArray[index].setBackgroundResource(R.drawable.ratio_bg_pressed);
+        this.ratioButtonArray[index].setBackgroundResource(R.drawable.crop_border_selected);
+        this.ratioButtonArray[index].setTextColor(-1);
     }
 
     void setSelectedTab(int index) {
