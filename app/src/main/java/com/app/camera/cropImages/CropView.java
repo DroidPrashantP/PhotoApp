@@ -1,4 +1,4 @@
-package com.app.camera.cropimages;
+package com.app.camera.cropImages;
 
 import android.content.Context;
 import android.graphics.Bitmap;

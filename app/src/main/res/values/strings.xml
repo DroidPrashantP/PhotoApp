@@ -2,9 +2,13 @@
     <string name="app_name">ResizePhotosInstagram</string>
     <!--<string name="banner_ad_unit_id_one">ca-app-pub-7037705036334941/5908115312</string>-->
 
-    <string name="banner_ad_unit_id_one">ca-app-pub-3796340875827275/5928932745</string>
-    <string name="banner_ad_unit_id_two">ca-app-pub-3796340875827275/7405665944</string>
-    <string name="banner_ad_unit_id_three">ca-app-pub-3796340875827275/8882399145</string>
+    <!--<string name="banner_ad_unit_id_one">ca-app-pub-3796340875827275/5928932745</string>-->
+    <!--<string name="banner_ad_unit_id_two">ca-app-pub-3796340875827275/7405665944</string>-->
+    <!--<string name="banner_ad_unit_id_three">ca-app-pub-3796340875827275/8882399145</string>-->
+
+    <string name="banner_ad_unit_id_one">ca-app-pub-7037705036334941/5908115312</string>
+    <string name="banner_ad_unit_id_two">ca-app-pub-7037705036334941/2844676115</string>
+    <string name="banner_ad_unit_id_three">ca-app-pub-7037705036334941/4321409318</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

@@ -67,7 +67,7 @@ import com.app.camera.canvastext.SingleTap;
 import com.app.camera.canvastext.TextData;
 import com.app.camera.collagelib.Utility;
 import com.app.camera.common_lib.Parameter;
-import com.app.camera.cropimages.FragmentCrop;
+import com.app.camera.cropImages.FragmentCrop;
 import com.app.camera.fragments.EffectFragment;
 import com.app.camera.fragments.FontFragment;
 import com.app.camera.imagesavelib.ImageUtility;
