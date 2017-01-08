@@ -11,7 +11,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Build;
 
-import com.app.camera.fragments.EffectFragment;
 import com.commit451.nativestackblur.NativeStackBlur;
 
 // Referenced classes of package com.lyrebirdstudio.lyrebirdlibrary:

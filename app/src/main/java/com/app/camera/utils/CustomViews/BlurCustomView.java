@@ -4,8 +4,6 @@ package com.app.camera.utils.CustomViews;
  * Created by Prashant on 10/1/16.
  */
 
-import android.view.View;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,11 +12,9 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.widget.ImageView;
 import android.widget.Toast;

@@ -278,7 +278,8 @@
                     android:textColor="@color/base"
                     style="@style/btn_custom_style"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/button_height"/>
+                    android:layout_height="@dimen/button_height"
+                    android:visibility="gone"/>
 
 
             </LinearLayout>

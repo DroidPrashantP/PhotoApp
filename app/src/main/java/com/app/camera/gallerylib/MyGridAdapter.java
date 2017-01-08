@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.camera.R;
-import com.app.camera.common_lib.MyAsyncTask;
-import com.app.camera.common_lib.MyAsyncTask2;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

@@ -2,8 +2,6 @@ package com.app.camera;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-//import com.crashlytics.android.Crashlytics;
-//import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Prashant on 24/12/15.

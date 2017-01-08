@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.app.camera.gallerylib.GalleryFragment;
-import com.app.camera.imagesavelib.ImageUtility;
 import com.google.android.gms.ads.InterstitialAd;
 
 public class CollageHelper {

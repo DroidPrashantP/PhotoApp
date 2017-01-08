@@ -5,15 +5,9 @@ package com.app.camera.utils.CustomViews;
  */
 import android.view.MotionEvent;
 
-public class RotationGestureDetector
-{
-    public static interface OnRotationGestureListener
-    {
+import com.app.camera.activities.MirrorActivity;
 
-        public abstract void OnRotation(RotationGestureDetector rotationgesturedetector);
-    }
-
-
+public class RotationGestureDetector {
     private static final int INVALID_POINTER_ID = -1;
     private float fX;
     private float fY;
@@ -24,72 +18,75 @@ public class RotationGestureDetector
     private float sX;
     private float sY;
 
-    public RotationGestureDetector(OnRotationGestureListener onrotationgesturelistener)
-    {
-        mListener = onrotationgesturelistener;
-        ptrID1 = -1;
-        ptrID2 = -1;
+    public interface OnRotationGestureListener {
+        void OnRotation(RotationGestureDetector rotationGestureDetector);
     }
 
-    private float angleBetweenLines(float f, float f1, float f2, float f3, float f4, float f5, float f6,
-                                    float f7)
-    {
-        f1 = (float)Math.toDegrees((float)Math.atan2(f1 - f3, f - f2) - (float)Math.atan2(f5 - f7, f4 - f6)) % 360F;
-        f = f1;
-        if (f1 < -180F)
-        {
-            f = f1 + 360F;
-        }
-        f1 = f;
-        if (f > 180F)
-        {
-            f1 = f - 360F;
-        }
-        return f1;
+    public float getAngle() {
+        return this.mAngle;
     }
 
-    public float getAngle()
-    {
-        return mAngle;
+    public RotationGestureDetector(OnRotationGestureListener listener) {
+        this.mListener = listener;
+        this.ptrID1 = INVALID_POINTER_ID;
+        this.ptrID2 = INVALID_POINTER_ID;
     }
 
-    public boolean onTouchEvent(MotionEvent motionevent)
-    {
-        motionevent.getActionMasked();
-        ptrID1 = motionevent.getPointerId(motionevent.getActionIndex());
-        ptrID2 = motionevent.getPointerId(motionevent.getActionIndex());
-        int i = motionevent.findPointerIndex(ptrID1);
-        int k = motionevent.findPointerIndex(ptrID2);
-        int i1 = motionevent.getPointerCount();
-        if (i >= 0 && i < i1 && k >= 0 && k < i1)
-        {
-            sX = motionevent.getX(i);
-            sY = motionevent.getY(i);
-            fX = motionevent.getX(k);
-            fY = motionevent.getY(k);
-        }
-        if (ptrID1 != -1 && ptrID2 != -1)
-        {
-            int j = motionevent.findPointerIndex(ptrID1);
-            int l = motionevent.findPointerIndex(ptrID2);
-            int j1 = motionevent.getPointerCount();
-            if (j >= 0 && j < j1 && l >= 0 && l < j1)
-            {
-                float f = motionevent.getX(motionevent.findPointerIndex(ptrID1));
-                float f1 = motionevent.getY(motionevent.findPointerIndex(ptrID1));
-                float f2 = motionevent.getX(motionevent.findPointerIndex(ptrID2));
-                float f3 = motionevent.getY(motionevent.findPointerIndex(ptrID2));
-                mAngle = angleBetweenLines(fX, fY, sX, sY, f2, f3, f, f1);
-                if (mListener != null)
-                {
-                    mListener.OnRotation(this);
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MirrorActivity.INDEX_MIRROR /*0*/:
+                this.ptrID1 = event.getPointerId(event.getActionIndex());
+                break;
+            case MirrorActivity.INDEX_MIRROR_3D /*1*/:
+                this.ptrID1 = INVALID_POINTER_ID;
+                break;
+            case MirrorActivity.INDEX_MIRROR_RATIO /*2*/:
+                if (!(this.ptrID1 == INVALID_POINTER_ID || this.ptrID2 == INVALID_POINTER_ID)) {
+                    int index1Move = event.findPointerIndex(this.ptrID1);
+                    int index2Move = event.findPointerIndex(this.ptrID2);
+                    int pointerCountMove = event.getPointerCount();
+                    if (index1Move >= 0 && index1Move < pointerCountMove && index2Move >= 0 && index2Move < pointerCountMove) {
+                        float nsX = event.getX(event.findPointerIndex(this.ptrID1));
+                        float nsY = event.getY(event.findPointerIndex(this.ptrID1));
+                        this.mAngle = angleBetweenLines(this.fX, this.fY, this.sX, this.sY, event.getX(event.findPointerIndex(this.ptrID2)), event.getY(event.findPointerIndex(this.ptrID2)), nsX, nsY);
+                        if (this.mListener != null) {
+                            this.mListener.OnRotation(this);
+                            break;
+                        }
+                    }
                 }
-            }
+                break;
+            case MirrorActivity.INDEX_MIRROR_EFFECT /*3*/:
+                this.ptrID1 = INVALID_POINTER_ID;
+                this.ptrID2 = INVALID_POINTER_ID;
+                break;
+            case MirrorActivity.INDEX_MIRROR_ADJUSTMENT /*5*/:
+                this.ptrID2 = event.getPointerId(event.getActionIndex());
+                int index1 = event.findPointerIndex(this.ptrID1);
+                int index2 = event.findPointerIndex(this.ptrID2);
+                int pointerCount = event.getPointerCount();
+                if (index1 >= 0 && index1 < pointerCount && index2 >= 0 && index2 < pointerCount) {
+                    this.sX = event.getX(index1);
+                    this.sY = event.getY(index1);
+                    this.fX = event.getX(index2);
+                    this.fY = event.getY(index2);
+                    break;
+                }
+            case MirrorActivity.TAB_SIZE /*6*/:
+                this.ptrID2 = INVALID_POINTER_ID;
+                break;
         }
-
-        ptrID1 = -1;
-        ptrID2 = -1;
         return true;
+    }
 
+    private float angleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY) {
+        float angle = ((float) Math.toDegrees((double) (((float) Math.atan2((double) (fY - sY), (double) (fX - sX))) - ((float) Math.atan2((double) (nfY - nsY), (double) (nfX - nsX)))))) % 360.0f;
+        if (angle < -180.0f) {
+            angle += 360.0f;
+        }
+        if (angle > 180.0f) {
+            return angle - 360.0f;
+        }
+        return angle;
     }
 }

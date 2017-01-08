@@ -43,7 +43,6 @@ import com.app.camera.adapters.MaskLayoutAdapter;
 import com.app.camera.adapters.ToolLayoutAdapter;
 import com.app.camera.bitmap.BitmapLoader;
 import com.app.camera.bitmap.BitmapProcessing;
-import com.app.camera.canvastext.TextData;
 import com.app.camera.multitouchview.StickerCustomView;
 import com.app.camera.utils.CommonActivity;
 import com.app.camera.utils.Constants;
@@ -483,11 +482,7 @@ public class BlurActivity extends Activity implements View.OnClickListener {
         } else {
             if (shapeApplyFlag) {
                    setCustomView();
-//                image_holder.MaskApply();
-                 Bitmap  bitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
-//               Bitmap mainbitmap = CommonActivity.getViewBitmap(mMaskRelativeView);
-//                Bitmap bitmap = mainbitmap.copy(Bitmap.Config.ARGB_8888, true);
-
+                Bitmap  bitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
                 Bitmap mask = BitmapFactory.decodeResource(getResources(), id);
                 //You can change original image here and draw anything you want to be masked on it.
                 Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.9), (int) (bitmap.getHeight() * 0.9), true);
@@ -509,7 +504,6 @@ public class BlurActivity extends Activity implements View.OnClickListener {
                 //Draw result after performing masking
                 tempCanvas.drawBitmap(result, 0, 0, new Paint());
                  image_holder.setImageBitmap(result);
-//                mMaskRelativeView.setBackground(new BitmapDrawable(getResources(), bitmap));
 
             }
         }

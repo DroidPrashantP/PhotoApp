@@ -47,7 +47,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -76,12 +75,10 @@ import com.app.camera.canvastext.ApplyTextInterface;
 import com.app.camera.canvastext.CustomRelativeLayout;
 import com.app.camera.canvastext.SingleTap;
 import com.app.camera.canvastext.TextData;
-import com.app.camera.common_lib.MyAsyncTask2;
 import com.app.camera.common_lib.Parameter;
 import com.app.camera.fragments.FontFragment;
 import com.app.camera.fragments.FullEffectFragment;
 import com.app.camera.gallerylib.GalleryUtility;
-import com.app.camera.imagesavelib.ImageUtility;
 import com.app.camera.pointlist.Collage;
 import com.app.camera.pointlist.CollageLayout;
 import com.app.camera.pointlist.MaskPair;
@@ -93,9 +90,9 @@ import com.app.camera.utils.CustomViews.BlurBuilder;
 import com.app.camera.utils.CustomViews.BlurBuilderNormal;
 import com.app.camera.utils.LibUtility;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdRequest.Builder;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -113,10 +110,11 @@ public class CollageActivity extends FragmentActivity {
     public static final int INDEX_COLLAGE_INVISIBLE_VIEW = 5;
     public static final int INDEX_COLLAGE_RATIO = 3;
     public static final int INDEX_COLLAGE_SPACE = 2;
-    static final int SAVE_IMAGE_ID = 1543;
     public static final int TAB_SIZE = 6;
+    static final int SAVE_IMAGE_ID = 1543;
     private static final String TAG = "CollageView";
     private static final float UPPER_SIZE_FOR_LOAD = 1500.0f;
+    public final int defaultSizeProgressForBlur;
     int RATIO_BUTTON_SIZE;
     Activity activity;
     AdView adWhirlLayout;
@@ -131,7 +129,6 @@ public class CollageActivity extends FragmentActivity {
     Context context;
     ViewGroup contextFooter;
     int currentStickerIndex;
-    public final int defaultSizeProgressForBlur;
     FontFragment.FontChoosedListener fontChoosedListener;
     FontFragment fontFragment;
     FullEffectFragment fullEffectFragment;
@@ -139,7 +136,6 @@ public class CollageActivity extends FragmentActivity {
     int height;
     InterstitialAd interstitial;
     boolean isScrapBook;
-    private RotationGestureDetector mRotationDetector;
     OnSeekBarChangeListener mSeekBarListener;
     RelativeLayout mainLayout;
     float mulX;
@@ -157,10 +153,6 @@ public class CollageActivity extends FragmentActivity {
     boolean selectImageForAdj;
     View selectSwapTextView;
     boolean showText;
-    private Animation slideLeftIn;
-    private Animation slideLeftOut;
-    private Animation slideRightIn;
-    private Animation slideRightOut;
     StickerGalleryListener stickerGalleryListener;
     ArrayList<StickerView> stickerList;
     FrameLayout stickerViewContainer;
@@ -172,6 +164,788 @@ public class CollageActivity extends FragmentActivity {
     ArrayList<TextData> textDataList;
     ViewFlipper viewFlipper;
     int width;
+    private RotationGestureDetector mRotationDetector;
+    private Animation slideLeftIn;
+    private Animation slideLeftOut;
+    private Animation slideRightIn;
+    private Animation slideRightOut;
+
+    public CollageActivity() {
+        this.activity = this;
+        this.selectImageForAdj = false;
+        this.isScrapBook = false;
+        this.patternAdapterList = new ArrayList();
+        this.defaultSizeProgressForBlur = 45;
+        this.btmDelete = null;
+        this.btmScale = null;
+        this.textDataList = new ArrayList();
+        this.showText = false;
+        this.fontChoosedListener = new C09411();
+        this.currentStickerIndex = INDEX_COLLAGE;
+        this.stickerViewSelectedListner = new C09422();
+        this.mSeekBarListener = new C05703();
+        this.context = this;
+        this.swapMode = false;
+        this.mulX = 1.0f;
+        this.mulY = 1.0f;
+        this.RATIO_BUTTON_SIZE = 11;
+    }
+
+    public static boolean hasHardwareAcceleration(Activity activity) {
+        Window window = activity.getWindow();
+        if (window != null && (window.getAttributes().flags & ViewCompat.MEASURED_STATE_TOO_SMALL) != 0) {
+            return true;
+        }
+        try {
+            if ((activity.getPackageManager().getActivityInfo(activity.getComponentName(), INDEX_COLLAGE).flags & AdRequest.MAX_CONTENT_URL_LENGTH) != 0) {
+                return true;
+            }
+        } catch (NameNotFoundException e) {
+            Log.e("Chrome", "getActivityInfo(self) should not fail");
+        }
+        return false;
+    }
+
+    public /* bridge */ /* synthetic */ View onCreateView(View view, String str, Context context, AttributeSet attributeSet) {
+        return super.onCreateView(view, str, context, attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ View onCreateView(String str, Context context, AttributeSet attributeSet) {
+        return super.onCreateView(str, context, attributeSet);
+    }
+
+    @Override
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        requestWindowFeature(INDEX_COLLAGE_BACKGROUND);
+        getWindow().addFlags(AccessibilityNodeInfoCompat.ACTION_NEXT_HTML_ELEMENT);
+        Display display = getWindowManager().getDefaultDisplay();
+        width = display.getWidth();
+        height = display.getHeight();
+        Utility.logFreeMemory(this.context);
+        setContentView(R.layout.activity_collage);
+        Bundle extras = getIntent().getExtras();
+        int arraySize = getCollageSize(extras);
+        seekBarRound = (SeekBar) findViewById(R.id.seekbar_round);
+        seekBarRound.setOnSeekBarChangeListener(this.mSeekBarListener);
+        seekBarPadding = (SeekBar) findViewById(R.id.seekbar_padding);
+        seekBarPadding.setOnSeekBarChangeListener(this.mSeekBarListener);
+        seekbarSize = (SeekBar) findViewById(R.id.seekbar_size);
+        seekbarSize.setOnSeekBarChangeListener(this.mSeekBarListener);
+        seekbarBlur = (SeekBar) findViewById(R.id.seekbar_collage_blur);
+        seekbarBlur.setOnSeekBarChangeListener(this.mSeekBarListener);
+        RecyclerView recyclerViewColor = (RecyclerView) findViewById(R.id.recyclerView_color);
+        collageRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_grid);
+        int colorDefault = getResources().getColor(R.color.view_flipper_bg_color);
+        int colorSelected = getResources().getColor(R.color.footer_button_color_pressed);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        collageRecyclerView.setLayoutManager(layoutManager);
+        collageAdapter = new MyAdapter(Collage.collageIconArray[arraySize - 1], new C09434(), colorDefault, colorSelected, false, true);
+        collageRecyclerView.setAdapter(collageAdapter);
+        collageRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        viewFlipper = (ViewFlipper) findViewById(R.id.collage_view_flipper);
+        viewFlipper.setDisplayedChild(5);
+        createAdapterList(colorDefault, colorSelected);
+        RecyclerView recyclerViewPattern = (RecyclerView) findViewById(R.id.recyclerView_pattern);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        colorContainer = (LinearLayout) findViewById(R.id.color_container);
+        recyclerViewPattern.setLayoutManager(linearLayoutManager);
+        recyclerViewPattern.setAdapter(new MyAdapter(Utility.patternResIdList3, new C09445(recyclerViewColor), colorDefault, colorSelected, false, false));
+        recyclerViewPattern.setItemAnimator(new DefaultItemAnimator());
+        LinearLayoutManager layoutManagerColor = new LinearLayoutManager(this.context);
+        layoutManagerColor.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewColor.setLayoutManager(layoutManagerColor);
+        recyclerViewColor.setAdapter(new ColorPickerAdapter(new C09456(), colorDefault, colorSelected));
+        recyclerViewColor.setItemAnimator(new DefaultItemAnimator());
+        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) findViewById(R.id.collage_footer);
+        horizontalScrollView.bringToFront();
+        horizontalScrollView.postDelayed(new C05717(horizontalScrollView), 50);
+        horizontalScrollView.postDelayed(new C05728(horizontalScrollView), 600);
+        new BitmapWorkerTask().execute(new Bundle[]{extras, bundle});
+
+    }
+
+    private void createAdapterList(int colorDefault, int colorSelected) {
+        int size = Utility.patternResIdList2.length;
+        this.patternAdapterList.clear();
+        this.patternAdapterList.add(new ColorPickerAdapter(new C09469(), colorDefault, colorSelected));
+        for (int i = INDEX_COLLAGE; i < size; i += INDEX_COLLAGE_BACKGROUND) {
+            this.patternAdapterList.add(new MyAdapter(Utility.patternResIdList2[i], new MyAdapter.CurrentCollageIndexChangedListener() {
+                public void onIndexChanged(int positionOrColor) {
+                    collageView.setPatternPaint(positionOrColor);
+                }
+            }, colorDefault, colorSelected, true, true));
+        }
+    }
+
+    public void addCanvasTextView() {
+        this.canvasText = new CustomRelativeLayout(this.context, this.textDataList, this.collageView.identityMatrix, new SingleTap() {
+            public void onSingleTap(TextData textData) {
+                fontFragment = new FontFragment();
+                Bundle arguments = new Bundle();
+                arguments.putSerializable("text_data", textData);
+                fontFragment.setArguments(arguments);
+                getSupportFragmentManager().beginTransaction().replace(R.id.collage_text_view_fragment_container, fontFragment, "FONT_FRAGMENT").commit();
+                Log.e(CollageActivity.TAG, "replace fragment");
+                fontFragment.setFontChoosedListener(fontChoosedListener);
+            }
+        });
+        this.canvasText.setApplyTextListener(new ApplyTextInterface() {
+            public void onOk(ArrayList<TextData> tdList) {
+                Iterator it = tdList.iterator();
+                while (it.hasNext()) {
+                    ((TextData) it.next()).setImageSaveMatrix(collageView.identityMatrix);
+                }
+                textDataList = tdList;
+                showText = true;
+                if (mainLayout == null) {
+                    mainLayout = (RelativeLayout) findViewById(R.id.collage_main_layout);
+                }
+                mainLayout.removeView(canvasText);
+                collageView.postInvalidate();
+            }
+
+            public void onCancel() {
+                showText = true;
+                mainLayout.removeView(canvasText);
+                collageView.postInvalidate();
+            }
+        });
+        this.showText = false;
+        this.collageView.invalidate();
+        this.mainLayout.addView(this.canvasText);
+        ((RelativeLayout) findViewById(R.id.collage_text_view_fragment_container)).bringToFront();
+        if (textDataList.size() == 0) {
+            this.fontFragment = new FontFragment();
+            this.fontFragment.setArguments(new Bundle());
+            getSupportFragmentManager().beginTransaction().add(R.id.collage_text_view_fragment_container, this.fontFragment, "FONT_FRAGMENT").commit();
+            Log.e(TAG, "add fragment");
+            this.fontFragment.setFontChoosedListener(this.fontChoosedListener);
+        }
+    }
+
+    private void setVisibilityForSingleImage() {
+        findViewById(R.id.seekbar_corner_container).setVisibility(View.GONE);
+        findViewById(R.id.seekbar_space_container).setVisibility(View.GONE);
+        findViewById(R.id.button_collage_blur).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_collage_context_delete).setVisibility(View.GONE);
+        findViewById(R.id.button_collage_context_swap).setVisibility(View.GONE);
+        if (!this.isScrapBook) {
+            this.collageView.setCollageSize(this.collageView.sizeMatrix, 45);
+            if (this.seekbarSize != null) {
+                this.seekbarSize.setProgress(45);
+            }
+        }
+        this.collageView.setBlurBitmap(this.collageView.blurRadius);
+        if (!this.isScrapBook) {
+            setSelectedTab(INDEX_COLLAGE_BLUR);
+        }
+    }
+
+    private void setVisibilityForScrapbook() {
+        findViewById(R.id.button_collage_layout).setVisibility(View.GONE);
+        findViewById(R.id.button_collage_space).setVisibility(View.GONE);
+        findViewById(R.id.button_collage_context_swap).setVisibility(View.GONE);
+        findViewById(R.id.button_collage_context_fit).setVisibility(View.GONE);
+        findViewById(R.id.button_collage_context_center).setVisibility(View.GONE);
+        findViewById(R.id.button_collage_context_delete).setVisibility(View.GONE);
+    }
+
+    int getCollageSize(Bundle extras) {
+        long[] selectedImageList = extras.getLongArray("photo_id_list");
+        if (selectedImageList == null) {
+            return 1;
+        }
+        return selectedImageList.length;
+    }
+
+    public void addStickerGalleryFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
+        if (this.galleryFragment == null) {
+            this.galleryFragment = new StickerGalleryFragment();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.add(R.id.sticker_grid_fragment_container, this.galleryFragment, "myStickerFragmentTag");
+            ft.commit();
+            this.galleryFragment.setGalleryListener(createGalleryListener());
+            Log.e(TAG, "galleryFragment null");
+        } else {
+            Log.e(TAG, "show gallery fragment");
+            getSupportFragmentManager().beginTransaction().show(this.galleryFragment).commit();
+        }
+        this.galleryFragment.setTotalImage(this.stickerViewContainer.getChildCount());
+    }
+
+    public StickerGalleryListener createGalleryListener() {
+        if (this.stickerGalleryListener == null) {
+            this.stickerGalleryListener = new StickerGalleryListener() {
+                public void onGalleryOkSingleImage(int resId) {
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId);
+                    if (stickerremoveBitmap == null) {
+                        stickerremoveBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_remove_text);
+                    }
+                    if (stickerscaleBitmap == null) {
+                        stickerscaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_scale_text);
+                    }
+                    StickerView stickerView = new StickerView(context, bitmap, null, stickerremoveBitmap, stickerscaleBitmap, resId);
+                    stickerView.setStickerViewSelectedListener(stickerViewSelectedListner);
+                    if (stickerViewContainer == null) {
+                        stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
+                    }
+                    stickerViewContainer.addView(stickerView);
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (galleryFragment == null) {
+                        galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
+                    }
+                    fm.beginTransaction().hide(galleryFragment).commit();
+                }
+
+                public void onGalleryOkImageArray(int[] ImageIdList) {
+                    if (stickerremoveBitmap == null) {
+                        stickerremoveBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_remove_text);
+                    }
+                    if (stickerscaleBitmap == null) {
+                        stickerscaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_scale_text);
+                    }
+                    for (int i = CollageActivity.INDEX_COLLAGE; i < ImageIdList.length; i += CollageActivity.INDEX_COLLAGE_BACKGROUND) {
+                        StickerView stickerView = new StickerView(context, BitmapFactory.decodeResource(getResources(), ImageIdList[i]), null, stickerremoveBitmap, stickerscaleBitmap, ImageIdList[i]);
+                        stickerView.setStickerViewSelectedListener(stickerViewSelectedListner);
+                        if (stickerViewContainer == null) {
+                            stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
+                        }
+                        stickerViewContainer.addView(stickerView);
+                    }
+                    FragmentManager fm = getSupportFragmentManager();
+                    if (galleryFragment == null) {
+                        galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myFragmentTag");
+                    }
+                    fm.beginTransaction().hide(galleryFragment).commit();
+                }
+
+                public void onGalleryCancel() {
+                    getSupportFragmentManager().beginTransaction().hide(galleryFragment).commit();
+                }
+            };
+        }
+        return this.stickerGalleryListener;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == SAVE_IMAGE_ID && !CommonLibrary.isAppPro(this.context) && this.context.getResources().getBoolean(R.bool.showInterstitialAds)) {
+//            ImageUtility.displayInterStitialWithSplashScreen(this.interstitial, this, ImageUtility.SPLASH_TIME_OUT_DEFAULT, "COLLAGE_ACTIVITY_ONACTIVITYRESULT");
+//        }
+    }
+
+    public void onDestroy() {
+        int i;
+        super.onDestroy();
+        if (this.bitmapList != null) {
+            for (i = INDEX_COLLAGE; i < this.bitmapList.length; i += INDEX_COLLAGE_BACKGROUND) {
+                if (this.bitmapList[i] != null) {
+                    this.bitmapList[i].recycle();
+                }
+            }
+        }
+        if (this.collageView != null) {
+            if (this.collageView.shapeLayoutList != null) {
+                for (i = INDEX_COLLAGE; i < this.collageView.shapeLayoutList.size(); i += INDEX_COLLAGE_BACKGROUND) {
+                    for (int j = INDEX_COLLAGE; j < ((ShapeLayout) this.collageView.shapeLayoutList.get(i)).shapeArr.length; j += INDEX_COLLAGE_BACKGROUND) {
+                        if (((ShapeLayout) this.collageView.shapeLayoutList.get(i)).shapeArr[j] != null) {
+                            ((ShapeLayout) this.collageView.shapeLayoutList.get(i)).shapeArr[j].freeBitmaps();
+                        }
+                    }
+                }
+            }
+            if (this.collageView.maskBitmapArray != null) {
+                for (i = INDEX_COLLAGE; i < this.collageView.maskBitmapArray.length; i += INDEX_COLLAGE_BACKGROUND) {
+                    if (this.collageView.maskBitmapArray[i] != null) {
+                        if (!this.collageView.maskBitmapArray[i].isRecycled()) {
+                            this.collageView.maskBitmapArray[i].recycle();
+                        }
+                        this.collageView.maskBitmapArray[i] = null;
+                    }
+                }
+            }
+        }
+        if (this.adWhirlLayout != null) {
+            this.adWhirlLayout.removeAllViews();
+            this.adWhirlLayout.destroy();
+        }
+    }
+
+    void setSelectedTab(int index) {
+        if (this.viewFlipper != null) {
+            setTabBg(INDEX_COLLAGE);
+            int displayedChild = this.viewFlipper.getDisplayedChild();
+            if (displayedChild != INDEX_COLLAGE_BACKGROUND) {
+                hideColorContainer();
+            }
+            if (index == 0) {
+                if (displayedChild != 0) {
+                    this.viewFlipper.setInAnimation(this.slideLeftIn);
+                    this.viewFlipper.setOutAnimation(this.slideRightOut);
+                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE);
+                } else {
+                    return;
+                }
+            }
+            if (index == INDEX_COLLAGE_BACKGROUND) {
+                setTabBg(INDEX_COLLAGE_BACKGROUND);
+                if (displayedChild != INDEX_COLLAGE_BACKGROUND) {
+                    if (displayedChild == 0) {
+                        this.viewFlipper.setInAnimation(this.slideRightIn);
+                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
+                    } else {
+                        this.viewFlipper.setInAnimation(this.slideLeftIn);
+                        this.viewFlipper.setOutAnimation(this.slideRightOut);
+                    }
+                    this.viewFlipper.setDisplayedChild(1);
+                } else {
+                    return;
+                }
+            }
+            if (index == INDEX_COLLAGE_BLUR) {
+                setTabBg(INDEX_COLLAGE_BLUR);
+                if (displayedChild != INDEX_COLLAGE_BLUR) {
+                    if (displayedChild == 0) {
+                        this.viewFlipper.setInAnimation(this.slideRightIn);
+                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
+                    } else {
+                        this.viewFlipper.setInAnimation(this.slideLeftIn);
+                        this.viewFlipper.setOutAnimation(this.slideRightOut);
+                    }
+                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_BLUR);
+                } else {
+                    return;
+                }
+            }
+            if (index == INDEX_COLLAGE_SPACE) {
+                setTabBg(INDEX_COLLAGE_SPACE);
+                if (displayedChild != INDEX_COLLAGE_SPACE) {
+                    if (displayedChild == 0 || displayedChild == INDEX_COLLAGE_BACKGROUND) {
+                        this.viewFlipper.setInAnimation(this.slideRightIn);
+                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
+                    } else {
+                        this.viewFlipper.setInAnimation(this.slideLeftIn);
+                        this.viewFlipper.setOutAnimation(this.slideRightOut);
+                    }
+                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_SPACE);
+                } else {
+                    return;
+                }
+            }
+            if (index == INDEX_COLLAGE_RATIO) {
+                setTabBg(INDEX_COLLAGE_RATIO);
+                if (displayedChild != INDEX_COLLAGE_RATIO) {
+                    if (displayedChild == INDEX_COLLAGE_INVISIBLE_VIEW) {
+                        this.viewFlipper.setInAnimation(this.slideLeftIn);
+                        this.viewFlipper.setOutAnimation(this.slideRightOut);
+                    } else {
+                        this.viewFlipper.setInAnimation(this.slideRightIn);
+                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
+                    }
+                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_RATIO);
+                } else {
+                    return;
+                }
+            }
+            if (index == INDEX_COLLAGE_INVISIBLE_VIEW) {
+                setTabBg(-1);
+                if (displayedChild != INDEX_COLLAGE_INVISIBLE_VIEW) {
+                    this.viewFlipper.setInAnimation(this.slideRightIn);
+                    this.viewFlipper.setOutAnimation(this.slideLeftOut);
+                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_INVISIBLE_VIEW);
+                }
+            }
+        }
+    }
+
+    private void setTabBg(int index) {
+        if (this.tabButtonList == null) {
+            this.tabButtonList = new View[TAB_SIZE];
+            this.tabButtonList[INDEX_COLLAGE] = findViewById(R.id.button_collage_layout);
+            this.tabButtonList[INDEX_COLLAGE_SPACE] = findViewById(R.id.button_collage_space);
+            this.tabButtonList[INDEX_COLLAGE_BLUR] = findViewById(R.id.button_collage_blur);
+            this.tabButtonList[INDEX_COLLAGE_BACKGROUND] = findViewById(R.id.button_collage_background);
+            this.tabButtonList[INDEX_COLLAGE_RATIO] = findViewById(R.id.button_collage_ratio);
+            this.tabButtonList[INDEX_COLLAGE_INVISIBLE_VIEW] = findViewById(R.id.button_collage_adj);
+        }
+        for (int i = INDEX_COLLAGE; i < this.tabButtonList.length; i += INDEX_COLLAGE_BACKGROUND) {
+            this.tabButtonList[i].setBackgroundResource(R.drawable.collage_footer_button);
+        }
+        if (index >= 0) {
+            this.tabButtonList[index].setBackgroundResource(R.color.footer_button_color_pressed);
+        }
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("show_text", this.showText);
+        savedInstanceState.putSerializable("text_data", this.textDataList);
+        if (this.fontFragment != null && this.fontFragment.isVisible()) {
+            getSupportFragmentManager().beginTransaction().remove(this.fontFragment).commit();
+        }
+        if (this.stickerViewContainer != null && this.stickerViewContainer.getChildCount() > 0) {
+            int size = this.stickerViewContainer.getChildCount();
+            StickerData[] stickerDataArray = new StickerData[size];
+            for (int i = INDEX_COLLAGE; i < size; i += INDEX_COLLAGE_BACKGROUND) {
+                stickerDataArray[i] = ((StickerView) this.stickerViewContainer.getChildAt(i)).getStickerData();
+            }
+            savedInstanceState.putParcelableArray("sticker_data_array", stickerDataArray);
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        this.showText = savedInstanceState.getBoolean("show_text");
+        this.textDataList = (ArrayList) savedInstanceState.getSerializable("text_data");
+        if (this.textDataList == null) {
+            this.textDataList = new ArrayList();
+        }
+        StickerData[] stickerDataArray = StickerData.toStickerData(savedInstanceState.getParcelableArray("sticker_data_array"));
+        if (stickerDataArray != null) {
+            Bitmap stickerremoveBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_remove_text);
+            Bitmap stickerscaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_scale_text);
+            for (int i = INDEX_COLLAGE; i < stickerDataArray.length; i += INDEX_COLLAGE_BACKGROUND) {
+                StickerView stickerView = new StickerView(this.context, BitmapFactory.decodeResource(getResources(), stickerDataArray[i].getResId()), stickerDataArray[i], stickerremoveBitmap, stickerscaleBitmap, stickerDataArray[i].getResId());
+                stickerView.setStickerViewSelectedListener(this.stickerViewSelectedListner);
+                if (this.stickerViewContainer == null) {
+                    this.stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
+                }
+                this.stickerViewContainer.addView(stickerView);
+            }
+        }
+    }
+
+    public void myClickHandler(View view) {
+        int id = view.getId();
+        if (id == R.id.button_collage_layout) {
+            setSelectedTab(INDEX_COLLAGE);
+        } else if (id == R.id.button_collage_ratio) {
+            setSelectedTab(INDEX_COLLAGE_RATIO);
+        } else if (id == R.id.button_collage_blur) {
+            collageView.setBlurBitmap(collageView.blurRadius);
+            setSelectedTab(INDEX_COLLAGE_BLUR);
+            collageView.startAnimator();
+        } else if (id == R.id.button_collage_background) {
+            setSelectedTab(INDEX_COLLAGE_BACKGROUND);
+        } else if (id == R.id.button_collage_space) {
+            setSelectedTab(INDEX_COLLAGE_SPACE);
+        } else if (id == R.id.button_collage_adj) {
+            if ((collageView.shapeLayoutList.get(0)).shapeArr.length == INDEX_COLLAGE_BACKGROUND) {
+                collageView.shapeIndex = 0;
+                collageView.openFilterFragment();
+            } else if (collageView.shapeIndex >= 0) {
+                this.collageView.openFilterFragment();
+                Log.e(TAG, "collageView.shapeIndex>=0 openFilterFragment");
+            } else {
+                setSelectedTab(5);
+                this.selectFilterTextView.setVisibility(View.VISIBLE);
+                this.selectImageForAdj = true;
+            }
+        } else if (id == R.id.button_collage_context_swap) {
+            if (((ShapeLayout) this.collageView.shapeLayoutList.get(this.collageView.currentCollageIndex)).shapeArr.length == INDEX_COLLAGE_SPACE) {
+                this.collageView.swapBitmaps(INDEX_COLLAGE, INDEX_COLLAGE_BACKGROUND);
+            } else {
+                this.selectSwapTextView.setVisibility(View.VISIBLE);
+                this.swapMode = true;
+            }
+        } else if (id == R.id.button_collage_context_delete) {
+            createDeleteDialog();
+        } else if (id == R.id.button_collage_context_filter) {
+            this.collageView.openFilterFragment();
+        } else if (id == R.id.button_save_collage_image) {
+            setSelectedTab(INDEX_COLLAGE_INVISIBLE_VIEW);
+            SaveImageTask saveImageTask = new SaveImageTask();
+            Object[] objArr = new Object[INDEX_COLLAGE_BACKGROUND];
+            objArr[INDEX_COLLAGE] = Integer.valueOf(INDEX_COLLAGE_RATIO);
+            saveImageTask.execute(objArr);
+        } else if (id == R.id.button_cancel_collage_image) {
+            backButtonAlertBuilder();
+        } else if (id == R.id.button11) {
+            this.mulX = 1.0f;
+            this.mulY = 1.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(INDEX_COLLAGE);
+        } else if (id == R.id.button21) {
+            this.mulX = 2.0f;
+            this.mulY = 1.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(INDEX_COLLAGE_BACKGROUND);
+        } else if (id == R.id.button12) {
+            this.mulX = 1.0f;
+            this.mulY = 2.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(INDEX_COLLAGE_SPACE);
+        } else if (id == R.id.button32) {
+            this.mulX = 3.0f;
+            this.mulY = 2.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(INDEX_COLLAGE_RATIO);
+        } else if (id == R.id.button23) {
+            this.mulX = 2.0f;
+            this.mulY = 3.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(INDEX_COLLAGE_BLUR);
+        } else if (id == R.id.button43) {
+            this.mulX = 4.0f;
+            this.mulY = 3.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(INDEX_COLLAGE_INVISIBLE_VIEW);
+        } else if (id == R.id.button34) {
+            this.mulX = 3.0f;
+            this.mulY = 4.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(TAB_SIZE);
+        } else if (id == R.id.button45) {
+            this.mulX = 4.0f;
+            this.mulY = 5.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(7);
+        } else if (id == R.id.button57) {
+            this.mulX = 5.0f;
+            this.mulY = 7.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(8);
+        } else if (id == R.id.button169) {
+            this.mulX = 16.0f;
+            this.mulY = 9.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(9);
+        } else if (id == R.id.button916) {
+            this.mulX = 9.0f;
+            this.mulY = 16.0f;
+            this.collageView.updateShapeListForRatio(this.width, this.height);
+            setRatioButtonBg(10);
+        } else if (id == R.id.hide_select_image_warning) {
+            this.selectSwapTextView.setVisibility(View.INVISIBLE);
+            this.swapMode = false;
+        } else if (id == R.id.hide_select_image_warning_filter) {
+            this.selectFilterTextView.setVisibility(View.INVISIBLE);
+            this.selectImageForAdj = false;
+        } else if (id == R.id.hide_color_container) {
+            hideColorContainer();
+        } else if (id == R.id.button_mirror_text) {
+            addCanvasTextView();
+            clearViewFlipper();
+        } else if (id == R.id.button_mirror_sticker) {
+            addStickerGalleryFragment();
+        }
+        if (id == R.id.button_collage_context_fit) {
+            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE);
+        } else if (id == R.id.button_collage_context_center) {
+            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_BACKGROUND);
+        } else if (id == R.id.button_collage_context_rotate_left) {
+            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_RATIO);
+        } else if (id == R.id.button_collage_context_rotate_right) {
+            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_SPACE);
+        } else if (id == R.id.button_collage_context_flip_horizontal) {
+            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_BLUR);
+        } else if (id == R.id.button_collage_context_flip_vertical) {
+            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_INVISIBLE_VIEW);
+        } else if (id == R.id.button_collage_context_rotate_negative) {
+            this.collageView.setShapeScaleMatrix(TAB_SIZE);
+        } else if (id == R.id.button_collage_context_rotate_positive) {
+            this.collageView.setShapeScaleMatrix(7);
+        } else if (id == R.id.button_collage_context_zoom_in) {
+            toastMatrixMessage(this.collageView.setShapeScaleMatrix(8));
+        } else if (id == R.id.button_collage_context_zoom_out) {
+            toastMatrixMessage(this.collageView.setShapeScaleMatrix(9));
+        } else if (id == R.id.button_collage_context_move_left) {
+            toastMatrixMessage(this.collageView.setShapeScaleMatrix(10));
+        } else if (id == R.id.button_collage_context_move_right) {
+            toastMatrixMessage(this.collageView.setShapeScaleMatrix(11));
+        } else if (id == R.id.button_collage_context_move_up) {
+            toastMatrixMessage(this.collageView.setShapeScaleMatrix(12));
+        } else if (id == R.id.button_collage_context_move_down) {
+            toastMatrixMessage(this.collageView.setShapeScaleMatrix(13));
+        } else if (this.fullEffectFragment != null && this.fullEffectFragment.isVisible()) {
+            this.fullEffectFragment.myClickHandler(view);
+        }
+        GalleryUtility.logHeap();
+        Utility.logFreeMemory(this.context);
+    }
+
+    void toastMatrixMessage(int message) {
+        String str = null;
+        if (message == INDEX_COLLAGE_BACKGROUND) {
+            str = "You reached maximum zoom!";
+        } else if (message == INDEX_COLLAGE_SPACE) {
+            str = "You reached minimum zoom!";
+        } else if (message == TAB_SIZE) {
+            str = "You reached max bottom!";
+        } else if (message == INDEX_COLLAGE_INVISIBLE_VIEW) {
+            str = "You reached max top!";
+        } else if (message == INDEX_COLLAGE_BLUR) {
+            str = "You reached max right!";
+        } else if (message == INDEX_COLLAGE_RATIO) {
+            str = "You reached max left!";
+        }
+        if (str != null) {
+            Toast msg = Toast.makeText(this.context, str, Toast.LENGTH_SHORT);
+            msg.setGravity(17, msg.getXOffset() / INDEX_COLLAGE_SPACE, msg.getYOffset() / INDEX_COLLAGE_SPACE);
+            msg.show();
+        }
+    }
+
+    void createDeleteDialog() {
+        if (((ShapeLayout) this.collageView.shapeLayoutList.get(INDEX_COLLAGE)).shapeArr.length == INDEX_COLLAGE_BACKGROUND) {
+            Toast msg = Toast.makeText(this.context, "You can't delete last image!", Toast.LENGTH_SHORT);
+            msg.setGravity(17, msg.getXOffset() / INDEX_COLLAGE_SPACE, msg.getYOffset() / INDEX_COLLAGE_SPACE);
+            msg.show();
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
+        builder.setMessage("Do you want to delete it?").setCancelable(true).setPositiveButton("Yes", new OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                collageView.deleteBitmap(collageView.shapeIndex, width, width);
+            }
+        }).setNegativeButton("No", new OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        this.saveImageAlert = builder.create();
+        this.saveImageAlert.show();
+    }
+
+    void clearViewFlipper() {
+        this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_INVISIBLE_VIEW);
+        setTabBg(-1);
+    }
+
+    private void hideColorContainer() {
+        if (this.colorContainer == null) {
+            this.colorContainer = (LinearLayout) findViewById(R.id.color_container);
+        }
+        this.colorContainer.setVisibility(View.INVISIBLE);
+    }
+
+    private void setRatioButtonBg(int index) {
+        if (this.ratioButtonArray == null) {
+            this.ratioButtonArray = new Button[this.RATIO_BUTTON_SIZE];
+            this.ratioButtonArray[INDEX_COLLAGE] = (Button) findViewById(R.id.button11);
+            this.ratioButtonArray[INDEX_COLLAGE_BACKGROUND] = (Button) findViewById(R.id.button21);
+            this.ratioButtonArray[INDEX_COLLAGE_SPACE] = (Button) findViewById(R.id.button12);
+            this.ratioButtonArray[INDEX_COLLAGE_RATIO] = (Button) findViewById(R.id.button32);
+            this.ratioButtonArray[INDEX_COLLAGE_BLUR] = (Button) findViewById(R.id.button23);
+            this.ratioButtonArray[INDEX_COLLAGE_INVISIBLE_VIEW] = (Button) findViewById(R.id.button43);
+            this.ratioButtonArray[TAB_SIZE] = (Button) findViewById(R.id.button34);
+            this.ratioButtonArray[7] = (Button) findViewById(R.id.button45);
+            this.ratioButtonArray[8] = (Button) findViewById(R.id.button57);
+            this.ratioButtonArray[9] = (Button) findViewById(R.id.button169);
+            this.ratioButtonArray[10] = (Button) findViewById(R.id.button916);
+        }
+        for (int i = INDEX_COLLAGE; i < this.RATIO_BUTTON_SIZE; i += INDEX_COLLAGE_BACKGROUND) {
+            this.ratioButtonArray[i].setBackgroundResource(R.drawable.crop_border);
+            this.ratioButtonArray[i].setTextColor(ViewCompat.MEASURED_STATE_MASK);
+        }
+        this.ratioButtonArray[index].setBackgroundResource(R.drawable.crop_border_selected);
+        this.ratioButtonArray[index].setTextColor(-1);
+    }
+
+    void addEffectFragment() {
+        if (this.fullEffectFragment == null) {
+            this.fullEffectFragment = (FullEffectFragment) getSupportFragmentManager().findFragmentByTag("FULL_FRAGMENT");
+            Log.e(TAG, "addEffectFragment");
+            if (this.fullEffectFragment == null) {
+                this.fullEffectFragment = new FullEffectFragment();
+                Log.e(TAG, "EffectFragment == null");
+                this.fullEffectFragment.setArguments(getIntent().getExtras());
+                Log.e(TAG, "fullEffectFragment null");
+                getSupportFragmentManager().beginTransaction().add(R.id.collage_effect_fragment_container, this.fullEffectFragment, "FULL_FRAGMENT").commitAllowingStateLoss();
+            } else {
+                Log.e(TAG, "not null null");
+                if (this.collageView.shapeIndex >= 0) {
+                    this.fullEffectFragment.setBitmapWithParameter(this.bitmapList[this.collageView.shapeIndex], this.parameterList[this.collageView.shapeIndex]);
+                }
+            }
+            getSupportFragmentManager().beginTransaction().hide(this.fullEffectFragment).commitAllowingStateLoss();
+            this.fullEffectFragment.setFullBitmapReadyListener(new FullEffectFragment.FullBitmapReady() {
+                public void onBitmapReady(Bitmap bitmap, Parameter parameter) {
+                    if (parameter.getTiltContext() != null) {
+                        Log.e(CollageActivity.TAG, "onBitmapReady tilt mode" + parameter.getTiltContext().mode);
+                    }
+                    collageView.updateShapeListForFilterBitmap(bitmap);
+                    collageView.updateParamList(parameter);
+                    collageView.postInvalidate();
+                    getSupportFragmentManager().beginTransaction().hide(fullEffectFragment).commit();
+                    collageView.postInvalidate();
+                }
+
+                public void onCancel() {
+                    setVisibilityOfFilterHorizontalListview(false);
+                    collageView.postInvalidate();
+                }
+            });
+            findViewById(R.id.collage_effect_fragment_container).bringToFront();
+        }
+    }
+
+    void setVisibilityOfFilterHorizontalListview(boolean show) {
+        if (show && this.fullEffectFragment.isHidden()) {
+            getSupportFragmentManager().beginTransaction().show(this.fullEffectFragment).commit();
+        }
+        if (!show && this.fullEffectFragment.isVisible()) {
+            getSupportFragmentManager().beginTransaction().hide(this.fullEffectFragment).commit();
+        }
+        findViewById(R.id.collage_effect_fragment_container).bringToFront();
+    }
+
+    public void onBackPressed() {
+        if (this.fontFragment != null && this.fontFragment.isVisible()) {
+            getSupportFragmentManager().beginTransaction().remove(this.fontFragment).commit();
+        } else if (this.galleryFragment != null && this.galleryFragment.isVisible()) {
+            this.galleryFragment.backtrace();
+        } else if (!this.showText && this.canvasText != null) {
+            this.showText = true;
+            this.mainLayout.removeView(this.canvasText);
+            this.collageView.postInvalidate();
+            this.canvasText = null;
+            Log.e(TAG, "replace fragment");
+        } else if (this.fullEffectFragment == null || !this.fullEffectFragment.isVisible()) {
+            if (this.colorContainer.getVisibility() == View.VISIBLE) {
+                hideColorContainer();
+            } else if (this.swapMode) {
+                this.selectSwapTextView.setVisibility(View.INVISIBLE);
+                this.swapMode = false;
+            } else if (this.collageView != null && this.collageView.shapeIndex >= 0) {
+                this.collageView.unselectShapes();
+            } else if (this.selectImageForAdj) {
+                this.selectFilterTextView.setVisibility(View.INVISIBLE);
+                this.selectImageForAdj = false;
+            } else if (this.viewFlipper == null || this.viewFlipper.getDisplayedChild() == INDEX_COLLAGE_INVISIBLE_VIEW) {
+                backButtonAlertBuilder();
+            } else {
+                setSelectedTab(INDEX_COLLAGE_INVISIBLE_VIEW);
+            }
+        } else if (!this.fullEffectFragment.onBackPressed()) {
+            setVisibilityOfFilterHorizontalListview(false);
+        }
+    }
+
+    private void backButtonAlertBuilder() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
+        builder.setMessage("Would you like to save image ?").setCancelable(true).setPositiveButton("Yes", new OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                SaveImageTask saveImageTask = new SaveImageTask();
+                Object[] objArr = new Object[CollageActivity.INDEX_COLLAGE_BACKGROUND];
+                objArr[CollageActivity.INDEX_COLLAGE] = Integer.valueOf(CollageActivity.INDEX_COLLAGE_BLUR);
+                saveImageTask.execute(objArr);
+            }
+        }).setNegativeButton("Cancel", new OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        }).setNeutralButton("No", new OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                activity.finish();
+            }
+        });
+        this.saveImageAlert = builder.create();
+        this.saveImageAlert.show();
+    }
 
     /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.3 */
     class C05703 implements OnSeekBarChangeListener {
@@ -242,10 +1016,11 @@ public class CollageActivity extends FragmentActivity {
     class CollageView extends View {
         public static final int BACKGROUND_BLUR = 1;
         public static final int BACKGROUND_PATTERN = 0;
-        private static final int INVALID_POINTER_ID = 1;
         public static final int PATTERN_SENTINEL = -1;
         static final float RATIO_CONSTANT = 1.25f;
+        private static final int INVALID_POINTER_ID = 1;
         private static final int UPPER_SIZE_LIMIT = 2048;
+        final float epsilon;
         float MIN_ZOOM;
         RectF above;
         int animEpsilon;
@@ -255,12 +1030,10 @@ public class CollageActivity extends FragmentActivity {
         int animationCount;
         int animationDurationLimit;
         int animationLimit;
-        private Runnable animator;
         int backgroundMode;
         Bitmap blurBitmap;
         BlurBuilder blurBuilder;
         BlurBuilderNormal blurBuilderNormal;
-        private int blurRadius;
         RectF blurRectDst;
         Rect blurRectSrc;
         Paint borderPaint;
@@ -271,7 +1044,6 @@ public class CollageActivity extends FragmentActivity {
         float cornerRadius;
         int currentCollageIndex;
         RectF drawingAreaRect;
-        final float epsilon;
         float finalAngle;
         Bitmap frameBitmap;
         int frameDuration;
@@ -280,12 +1052,9 @@ public class CollageActivity extends FragmentActivity {
         boolean isInCircle;
         boolean isOnCross;
         RectF left;
-        private int mActivePointerId;
         float mLastTouchX;
         float mLastTouchY;
-        private ScaleGestureDetector mScaleDetector;
         float mScaleFactor;
-        private GestureDetectorCompat mTouchDetector;
         Bitmap[] maskBitmapArray;
         int[] maskResIdList;
         float[] matrixValues;
@@ -314,7 +1083,6 @@ public class CollageActivity extends FragmentActivity {
         Matrix sizeMatrixSaved;
         float sizeScale;
         ArrayList<Float> smallestDistanceList;
-        private float startAngle;
         Matrix startMatrix;
         long startTime;
         Matrix textMatrix;
@@ -324,128 +1092,12 @@ public class CollageActivity extends FragmentActivity {
         float xscale;
         float yscale;
         PointF zoomStart;
-
-        /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.CollageView.1 */
-        class C05731 implements Runnable {
-            C05731() {
-            }
-
-            public void run() {
-                boolean scheduleNewFrame = false;
-                int iter = ((int) (((float) (System.nanoTime() - CollageView.this.startTime)) / 1000000.0f)) / CollageView.this.animationDurationLimit;
-                if (iter <= 0) {
-                    iter = CollageView.INVALID_POINTER_ID;
-                }
-                CollageView collageView;
-                if (CollageView.this.animationCount == 0) {
-                    collageView = CollageView.this;
-                    collageView.animationCount += CollageView.INVALID_POINTER_ID;
-                } else {
-                    collageView = CollageView.this;
-                    collageView.animationCount += iter;
-                }
-                CollageView.this.setCollageSize(CollageView.this.sizeMatrix, CollageView.this.animSize(CollageView.this.animationCount));
-                if (CollageView.this.animationCount < CollageView.this.animationLimit) {
-                    scheduleNewFrame = true;
-                } else {
-                    CollageView.this.animate = false;
-                }
-                if (scheduleNewFrame) {
-                    CollageView.this.postDelayed(this, (long) CollageView.this.frameDuration);
-                } else {
-                    CollageView.this.sizeMatrix.set(CollageView.this.sizeMatrixSaved);
-                }
-                ((ShapeLayout) CollageView.this.shapeLayoutList.get(CollageView.this.currentCollageIndex)).shapeArr[CollageView.BACKGROUND_PATTERN].f508r.roundOut(CollageView.this.rectAnim);
-                CollageView.this.invalidate(CollageView.this.rectAnim);
-                CollageView.this.startTime = System.nanoTime();
-            }
-        }
-
-        class MyGestureListener extends SimpleOnGestureListener {
-            private static final String DEBUG_TAG = "Gestures";
-
-            MyGestureListener() {
-            }
-
-            public boolean onSingleTapConfirmed(MotionEvent event) {
-                Log.d(DEBUG_TAG, "onSingleTapConfirmed: ");
-                return true;
-            }
-
-            public boolean onSingleTapUp(MotionEvent event) {
-                Log.d(DEBUG_TAG, "onSingleTapUp: ");
-                if (!CollageView.this.isOnCross) {
-                    collageView.selectCurrentShape(event.getX(), event.getY(), true);
-                }
-                return true;
-            }
-        }
-
-        private class ScaleListener extends SimpleOnScaleGestureListener {
-            private ScaleListener() {
-            }
-
-            public boolean onScale(ScaleGestureDetector detector) {
-                if (CollageView.this.shapeIndex >= 0) {
-                    CollageView.this.mScaleFactor = detector.getScaleFactor();
-                    detector.isInProgress();
-                    CollageView.this.mScaleFactor = Math.max(0.1f, Math.min(CollageView.this.mScaleFactor, 5.0f));
-                    CollageView.this.scaleShape = ((ShapeLayout) CollageView.this.shapeLayoutList.get(CollageView.this.currentCollageIndex)).shapeArr[CollageView.this.shapeIndex];
-                    if (isScrapBook) {
-                        CollageView.this.scaleShape.bitmapMatrixScaleScrapBook(CollageView.this.mScaleFactor, CollageView.this.mScaleFactor);
-                    } else {
-                        CollageView.this.scaleShape.bitmapMatrixScale(CollageView.this.mScaleFactor, CollageView.this.mScaleFactor, CollageView.this.scaleShape.bounds.centerX(), CollageView.this.scaleShape.bounds.centerY());
-                    }
-                    CollageView.this.invalidate();
-                    CollageView.this.requestLayout();
-                }
-                return true;
-            }
-        }
-
-        /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.CollageView.2 */
-        class C09472 implements RotationGestureDetector.OnRotationGestureListener {
-            C09472() {
-            }
-
-            public void OnRotation(RotationGestureDetector rotationDetector) {
-                if (CollageView.this.shapeIndex >= 0) {
-                    float angle = rotationDetector.getAngle();
-                    CollageView.this.scaleShape = ((ShapeLayout) CollageView.this.shapeLayoutList.get(CollageView.this.currentCollageIndex)).shapeArr[CollageView.this.shapeIndex];
-                    float rotation = CollageView.this.getMatrixRotation(CollageView.this.scaleShape.bitmapMatrix);
-                    if ((rotation == 0.0f || rotation == 90.0f || rotation == 180.0f || rotation == -180.0f || rotation == -90.0f) && Math.abs(CollageView.this.finalAngle - angle) < 4.0f) {
-                        CollageView.this.orthogonal = true;
-                        return;
-                    }
-                    if (Math.abs((rotation - CollageView.this.finalAngle) + angle) < 4.0f) {
-                        angle = CollageView.this.finalAngle - rotation;
-                        CollageView.this.orthogonal = true;
-                    }
-                    if (Math.abs(90.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
-                        angle = (CollageView.this.finalAngle + 90.0f) - rotation;
-                        CollageView.this.orthogonal = true;
-                    }
-                    if (Math.abs(180.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
-                        angle = (180.0f + CollageView.this.finalAngle) - rotation;
-                        CollageView.this.orthogonal = true;
-                    }
-                    if (Math.abs(-180.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
-                        angle = (CollageView.this.finalAngle - 0.024902344f) - rotation;
-                        CollageView.this.orthogonal = true;
-                    }
-                    if (Math.abs(-90.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
-                        angle = (CollageView.this.finalAngle - 0.049804688f) - rotation;
-                        CollageView.this.orthogonal = true;
-                    } else {
-                        CollageView.this.orthogonal = false;
-                    }
-                    CollageView.this.scaleShape.bitmapMatrixRotate(CollageView.this.finalAngle - angle);
-                    CollageView.this.finalAngle = angle;
-                    CollageView.this.invalidate();
-                    CollageView.this.requestLayout();
-                }
-            }
-        }
+        private Runnable animator;
+        private int blurRadius;
+        private int mActivePointerId;
+        private ScaleGestureDetector mScaleDetector;
+        private GestureDetectorCompat mTouchDetector;
+        private float startAngle;
 
         @SuppressLint({"NewApi"})
         public CollageView(Context context, int width, int height) {
@@ -1205,12 +1857,12 @@ public class CollageActivity extends FragmentActivity {
                         }
                     }
                     break;
-                case CollageActivity.INDEX_COLLAGE_RATIO :
+                case CollageActivity.INDEX_COLLAGE_RATIO:
                     this.mActivePointerId = INVALID_POINTER_ID;
                     this.isInCircle = false;
                     this.isOnCross = false;
                     break;
-                case CollageActivity.TAB_SIZE :
+                case CollageActivity.TAB_SIZE:
                     this.finalAngle = 0.0f;
                     pointerIndex = (MotionEventCompat.ACTION_POINTER_INDEX_MASK & action) >> 8;
                     if (ev.getPointerId(pointerIndex) == this.mActivePointerId) {
@@ -1389,6 +2041,128 @@ public class CollageActivity extends FragmentActivity {
             int t = (int) ((btmheight - h) / 2.0f);
             this.blurRectSrc.set(l, t, (int) (((float) l) + w), (int) (((float) t) + h));
         }
+
+        /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.CollageView.1 */
+        class C05731 implements Runnable {
+            C05731() {
+            }
+
+            public void run() {
+                boolean scheduleNewFrame = false;
+                int iter = ((int) (((float) (System.nanoTime() - CollageView.this.startTime)) / 1000000.0f)) / CollageView.this.animationDurationLimit;
+                if (iter <= 0) {
+                    iter = CollageView.INVALID_POINTER_ID;
+                }
+                CollageView collageView;
+                if (CollageView.this.animationCount == 0) {
+                    collageView = CollageView.this;
+                    collageView.animationCount += CollageView.INVALID_POINTER_ID;
+                } else {
+                    collageView = CollageView.this;
+                    collageView.animationCount += iter;
+                }
+                CollageView.this.setCollageSize(CollageView.this.sizeMatrix, CollageView.this.animSize(CollageView.this.animationCount));
+                if (CollageView.this.animationCount < CollageView.this.animationLimit) {
+                    scheduleNewFrame = true;
+                } else {
+                    CollageView.this.animate = false;
+                }
+                if (scheduleNewFrame) {
+                    CollageView.this.postDelayed(this, (long) CollageView.this.frameDuration);
+                } else {
+                    CollageView.this.sizeMatrix.set(CollageView.this.sizeMatrixSaved);
+                }
+                ((ShapeLayout) CollageView.this.shapeLayoutList.get(CollageView.this.currentCollageIndex)).shapeArr[CollageView.BACKGROUND_PATTERN].f508r.roundOut(CollageView.this.rectAnim);
+                CollageView.this.invalidate(CollageView.this.rectAnim);
+                CollageView.this.startTime = System.nanoTime();
+            }
+        }
+
+        class MyGestureListener extends SimpleOnGestureListener {
+            private static final String DEBUG_TAG = "Gestures";
+
+            MyGestureListener() {
+            }
+
+            public boolean onSingleTapConfirmed(MotionEvent event) {
+                Log.d(DEBUG_TAG, "onSingleTapConfirmed: ");
+                return true;
+            }
+
+            public boolean onSingleTapUp(MotionEvent event) {
+                Log.d(DEBUG_TAG, "onSingleTapUp: ");
+                if (!CollageView.this.isOnCross) {
+                    collageView.selectCurrentShape(event.getX(), event.getY(), true);
+                }
+                return true;
+            }
+        }
+
+        private class ScaleListener extends SimpleOnScaleGestureListener {
+            private ScaleListener() {
+            }
+
+            public boolean onScale(ScaleGestureDetector detector) {
+                if (CollageView.this.shapeIndex >= 0) {
+                    CollageView.this.mScaleFactor = detector.getScaleFactor();
+                    detector.isInProgress();
+                    CollageView.this.mScaleFactor = Math.max(0.1f, Math.min(CollageView.this.mScaleFactor, 5.0f));
+                    CollageView.this.scaleShape = ((ShapeLayout) CollageView.this.shapeLayoutList.get(CollageView.this.currentCollageIndex)).shapeArr[CollageView.this.shapeIndex];
+                    if (isScrapBook) {
+                        CollageView.this.scaleShape.bitmapMatrixScaleScrapBook(CollageView.this.mScaleFactor, CollageView.this.mScaleFactor);
+                    } else {
+                        CollageView.this.scaleShape.bitmapMatrixScale(CollageView.this.mScaleFactor, CollageView.this.mScaleFactor, CollageView.this.scaleShape.bounds.centerX(), CollageView.this.scaleShape.bounds.centerY());
+                    }
+                    CollageView.this.invalidate();
+                    CollageView.this.requestLayout();
+                }
+                return true;
+            }
+        }
+
+        /* renamed from: com.lyrebirdstudio.collagelib.CollageActivity.CollageView.2 */
+        class C09472 implements RotationGestureDetector.OnRotationGestureListener {
+            C09472() {
+            }
+
+            public void OnRotation(RotationGestureDetector rotationDetector) {
+                if (CollageView.this.shapeIndex >= 0) {
+                    float angle = rotationDetector.getAngle();
+                    CollageView.this.scaleShape = ((ShapeLayout) CollageView.this.shapeLayoutList.get(CollageView.this.currentCollageIndex)).shapeArr[CollageView.this.shapeIndex];
+                    float rotation = CollageView.this.getMatrixRotation(CollageView.this.scaleShape.bitmapMatrix);
+                    if ((rotation == 0.0f || rotation == 90.0f || rotation == 180.0f || rotation == -180.0f || rotation == -90.0f) && Math.abs(CollageView.this.finalAngle - angle) < 4.0f) {
+                        CollageView.this.orthogonal = true;
+                        return;
+                    }
+                    if (Math.abs((rotation - CollageView.this.finalAngle) + angle) < 4.0f) {
+                        angle = CollageView.this.finalAngle - rotation;
+                        CollageView.this.orthogonal = true;
+                    }
+                    if (Math.abs(90.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
+                        angle = (CollageView.this.finalAngle + 90.0f) - rotation;
+                        CollageView.this.orthogonal = true;
+                    }
+                    if (Math.abs(180.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
+                        angle = (180.0f + CollageView.this.finalAngle) - rotation;
+                        CollageView.this.orthogonal = true;
+                    }
+                    if (Math.abs(-180.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
+                        angle = (CollageView.this.finalAngle - 0.024902344f) - rotation;
+                        CollageView.this.orthogonal = true;
+                    }
+                    if (Math.abs(-90.0f - ((rotation - CollageView.this.finalAngle) + angle)) < 4.0f) {
+                        angle = (CollageView.this.finalAngle - 0.049804688f) - rotation;
+                        CollageView.this.orthogonal = true;
+                    } else {
+                        CollageView.this.orthogonal = false;
+                    }
+                    CollageView.this.scaleShape.bitmapMatrixRotate(CollageView.this.finalAngle - angle);
+                    CollageView.this.finalAngle = angle;
+                    CollageView.this.invalidate();
+                    CollageView.this.requestLayout();
+                }
+            }
+        }
     }
 
     final class MyMediaScannerConnectionClient implements MediaScannerConnectionClient {
@@ -1532,7 +2306,7 @@ public class CollageActivity extends FragmentActivity {
                         maxDivider = 3;
                     }
                     String str = selectedImagePath;
-                    bitmapList[0] = Utility.decodeFile(str, Utility.maxSizeForDimension(context, maxDivider, UPPER_SIZE_FOR_LOAD),isScrapBook);
+                    bitmapList[0] = Utility.decodeFile(str, Utility.maxSizeForDimension(context, maxDivider, UPPER_SIZE_FOR_LOAD), isScrapBook);
                 }
             } else {
                 arraySize = selectedImageList.length;
@@ -1574,7 +2348,8 @@ public class CollageActivity extends FragmentActivity {
 
         @Override
         protected void onPostExecute(Void v) {
-            try {progressDialog.dismiss();
+            try {
+                progressDialog.dismiss();
             } catch (Exception e) {
             }
             if (arraySize <= 0) {
@@ -1735,780 +2510,5 @@ public class CollageActivity extends FragmentActivity {
             }
             MyMediaScannerConnectionClient myMediaScannerConnectionClient = new MyMediaScannerConnectionClient(getApplicationContext(), new File(this.resultPath), null);
         }
-    }
-
-    public /* bridge */ /* synthetic */ View onCreateView(View view, String str, Context context, AttributeSet attributeSet) {
-        return super.onCreateView(view, str, context, attributeSet);
-    }
-
-    public /* bridge */ /* synthetic */ View onCreateView(String str, Context context, AttributeSet attributeSet) {
-        return super.onCreateView(str, context, attributeSet);
-    }
-
-    public CollageActivity() {
-        this.activity = this;
-        this.selectImageForAdj = false;
-        this.isScrapBook = false;
-        this.patternAdapterList = new ArrayList();
-        this.defaultSizeProgressForBlur = 45;
-        this.btmDelete = null;
-        this.btmScale = null;
-        this.textDataList = new ArrayList();
-        this.showText = false;
-        this.fontChoosedListener = new C09411();
-        this.currentStickerIndex = INDEX_COLLAGE;
-        this.stickerViewSelectedListner = new C09422();
-        this.mSeekBarListener = new C05703();
-        this.context = this;
-        this.swapMode = false;
-        this.mulX = 1.0f;
-        this.mulY = 1.0f;
-        this.RATIO_BUTTON_SIZE = 11;
-    }
-
-    @Override
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        requestWindowFeature(INDEX_COLLAGE_BACKGROUND);
-        getWindow().addFlags(AccessibilityNodeInfoCompat.ACTION_NEXT_HTML_ELEMENT);
-        Display display = getWindowManager().getDefaultDisplay();
-        width = display.getWidth();
-        height = display.getHeight();
-        Utility.logFreeMemory(this.context);
-        setContentView(R.layout.activity_collage);
-        Bundle extras = getIntent().getExtras();
-        int arraySize = getCollageSize(extras);
-        seekBarRound = (SeekBar) findViewById(R.id.seekbar_round);
-        seekBarRound.setOnSeekBarChangeListener(this.mSeekBarListener);
-        seekBarPadding = (SeekBar) findViewById(R.id.seekbar_padding);
-        seekBarPadding.setOnSeekBarChangeListener(this.mSeekBarListener);
-        seekbarSize = (SeekBar) findViewById(R.id.seekbar_size);
-        seekbarSize.setOnSeekBarChangeListener(this.mSeekBarListener);
-        seekbarBlur = (SeekBar) findViewById(R.id.seekbar_collage_blur);
-        seekbarBlur.setOnSeekBarChangeListener(this.mSeekBarListener);
-        RecyclerView recyclerViewColor = (RecyclerView) findViewById(R.id.recyclerView_color);
-        collageRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_grid);
-        int colorDefault = getResources().getColor(R.color.view_flipper_bg_color);
-        int colorSelected = getResources().getColor(R.color.footer_button_color_pressed);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        collageRecyclerView.setLayoutManager(layoutManager);
-        collageAdapter = new MyAdapter(Collage.collageIconArray[arraySize - 1], new C09434(), colorDefault, colorSelected, false, true);
-        collageRecyclerView.setAdapter(collageAdapter);
-        collageRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        viewFlipper = (ViewFlipper) findViewById(R.id.collage_view_flipper);
-        viewFlipper.setDisplayedChild(5);
-        createAdapterList(colorDefault, colorSelected);
-        RecyclerView recyclerViewPattern = (RecyclerView) findViewById(R.id.recyclerView_pattern);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        colorContainer = (LinearLayout) findViewById(R.id.color_container);
-        recyclerViewPattern.setLayoutManager(linearLayoutManager);
-        recyclerViewPattern.setAdapter(new MyAdapter(Utility.patternResIdList3, new C09445(recyclerViewColor), colorDefault, colorSelected, false, false));
-        recyclerViewPattern.setItemAnimator(new DefaultItemAnimator());
-        LinearLayoutManager layoutManagerColor = new LinearLayoutManager(this.context);
-        layoutManagerColor.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewColor.setLayoutManager(layoutManagerColor);
-        recyclerViewColor.setAdapter(new ColorPickerAdapter(new C09456(), colorDefault, colorSelected));
-        recyclerViewColor.setItemAnimator(new DefaultItemAnimator());
-        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) findViewById(R.id.collage_footer);
-        horizontalScrollView.bringToFront();
-        horizontalScrollView.postDelayed(new C05717(horizontalScrollView), 50);
-        horizontalScrollView.postDelayed(new C05728(horizontalScrollView), 600);
-        new BitmapWorkerTask().execute(new Bundle[]{extras,bundle});
-
-    }
-
-    private void createAdapterList(int colorDefault, int colorSelected) {
-        int size = Utility.patternResIdList2.length;
-        this.patternAdapterList.clear();
-        this.patternAdapterList.add(new ColorPickerAdapter(new C09469(), colorDefault, colorSelected));
-        for (int i = INDEX_COLLAGE; i < size; i += INDEX_COLLAGE_BACKGROUND) {
-            this.patternAdapterList.add(new MyAdapter(Utility.patternResIdList2[i], new MyAdapter.CurrentCollageIndexChangedListener() {
-                public void onIndexChanged(int positionOrColor) {
-                    collageView.setPatternPaint(positionOrColor);
-                }
-            }, colorDefault, colorSelected, true, true));
-        }
-    }
-
-   public void addCanvasTextView() {
-        this.canvasText = new CustomRelativeLayout(this.context, this.textDataList, this.collageView.identityMatrix, new SingleTap() {
-            public void onSingleTap(TextData textData) {
-                fontFragment = new FontFragment();
-                Bundle arguments = new Bundle();
-                arguments.putSerializable("text_data", textData);
-                fontFragment.setArguments(arguments);
-                getSupportFragmentManager().beginTransaction().replace(R.id.collage_text_view_fragment_container, fontFragment, "FONT_FRAGMENT").commit();
-                Log.e(CollageActivity.TAG, "replace fragment");
-                fontFragment.setFontChoosedListener(fontChoosedListener);
-            }
-        });
-        this.canvasText.setApplyTextListener(new ApplyTextInterface() {
-            public void onOk(ArrayList<TextData> tdList) {
-                Iterator it = tdList.iterator();
-                while (it.hasNext()) {
-                    ((TextData) it.next()).setImageSaveMatrix(collageView.identityMatrix);
-                }
-                textDataList = tdList;
-                showText = true;
-                if (mainLayout == null) {
-                    mainLayout = (RelativeLayout) findViewById(R.id.collage_main_layout);
-                }
-                mainLayout.removeView(canvasText);
-                collageView.postInvalidate();
-            }
-
-            public void onCancel() {
-                showText = true;
-                mainLayout.removeView(canvasText);
-                collageView.postInvalidate();
-            }
-        });
-        this.showText = false;
-        this.collageView.invalidate();
-        this.mainLayout.addView(this.canvasText);
-        ((RelativeLayout) findViewById(R.id.collage_text_view_fragment_container)).bringToFront();
-        this.fontFragment = new FontFragment();
-        this.fontFragment.setArguments(new Bundle());
-        getSupportFragmentManager().beginTransaction().add(R.id.collage_text_view_fragment_container, this.fontFragment, "FONT_FRAGMENT").commit();
-        Log.e(TAG, "add fragment");
-        this.fontFragment.setFontChoosedListener(this.fontChoosedListener);
-    }
-
-    private void setVisibilityForSingleImage() {
-        findViewById(R.id.seekbar_corner_container).setVisibility(View.GONE);
-        findViewById(R.id.seekbar_space_container).setVisibility(View.GONE);
-        findViewById(R.id.button_collage_blur).setVisibility(View.VISIBLE);
-        findViewById(R.id.button_collage_context_delete).setVisibility(View.GONE);
-        findViewById(R.id.button_collage_context_swap).setVisibility(View.GONE);
-        if (!this.isScrapBook) {
-            this.collageView.setCollageSize(this.collageView.sizeMatrix, 45);
-            if (this.seekbarSize != null) {
-                this.seekbarSize.setProgress(45);
-            }
-        }
-        this.collageView.setBlurBitmap(this.collageView.blurRadius);
-        if (!this.isScrapBook) {
-            setSelectedTab(INDEX_COLLAGE_BLUR);
-        }
-    }
-
-    private void setVisibilityForScrapbook() {
-        findViewById(R.id.button_collage_layout).setVisibility(View.GONE);
-        findViewById(R.id.button_collage_space).setVisibility(View.GONE);
-        findViewById(R.id.button_collage_context_swap).setVisibility(View.GONE);
-        findViewById(R.id.button_collage_context_fit).setVisibility(View.GONE);
-        findViewById(R.id.button_collage_context_center).setVisibility(View.GONE);
-        findViewById(R.id.button_collage_context_delete).setVisibility(View.GONE);
-    }
-
-    public static boolean hasHardwareAcceleration(Activity activity) {
-        Window window = activity.getWindow();
-        if (window != null && (window.getAttributes().flags & ViewCompat.MEASURED_STATE_TOO_SMALL) != 0) {
-            return true;
-        }
-        try {
-            if ((activity.getPackageManager().getActivityInfo(activity.getComponentName(), INDEX_COLLAGE).flags & AdRequest.MAX_CONTENT_URL_LENGTH) != 0) {
-                return true;
-            }
-        } catch (NameNotFoundException e) {
-            Log.e("Chrome", "getActivityInfo(self) should not fail");
-        }
-        return false;
-    }
-
-    int getCollageSize(Bundle extras) {
-        long[] selectedImageList = extras.getLongArray("photo_id_list");
-        if (selectedImageList == null) {
-            return 1;
-        }
-        return selectedImageList.length;
-    }
-
-    public void addStickerGalleryFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
-        if (this.galleryFragment == null) {
-            this.galleryFragment = new StickerGalleryFragment();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.add(R.id.sticker_grid_fragment_container, this.galleryFragment, "myStickerFragmentTag");
-            ft.commit();
-            this.galleryFragment.setGalleryListener(createGalleryListener());
-            Log.e(TAG, "galleryFragment null");
-        } else {
-            Log.e(TAG, "show gallery fragment");
-            getSupportFragmentManager().beginTransaction().show(this.galleryFragment).commit();
-        }
-        this.galleryFragment.setTotalImage(this.stickerViewContainer.getChildCount());
-    }
-
-   public  StickerGalleryListener createGalleryListener() {
-        if (this.stickerGalleryListener == null) {
-            this.stickerGalleryListener = new StickerGalleryListener() {
-                public void onGalleryOkSingleImage(int resId) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId);
-                    if (stickerremoveBitmap == null) {
-                        stickerremoveBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_remove_text);
-                    }
-                    if (stickerscaleBitmap == null) {
-                        stickerscaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_scale_text);
-                    }
-                    StickerView stickerView = new StickerView(context, bitmap, null, stickerremoveBitmap, stickerscaleBitmap, resId);
-                    stickerView.setStickerViewSelectedListener(stickerViewSelectedListner);
-                    if (stickerViewContainer == null) {
-                        stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
-                    }
-                    stickerViewContainer.addView(stickerView);
-                    FragmentManager fm = getSupportFragmentManager();
-                    if (galleryFragment == null) {
-                        galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
-                    }
-                    fm.beginTransaction().hide(galleryFragment).commit();
-                }
-
-                public void onGalleryOkImageArray(int[] ImageIdList) {
-                    if (stickerremoveBitmap == null) {
-                        stickerremoveBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_remove_text);
-                    }
-                    if (stickerscaleBitmap == null) {
-                        stickerscaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_scale_text);
-                    }
-                    for (int i = CollageActivity.INDEX_COLLAGE; i < ImageIdList.length; i += CollageActivity.INDEX_COLLAGE_BACKGROUND) {
-                        StickerView stickerView = new StickerView(context, BitmapFactory.decodeResource(getResources(), ImageIdList[i]), null, stickerremoveBitmap, stickerscaleBitmap, ImageIdList[i]);
-                        stickerView.setStickerViewSelectedListener(stickerViewSelectedListner);
-                        if (stickerViewContainer == null) {
-                            stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
-                        }
-                        stickerViewContainer.addView(stickerView);
-                    }
-                    FragmentManager fm = getSupportFragmentManager();
-                    if (galleryFragment == null) {
-                        galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myFragmentTag");
-                    }
-                    fm.beginTransaction().hide(galleryFragment).commit();
-                }
-
-                public void onGalleryCancel() {
-                    getSupportFragmentManager().beginTransaction().hide(galleryFragment).commit();
-                }
-            };
-        }
-        return this.stickerGalleryListener;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == SAVE_IMAGE_ID && !CommonLibrary.isAppPro(this.context) && this.context.getResources().getBoolean(R.bool.showInterstitialAds)) {
-//            ImageUtility.displayInterStitialWithSplashScreen(this.interstitial, this, ImageUtility.SPLASH_TIME_OUT_DEFAULT, "COLLAGE_ACTIVITY_ONACTIVITYRESULT");
-//        }
-    }
-
-    public void onDestroy() {
-        int i;
-        super.onDestroy();
-        if (this.bitmapList != null) {
-            for (i = INDEX_COLLAGE; i < this.bitmapList.length; i += INDEX_COLLAGE_BACKGROUND) {
-                if (this.bitmapList[i] != null) {
-                    this.bitmapList[i].recycle();
-                }
-            }
-        }
-        if (this.collageView != null) {
-            if (this.collageView.shapeLayoutList != null) {
-                for (i = INDEX_COLLAGE; i < this.collageView.shapeLayoutList.size(); i += INDEX_COLLAGE_BACKGROUND) {
-                    for (int j = INDEX_COLLAGE; j < ((ShapeLayout) this.collageView.shapeLayoutList.get(i)).shapeArr.length; j += INDEX_COLLAGE_BACKGROUND) {
-                        if (((ShapeLayout) this.collageView.shapeLayoutList.get(i)).shapeArr[j] != null) {
-                            ((ShapeLayout) this.collageView.shapeLayoutList.get(i)).shapeArr[j].freeBitmaps();
-                        }
-                    }
-                }
-            }
-            if (this.collageView.maskBitmapArray != null) {
-                for (i = INDEX_COLLAGE; i < this.collageView.maskBitmapArray.length; i += INDEX_COLLAGE_BACKGROUND) {
-                    if (this.collageView.maskBitmapArray[i] != null) {
-                        if (!this.collageView.maskBitmapArray[i].isRecycled()) {
-                            this.collageView.maskBitmapArray[i].recycle();
-                        }
-                        this.collageView.maskBitmapArray[i] = null;
-                    }
-                }
-            }
-        }
-        if (this.adWhirlLayout != null) {
-            this.adWhirlLayout.removeAllViews();
-            this.adWhirlLayout.destroy();
-        }
-    }
-
-    void setSelectedTab(int index) {
-        if (this.viewFlipper != null) {
-            setTabBg(INDEX_COLLAGE);
-            int displayedChild = this.viewFlipper.getDisplayedChild();
-            if (displayedChild != INDEX_COLLAGE_BACKGROUND) {
-                hideColorContainer();
-            }
-            if (index == 0) {
-                if (displayedChild != 0) {
-                    this.viewFlipper.setInAnimation(this.slideLeftIn);
-                    this.viewFlipper.setOutAnimation(this.slideRightOut);
-                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE);
-                } else {
-                    return;
-                }
-            }
-            if (index == INDEX_COLLAGE_BACKGROUND) {
-                setTabBg(INDEX_COLLAGE_BACKGROUND);
-                if (displayedChild != INDEX_COLLAGE_BACKGROUND) {
-                    if (displayedChild == 0) {
-                        this.viewFlipper.setInAnimation(this.slideRightIn);
-                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
-                    } else {
-                        this.viewFlipper.setInAnimation(this.slideLeftIn);
-                        this.viewFlipper.setOutAnimation(this.slideRightOut);
-                    }
-                    this.viewFlipper.setDisplayedChild(1);
-                } else {
-                    return;
-                }
-            }
-            if (index == INDEX_COLLAGE_BLUR) {
-                setTabBg(INDEX_COLLAGE_BLUR);
-                if (displayedChild != INDEX_COLLAGE_BLUR) {
-                    if (displayedChild == 0) {
-                        this.viewFlipper.setInAnimation(this.slideRightIn);
-                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
-                    } else {
-                        this.viewFlipper.setInAnimation(this.slideLeftIn);
-                        this.viewFlipper.setOutAnimation(this.slideRightOut);
-                    }
-                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_BLUR);
-                } else {
-                    return;
-                }
-            }
-            if (index == INDEX_COLLAGE_SPACE) {
-                setTabBg(INDEX_COLLAGE_SPACE);
-                if (displayedChild != INDEX_COLLAGE_SPACE) {
-                    if (displayedChild == 0 || displayedChild == INDEX_COLLAGE_BACKGROUND) {
-                        this.viewFlipper.setInAnimation(this.slideRightIn);
-                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
-                    } else {
-                        this.viewFlipper.setInAnimation(this.slideLeftIn);
-                        this.viewFlipper.setOutAnimation(this.slideRightOut);
-                    }
-                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_SPACE);
-                } else {
-                    return;
-                }
-            }
-            if (index == INDEX_COLLAGE_RATIO) {
-                setTabBg(INDEX_COLLAGE_RATIO);
-                if (displayedChild != INDEX_COLLAGE_RATIO) {
-                    if (displayedChild == INDEX_COLLAGE_INVISIBLE_VIEW) {
-                        this.viewFlipper.setInAnimation(this.slideLeftIn);
-                        this.viewFlipper.setOutAnimation(this.slideRightOut);
-                    } else {
-                        this.viewFlipper.setInAnimation(this.slideRightIn);
-                        this.viewFlipper.setOutAnimation(this.slideLeftOut);
-                    }
-                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_RATIO);
-                } else {
-                    return;
-                }
-            }
-            if (index == INDEX_COLLAGE_INVISIBLE_VIEW) {
-                setTabBg(-1);
-                if (displayedChild != INDEX_COLLAGE_INVISIBLE_VIEW) {
-                    this.viewFlipper.setInAnimation(this.slideRightIn);
-                    this.viewFlipper.setOutAnimation(this.slideLeftOut);
-                    this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_INVISIBLE_VIEW);
-                }
-            }
-        }
-    }
-
-    private void setTabBg(int index) {
-        if (this.tabButtonList == null) {
-            this.tabButtonList = new View[TAB_SIZE];
-            this.tabButtonList[INDEX_COLLAGE] = findViewById(R.id.button_collage_layout);
-            this.tabButtonList[INDEX_COLLAGE_SPACE] = findViewById(R.id.button_collage_space);
-            this.tabButtonList[INDEX_COLLAGE_BLUR] = findViewById(R.id.button_collage_blur);
-            this.tabButtonList[INDEX_COLLAGE_BACKGROUND] = findViewById(R.id.button_collage_background);
-            this.tabButtonList[INDEX_COLLAGE_RATIO] = findViewById(R.id.button_collage_ratio);
-            this.tabButtonList[INDEX_COLLAGE_INVISIBLE_VIEW] = findViewById(R.id.button_collage_adj);
-        }
-        for (int i = INDEX_COLLAGE; i < this.tabButtonList.length; i += INDEX_COLLAGE_BACKGROUND) {
-            this.tabButtonList[i].setBackgroundResource(R.drawable.collage_footer_button);
-        }
-        if (index >= 0) {
-            this.tabButtonList[index].setBackgroundResource(R.color.footer_button_color_pressed);
-        }
-    }
-
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putBoolean("show_text", this.showText);
-        savedInstanceState.putSerializable("text_data", this.textDataList);
-        if (this.fontFragment != null && this.fontFragment.isVisible()) {
-            getSupportFragmentManager().beginTransaction().remove(this.fontFragment).commit();
-        }
-        if (this.stickerViewContainer != null && this.stickerViewContainer.getChildCount() > 0) {
-            int size = this.stickerViewContainer.getChildCount();
-            StickerData[] stickerDataArray = new StickerData[size];
-            for (int i = INDEX_COLLAGE; i < size; i += INDEX_COLLAGE_BACKGROUND) {
-                stickerDataArray[i] = ((StickerView) this.stickerViewContainer.getChildAt(i)).getStickerData();
-            }
-            savedInstanceState.putParcelableArray("sticker_data_array", stickerDataArray);
-        }
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        this.showText = savedInstanceState.getBoolean("show_text");
-        this.textDataList = (ArrayList) savedInstanceState.getSerializable("text_data");
-        if (this.textDataList == null) {
-            this.textDataList = new ArrayList();
-        }
-        StickerData[] stickerDataArray = StickerData.toStickerData(savedInstanceState.getParcelableArray("sticker_data_array"));
-        if (stickerDataArray != null) {
-            Bitmap stickerremoveBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_remove_text);
-            Bitmap stickerscaleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sticker_scale_text);
-            for (int i = INDEX_COLLAGE; i < stickerDataArray.length; i += INDEX_COLLAGE_BACKGROUND) {
-                StickerView stickerView = new StickerView(this.context, BitmapFactory.decodeResource(getResources(), stickerDataArray[i].getResId()), stickerDataArray[i], stickerremoveBitmap, stickerscaleBitmap, stickerDataArray[i].getResId());
-                stickerView.setStickerViewSelectedListener(this.stickerViewSelectedListner);
-                if (this.stickerViewContainer == null) {
-                    this.stickerViewContainer = (FrameLayout) findViewById(R.id.sticker_view_container);
-                }
-                this.stickerViewContainer.addView(stickerView);
-            }
-        }
-    }
-
-    public void myClickHandler(View view) {
-        int id = view.getId();
-        if (id == R.id.button_collage_layout) {
-            setSelectedTab(INDEX_COLLAGE);
-        } else if (id == R.id.button_collage_ratio) {
-            setSelectedTab(INDEX_COLLAGE_RATIO);
-        } else if (id == R.id.button_collage_blur) {
-            collageView.setBlurBitmap(collageView.blurRadius);
-            setSelectedTab(INDEX_COLLAGE_BLUR);
-            collageView.startAnimator();
-        } else if (id == R.id.button_collage_background) {
-            setSelectedTab(INDEX_COLLAGE_BACKGROUND);
-        } else if (id == R.id.button_collage_space) {
-            setSelectedTab(INDEX_COLLAGE_SPACE);
-        } else if (id == R.id.button_collage_adj) {
-            if ((collageView.shapeLayoutList.get(0)).shapeArr.length == INDEX_COLLAGE_BACKGROUND) {
-                collageView.shapeIndex = 0;
-                collageView.openFilterFragment();
-            } else if (collageView.shapeIndex >= 0) {
-                this.collageView.openFilterFragment();
-                Log.e(TAG, "collageView.shapeIndex>=0 openFilterFragment");
-            } else {
-                setSelectedTab(5);
-                this.selectFilterTextView.setVisibility(View.VISIBLE);
-                this.selectImageForAdj = true;
-            }
-        } else if (id == R.id.button_collage_context_swap) {
-            if (((ShapeLayout) this.collageView.shapeLayoutList.get(this.collageView.currentCollageIndex)).shapeArr.length == INDEX_COLLAGE_SPACE) {
-                this.collageView.swapBitmaps(INDEX_COLLAGE, INDEX_COLLAGE_BACKGROUND);
-            } else {
-                this.selectSwapTextView.setVisibility(View.VISIBLE);
-                this.swapMode = true;
-            }
-        } else if (id == R.id.button_collage_context_delete) {
-            createDeleteDialog();
-        } else if (id == R.id.button_collage_context_filter) {
-            this.collageView.openFilterFragment();
-        } else if (id == R.id.button_save_collage_image) {
-            setSelectedTab(INDEX_COLLAGE_INVISIBLE_VIEW);
-            SaveImageTask saveImageTask = new SaveImageTask();
-            Object[] objArr = new Object[INDEX_COLLAGE_BACKGROUND];
-            objArr[INDEX_COLLAGE] = Integer.valueOf(INDEX_COLLAGE_RATIO);
-            saveImageTask.execute(objArr);
-        } else if (id == R.id.button_cancel_collage_image) {
-            backButtonAlertBuilder();
-        } else if (id == R.id.button11) {
-            this.mulX = 1.0f;
-            this.mulY = 1.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(INDEX_COLLAGE);
-        } else if (id == R.id.button21) {
-            this.mulX = 2.0f;
-            this.mulY = 1.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(INDEX_COLLAGE_BACKGROUND);
-        } else if (id == R.id.button12) {
-            this.mulX = 1.0f;
-            this.mulY = 2.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(INDEX_COLLAGE_SPACE);
-        } else if (id == R.id.button32) {
-            this.mulX = 3.0f;
-            this.mulY = 2.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(INDEX_COLLAGE_RATIO);
-        } else if (id == R.id.button23) {
-            this.mulX = 2.0f;
-            this.mulY = 3.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(INDEX_COLLAGE_BLUR);
-        } else if (id == R.id.button43) {
-            this.mulX = 4.0f;
-            this.mulY = 3.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(INDEX_COLLAGE_INVISIBLE_VIEW);
-        } else if (id == R.id.button34) {
-            this.mulX = 3.0f;
-            this.mulY = 4.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(TAB_SIZE);
-        } else if (id == R.id.button45) {
-            this.mulX = 4.0f;
-            this.mulY = 5.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(7);
-        } else if (id == R.id.button57) {
-            this.mulX = 5.0f;
-            this.mulY = 7.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(8);
-        } else if (id == R.id.button169) {
-            this.mulX = 16.0f;
-            this.mulY = 9.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(9);
-        } else if (id == R.id.button916) {
-            this.mulX = 9.0f;
-            this.mulY = 16.0f;
-            this.collageView.updateShapeListForRatio(this.width, this.height);
-            setRatioButtonBg(10);
-        } else if (id == R.id.hide_select_image_warning) {
-            this.selectSwapTextView.setVisibility(View.INVISIBLE);
-            this.swapMode = false;
-        } else if (id == R.id.hide_select_image_warning_filter) {
-            this.selectFilterTextView.setVisibility(View.INVISIBLE);
-            this.selectImageForAdj = false;
-        } else if (id == R.id.hide_color_container) {
-            hideColorContainer();
-        } else if (id == R.id.button_mirror_text) {
-            addCanvasTextView();
-            clearViewFlipper();
-        } else if (id == R.id.button_mirror_sticker) {
-            addStickerGalleryFragment();
-        }
-        if (id == R.id.button_collage_context_fit) {
-            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE);
-        } else if (id == R.id.button_collage_context_center) {
-            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_BACKGROUND);
-        } else if (id == R.id.button_collage_context_rotate_left) {
-            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_RATIO);
-        } else if (id == R.id.button_collage_context_rotate_right) {
-            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_SPACE);
-        } else if (id == R.id.button_collage_context_flip_horizontal) {
-            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_BLUR);
-        } else if (id == R.id.button_collage_context_flip_vertical) {
-            this.collageView.setShapeScaleMatrix(INDEX_COLLAGE_INVISIBLE_VIEW);
-        } else if (id == R.id.button_collage_context_rotate_negative) {
-            this.collageView.setShapeScaleMatrix(TAB_SIZE);
-        } else if (id == R.id.button_collage_context_rotate_positive) {
-            this.collageView.setShapeScaleMatrix(7);
-        } else if (id == R.id.button_collage_context_zoom_in) {
-            toastMatrixMessage(this.collageView.setShapeScaleMatrix(8));
-        } else if (id == R.id.button_collage_context_zoom_out) {
-            toastMatrixMessage(this.collageView.setShapeScaleMatrix(9));
-        } else if (id == R.id.button_collage_context_move_left) {
-            toastMatrixMessage(this.collageView.setShapeScaleMatrix(10));
-        } else if (id == R.id.button_collage_context_move_right) {
-            toastMatrixMessage(this.collageView.setShapeScaleMatrix(11));
-        } else if (id == R.id.button_collage_context_move_up) {
-            toastMatrixMessage(this.collageView.setShapeScaleMatrix(12));
-        } else if (id == R.id.button_collage_context_move_down) {
-            toastMatrixMessage(this.collageView.setShapeScaleMatrix(13));
-        } else if (this.fullEffectFragment != null && this.fullEffectFragment.isVisible()) {
-            this.fullEffectFragment.myClickHandler(view);
-        }
-        GalleryUtility.logHeap();
-        Utility.logFreeMemory(this.context);
-    }
-
-    void toastMatrixMessage(int message) {
-        String str = null;
-        if (message == INDEX_COLLAGE_BACKGROUND) {
-            str = "You reached maximum zoom!";
-        } else if (message == INDEX_COLLAGE_SPACE) {
-            str = "You reached minimum zoom!";
-        } else if (message == TAB_SIZE) {
-            str = "You reached max bottom!";
-        } else if (message == INDEX_COLLAGE_INVISIBLE_VIEW) {
-            str = "You reached max top!";
-        } else if (message == INDEX_COLLAGE_BLUR) {
-            str = "You reached max right!";
-        } else if (message == INDEX_COLLAGE_RATIO) {
-            str = "You reached max left!";
-        }
-        if (str != null) {
-            Toast msg = Toast.makeText(this.context, str, Toast.LENGTH_SHORT);
-            msg.setGravity(17, msg.getXOffset() / INDEX_COLLAGE_SPACE, msg.getYOffset() / INDEX_COLLAGE_SPACE);
-            msg.show();
-        }
-    }
-
-    void createDeleteDialog() {
-        if (((ShapeLayout) this.collageView.shapeLayoutList.get(INDEX_COLLAGE)).shapeArr.length == INDEX_COLLAGE_BACKGROUND) {
-            Toast msg = Toast.makeText(this.context, "You can't delete last image!", Toast.LENGTH_SHORT);
-            msg.setGravity(17, msg.getXOffset() / INDEX_COLLAGE_SPACE, msg.getYOffset() / INDEX_COLLAGE_SPACE);
-            msg.show();
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
-        builder.setMessage("Do you want to delete it?").setCancelable(true).setPositiveButton("Yes", new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                collageView.deleteBitmap(collageView.shapeIndex, width, width);
-            }
-        }).setNegativeButton("No", new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
-        this.saveImageAlert = builder.create();
-        this.saveImageAlert.show();
-    }
-
-    void clearViewFlipper() {
-        this.viewFlipper.setDisplayedChild(INDEX_COLLAGE_INVISIBLE_VIEW);
-        setTabBg(-1);
-    }
-
-    private void hideColorContainer() {
-        if (this.colorContainer == null) {
-            this.colorContainer = (LinearLayout) findViewById(R.id.color_container);
-        }
-        this.colorContainer.setVisibility(View.INVISIBLE);
-    }
-
-    private void setRatioButtonBg(int index) {
-        if (this.ratioButtonArray == null) {
-            this.ratioButtonArray = new Button[this.RATIO_BUTTON_SIZE];
-            this.ratioButtonArray[INDEX_COLLAGE] = (Button) findViewById(R.id.button11);
-            this.ratioButtonArray[INDEX_COLLAGE_BACKGROUND] = (Button) findViewById(R.id.button21);
-            this.ratioButtonArray[INDEX_COLLAGE_SPACE] = (Button) findViewById(R.id.button12);
-            this.ratioButtonArray[INDEX_COLLAGE_RATIO] = (Button) findViewById(R.id.button32);
-            this.ratioButtonArray[INDEX_COLLAGE_BLUR] = (Button) findViewById(R.id.button23);
-            this.ratioButtonArray[INDEX_COLLAGE_INVISIBLE_VIEW] = (Button) findViewById(R.id.button43);
-            this.ratioButtonArray[TAB_SIZE] = (Button) findViewById(R.id.button34);
-            this.ratioButtonArray[7] = (Button) findViewById(R.id.button45);
-            this.ratioButtonArray[8] = (Button) findViewById(R.id.button57);
-            this.ratioButtonArray[9] = (Button) findViewById(R.id.button169);
-            this.ratioButtonArray[10] = (Button) findViewById(R.id.button916);
-        }
-        for (int i = INDEX_COLLAGE; i < this.RATIO_BUTTON_SIZE; i += INDEX_COLLAGE_BACKGROUND) {
-            this.ratioButtonArray[i].setBackgroundResource(R.drawable.crop_border);
-            this.ratioButtonArray[i].setTextColor(ViewCompat.MEASURED_STATE_MASK);
-        }
-        this.ratioButtonArray[index].setBackgroundResource(R.drawable.crop_border_selected);
-        this.ratioButtonArray[index].setTextColor(-1);
-    }
-
-    void addEffectFragment() {
-        if (this.fullEffectFragment == null) {
-            this.fullEffectFragment = (FullEffectFragment) getSupportFragmentManager().findFragmentByTag("FULL_FRAGMENT");
-            Log.e(TAG, "addEffectFragment");
-            if (this.fullEffectFragment == null) {
-                this.fullEffectFragment = new FullEffectFragment();
-                Log.e(TAG, "EffectFragment == null");
-                this.fullEffectFragment.setArguments(getIntent().getExtras());
-                Log.e(TAG, "fullEffectFragment null");
-                getSupportFragmentManager().beginTransaction().add(R.id.collage_effect_fragment_container, this.fullEffectFragment, "FULL_FRAGMENT").commitAllowingStateLoss();
-            } else {
-                Log.e(TAG, "not null null");
-                if (this.collageView.shapeIndex >= 0) {
-                    this.fullEffectFragment.setBitmapWithParameter(this.bitmapList[this.collageView.shapeIndex], this.parameterList[this.collageView.shapeIndex]);
-                }
-            }
-            getSupportFragmentManager().beginTransaction().hide(this.fullEffectFragment).commitAllowingStateLoss();
-            this.fullEffectFragment.setFullBitmapReadyListener(new FullEffectFragment.FullBitmapReady() {
-                public void onBitmapReady(Bitmap bitmap, Parameter parameter) {
-                    if (parameter.getTiltContext() != null) {
-                        Log.e(CollageActivity.TAG, "onBitmapReady tilt mode" + parameter.getTiltContext().mode);
-                    }
-                    collageView.updateShapeListForFilterBitmap(bitmap);
-                    collageView.updateParamList(parameter);
-                    collageView.postInvalidate();
-                    getSupportFragmentManager().beginTransaction().hide(fullEffectFragment).commit();
-                    collageView.postInvalidate();
-                }
-
-                public void onCancel() {
-                    setVisibilityOfFilterHorizontalListview(false);
-                    collageView.postInvalidate();
-                }
-            });
-            findViewById(R.id.collage_effect_fragment_container).bringToFront();
-        }
-    }
-
-    void setVisibilityOfFilterHorizontalListview(boolean show) {
-        if (show && this.fullEffectFragment.isHidden()) {
-            getSupportFragmentManager().beginTransaction().show(this.fullEffectFragment).commit();
-        }
-        if (!show && this.fullEffectFragment.isVisible()) {
-            getSupportFragmentManager().beginTransaction().hide(this.fullEffectFragment).commit();
-        }
-        findViewById(R.id.collage_effect_fragment_container).bringToFront();
-    }
-
-    public void onBackPressed() {
-        if (this.fontFragment != null && this.fontFragment.isVisible()) {
-            getSupportFragmentManager().beginTransaction().remove(this.fontFragment).commit();
-        } else if (this.galleryFragment != null && this.galleryFragment.isVisible()) {
-            this.galleryFragment.backtrace();
-        } else if (!this.showText && this.canvasText != null) {
-            this.showText = true;
-            this.mainLayout.removeView(this.canvasText);
-            this.collageView.postInvalidate();
-            this.canvasText = null;
-            Log.e(TAG, "replace fragment");
-        } else if (this.fullEffectFragment == null || !this.fullEffectFragment.isVisible()) {
-            if (this.colorContainer.getVisibility() == View.VISIBLE) {
-                hideColorContainer();
-            } else if (this.swapMode) {
-                this.selectSwapTextView.setVisibility(View.INVISIBLE);
-                this.swapMode = false;
-            } else if (this.collageView != null && this.collageView.shapeIndex >= 0) {
-                this.collageView.unselectShapes();
-            } else if (this.selectImageForAdj) {
-                this.selectFilterTextView.setVisibility(View.INVISIBLE);
-                this.selectImageForAdj = false;
-            } else if (this.viewFlipper == null || this.viewFlipper.getDisplayedChild() == INDEX_COLLAGE_INVISIBLE_VIEW) {
-                backButtonAlertBuilder();
-            } else {
-                setSelectedTab(INDEX_COLLAGE_INVISIBLE_VIEW);
-            }
-        } else if (!this.fullEffectFragment.onBackPressed()) {
-            setVisibilityOfFilterHorizontalListview(false);
-        }
-    }
-
-    private void backButtonAlertBuilder() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
-        builder.setMessage("Would you like to save image ?").setCancelable(true).setPositiveButton("Yes", new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                SaveImageTask saveImageTask = new SaveImageTask();
-                Object[] objArr = new Object[CollageActivity.INDEX_COLLAGE_BACKGROUND];
-                objArr[CollageActivity.INDEX_COLLAGE] = Integer.valueOf(CollageActivity.INDEX_COLLAGE_BLUR);
-                saveImageTask.execute(objArr);
-            }
-        }).setNegativeButton("Cancel", new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        }).setNeutralButton("No", new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                activity.finish();
-            }
-        });
-        this.saveImageAlert = builder.create();
-        this.saveImageAlert.show();
     }
 }

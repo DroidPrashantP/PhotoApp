@@ -59,16 +59,13 @@ import android.widget.ViewFlipper;
 
 import com.app.camera.R;
 import com.app.camera.adapters.BackgroundPatternAdapter;
-import com.app.camera.adapters.MyAdapter;
 import com.app.camera.adapters.MyRecylceAdapterBase;
 import com.app.camera.adapters.SquareColorPickerAdapter;
 import com.app.camera.canvastext.ApplyTextInterface;
 import com.app.camera.canvastext.CustomRelativeLayout;
 import com.app.camera.canvastext.SingleTap;
 import com.app.camera.canvastext.TextData;
-import com.app.camera.collagelib.ColorPickerAdapter;
 import com.app.camera.collagelib.Utility;
-import com.app.camera.common_lib.MyAsyncTask2;
 import com.app.camera.common_lib.Parameter;
 import com.app.camera.cropimages.FragmentCrop;
 import com.app.camera.fragments.EffectFragment;
@@ -94,7 +91,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SquareActivity extends FragmentActivity {
-    private static final String TAG = SquareActivity.class.getSimpleName();
     public static final int INDEX_SQUARE = 0;
     public static final int INDEX_SQUARE_ADJ = 3;
     public static final int INDEX_SQUARE_BACKGROUND = 1;
@@ -102,14 +98,12 @@ public class SquareActivity extends FragmentActivity {
     public static final int INDEX_SQUARE_FRAME = 6;
     public static final int INDEX_SQUARE_FX = 5;
     public static final int INDEX_SQUARE_INVISIBLE_VIEW = 4;
-    static final int INSTAGRAM_ID = 470;
     public static final int MATRIX_MODE_CENTER = 1;
     public static final int MATRIX_MODE_FIT = 0;
     public static final int MATRIX_MODE_FLIP_HORIZONTAL = 4;
     public static final int MATRIX_MODE_FLIP_VERTICAL = 5;
     public static final int MATRIX_MODE_ROTATE_LEFT = 3;
     public static final int MATRIX_MODE_ROTATE_RIGHT = 2;
-    static final int SAVE_IMAGE_ID = 1346;
     public static final int TAB_INDEX_SQUARE = 0;
     public static final int TAB_INDEX_SQUARE_ADJ = 5;
     public static final int TAB_INDEX_SQUARE_BACKGROUND = 1;
@@ -117,6 +111,9 @@ public class SquareActivity extends FragmentActivity {
     public static final int TAB_INDEX_SQUARE_FRAME = 3;
     public static final int TAB_INDEX_SQUARE_FX = 4;
     public static final int TAB_SIZE = 6;
+    static final int INSTAGRAM_ID = 470;
+    static final int SAVE_IMAGE_ID = 1346;
+    private static final String TAG = SquareActivity.class.getSimpleName();
     public int SAVE_FINISH;
     public int SAVE_INSTAGRAM;
     public int SAVE_NORMAL;
@@ -135,7 +132,6 @@ public class SquareActivity extends FragmentActivity {
     public FontFragment fontFragment;
     public StickerGalleryFragment galleryFragment;
     public InterstitialAd interstitial;
-    private ScaleGestureDetector mScaleDetector;
     public SquareView mSqView;
     public RelativeLayout mainLayout;
     public ArrayList<MyRecylceAdapterBase> patternAdapterList;
@@ -144,13 +140,7 @@ public class SquareActivity extends FragmentActivity {
     public Bitmap scaleBitmap;
     public SeekBar seekBarBlur;
     public View selectFilterTextView;
-    boolean selectImageForAdj;
     public View selectSwapTextView;
-    boolean showText;
-    private Animation slideLeftIn;
-    private Animation slideLeftOut;
-    private Animation slideRightIn;
-    private Animation slideRightOut;
     public Bitmap sourceBitmap;
     public StickerGalleryListener stickerGalleryListener;
     public ArrayList<StickerView> stickerList;
@@ -159,6 +149,13 @@ public class SquareActivity extends FragmentActivity {
     public View[] tabButtonList;
     public ArrayList<TextData> textDataList;
     public ViewFlipper viewFlipper;
+    boolean selectImageForAdj;
+    boolean showText;
+    private ScaleGestureDetector mScaleDetector;
+    private Animation slideLeftIn;
+    private Animation slideLeftOut;
+    private Animation slideRightIn;
+    private Animation slideRightOut;
     private RecyclerView recyclerViewColor;
 
     public SquareActivity() {
@@ -184,9 +181,10 @@ public class SquareActivity extends FragmentActivity {
         getWindow().addFlags(AccessibilityNodeInfoCompat.ACTION_NEXT_HTML_ELEMENT);
         Bundle extras = getIntent().getExtras();
         String selectedImagePath = extras.getString("selectedImagePath");
+//        this.sourceBitmap = BitmapResizer.decodeBitmapFromFile(selectedImagePath, extras.getInt("MAX_SIZE"));
         this.sourceBitmap = ImageUtility.decodeBitmapFromFile(selectedImagePath, extras.getInt("MAX_SIZE"));
         if (this.sourceBitmap == null) {
-            Toast msg = Toast.makeText(this.context, "Could not load the photo, please use another GALLERY app!", TAB_INDEX_SQUARE_BACKGROUND);
+            Toast msg = Toast.makeText(this.context, "Could not load the photo, please use another GALLERY app!", Toast.LENGTH_SHORT);
             msg.setGravity(17, msg.getXOffset() / TAB_INDEX_SQUARE_BLUR, msg.getYOffset() / TAB_INDEX_SQUARE_BLUR);
             msg.show();
             finish();
@@ -284,643 +282,6 @@ public class SquareActivity extends FragmentActivity {
         }
     }
 
-    class C05926 implements Runnable {
-        private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
-
-        C05926(HorizontalScrollView horizontalScrollView) {
-            this.val$horizontalScrollView = horizontalScrollView;
-        }
-
-        public void run() {
-            this.val$horizontalScrollView.scrollTo(this.val$horizontalScrollView.getChildAt(SquareActivity.TAB_INDEX_SQUARE).getMeasuredWidth(), SquareActivity.TAB_INDEX_SQUARE);
-        }
-    }
-
-    class C05937 implements Runnable {
-        private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
-
-        C05937(HorizontalScrollView horizontalScrollView) {
-            this.val$horizontalScrollView = horizontalScrollView;
-        }
-
-        public void run() {
-            this.val$horizontalScrollView.fullScroll(17);
-        }
-    }
-
-    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.8 */
-    class C05948 implements OnSeekBarChangeListener {
-        C05948() {
-        }
-
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            float radius = ((float) seekBar.getProgress()) / 4.0f;
-            if (radius > BlurBuilder.BLUR_RADIUS_MAX) {
-                radius = BlurBuilder.BLUR_RADIUS_MAX;
-            }
-            if (radius < 0.0f) {
-                radius = 0.0f;
-            }
-            SquareActivity.this.blurText.setText("" + ((int) radius));
-            Log.e(SquareActivity.TAG, "blur radius " + radius);
-            SquareActivity.this.mSqView.setBlurBitmap((int) radius);
-        }
-
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            SquareActivity.this.blurText.setText("" + ((int) (((float) progress) / 4.0f)));
-        }
-    }
-
-    class MyGestureListener extends SimpleOnGestureListener {
-        private static final String DEBUG_TAG = "Gestures";
-
-        MyGestureListener() {
-        }
-
-        public boolean onSingleTapConfirmed(MotionEvent event) {
-            Log.d(DEBUG_TAG, "onSingleTapConfirmed: ");
-            return true;
-        }
-
-        public boolean onSingleTapUp(MotionEvent event) {
-            Log.d(DEBUG_TAG, "onSingleTapUp: ");
-            return true;
-        }
-    }
-
-    final class MyMediaScannerConnectionClient implements MediaScannerConnectionClient {
-        private MediaScannerConnection mConn;
-        private String mFilename;
-        private String mMimetype;
-
-        public MyMediaScannerConnectionClient(Context ctx, File file, String mimetype) {
-            this.mFilename = file.getAbsolutePath();
-            this.mConn = new MediaScannerConnection(ctx, this);
-            this.mConn.connect();
-        }
-
-        public void onMediaScannerConnected() {
-            this.mConn.scanFile(this.mFilename, this.mMimetype);
-        }
-
-        public void onScanCompleted(String path, Uri uri) {
-            this.mConn.disconnect();
-        }
-    }
-
-    class SquareView extends View {
-        public static final int BACKGROUND_BLUR = 1;
-        public static final int BACKGROUND_PATTERN = 0;
-        private static final int INVALID_POINTER_ID = 1;
-        public static final int PATTERN_SENTINEL = -1;
-        private static final int UPPER_SIZE_LIMIT = 2048;
-        int backgroundMode;
-        float bitmapHeight;
-        Matrix bitmapMatrix;
-        float bitmapWidth;
-        Bitmap blurBitmap;
-        Matrix blurBitmapMatrix;
-        BlurBuilderNormal blurBuilderNormal;
-        private int blurRadius;
-        PointF centerOriginal;
-        Paint dashPaint;
-        Path dashPathHorizontal;
-        Path dashPathHorizontalTemp;
-        Path dashPathVertical;
-        Path dashPathVerticalTemp;
-        float epsilon;
-        float[] f509f;
-        Bitmap filterBitmap;
-        float finalAngle;
-        Paint grayPaint;
-        Matrix identityMatrix;
-        Matrix inverseMatrix;
-        boolean isOrthogonal;
-        private int mActivePointerId;
-        float mLastTouchX;
-        float mLastTouchY;
-        private RotationGestureDetector mRotationDetector;
-        float mScaleFactor;
-        int offsetX;
-        int offsetY;
-        Paint paint;
-        Parameter parameter;
-        Bitmap patternBitmap;
-        Paint patternPaint;
-        Paint pointPaint;
-        RotationGestureDetector.OnRotationGestureListener rotateListener;
-        int screenHeight;
-        int screenWidth;
-        Matrix textMatrix;
-        float[] values;
-        int viewHeight;
-        int viewWidth;
-
-        private class ScaleListener extends SimpleOnScaleGestureListener {
-            private ScaleListener() {
-            }
-
-            public boolean onScale(ScaleGestureDetector detector) {
-                SquareView.this.mScaleFactor = detector.getScaleFactor();
-                detector.isInProgress();
-                SquareView.this.mScaleFactor = Math.max(0.1f, Math.min(SquareView.this.mScaleFactor, 5.0f));
-                PointF center = SquareView.this.getCenterOfImage();
-                SquareView.this.bitmapMatrix.postScale(SquareView.this.mScaleFactor, SquareView.this.mScaleFactor, center.x, center.y);
-                SquareView.this.invalidate();
-                return true;
-            }
-        }
-
-        /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.SquareView.1 */
-        class C09611 implements RotationGestureDetector.OnRotationGestureListener {
-            C09611() {
-            }
-
-            public void OnRotation(RotationGestureDetector rotationDetector) {
-                float angle = rotationDetector.getAngle();
-                float rotation = SquareView.this.getMatrixRotation(SquareView.this.bitmapMatrix);
-                if ((rotation == 0.0f || rotation == 90.0f || rotation == 180.0f || rotation == -180.0f || rotation == -90.0f) && Math.abs(SquareView.this.finalAngle - angle) < SquareView.this.epsilon) {
-                    SquareView.this.isOrthogonal = true;
-                    return;
-                }
-                if (Math.abs((rotation - SquareView.this.finalAngle) + angle) < SquareView.this.epsilon) {
-                    angle = SquareView.this.finalAngle - rotation;
-                    SquareView.this.isOrthogonal = true;
-                } else if (Math.abs(90.0f - ((rotation - SquareView.this.finalAngle) + angle)) < SquareView.this.epsilon) {
-                    angle = (SquareView.this.finalAngle + 90.0f) - rotation;
-                    SquareView.this.isOrthogonal = true;
-                } else if (Math.abs(180.0f - ((rotation - SquareView.this.finalAngle) + angle)) < SquareView.this.epsilon) {
-                    angle = (SquareView.this.finalAngle + 180.0f) - rotation;
-                    SquareView.this.isOrthogonal = true;
-                } else if (Math.abs(-180.0f - ((rotation - SquareView.this.finalAngle) + angle)) < SquareView.this.epsilon) {
-                    angle = (SquareView.this.finalAngle - 0.024902344f) - rotation;
-                    SquareView.this.isOrthogonal = true;
-                } else if (Math.abs(-90.0f - ((rotation - SquareView.this.finalAngle) + angle)) < SquareView.this.epsilon) {
-                    angle = (SquareView.this.finalAngle - 0.049804688f) - rotation;
-                    SquareView.this.isOrthogonal = true;
-                } else {
-                    SquareView.this.isOrthogonal = false;
-                }
-                PointF center = SquareView.this.getCenterOfImage();
-                SquareView.this.bitmapMatrix.postRotate(SquareView.this.finalAngle - angle, center.x, center.y);
-                SquareView.this.finalAngle = angle;
-                SquareView.this.invalidate();
-            }
-        }
-
-        public SquareView(Context context, int w, int h) {
-            super(context);
-            this.identityMatrix = new Matrix();
-            this.textMatrix = new Matrix();
-            this.backgroundMode = BACKGROUND_PATTERN;
-            this.dashPaint = new Paint();
-            this.dashPathVerticalTemp = new Path();
-            this.dashPathHorizontalTemp = new Path();
-            this.isOrthogonal = false;
-            this.blurRadius = 14;
-            this.inverseMatrix = new Matrix();
-            this.f509f = new float[SquareActivity.TAB_INDEX_SQUARE_BLUR];
-            this.centerOriginal = new PointF();
-            this.mActivePointerId = INVALID_POINTER_ID;
-            this.values = new float[9];
-            this.mScaleFactor = 1.0f;
-            this.finalAngle = 0.0f;
-            this.epsilon = 4.0f;
-            this.rotateListener = new C09611();
-            this.screenWidth = w;
-            this.screenHeight = h;
-            this.paint = new Paint();
-            this.bitmapMatrix = new Matrix();
-            this.paint.setColor(-3355444);
-            int min = Math.min(w, h);
-            this.viewWidth = min;
-            this.viewHeight = min;
-            this.offsetX = Math.abs(w - this.viewWidth) / SquareActivity.TAB_INDEX_SQUARE_BLUR;
-            this.offsetY = Math.abs(h - this.viewHeight) / SquareActivity.TAB_INDEX_SQUARE_BLUR;
-            new Options().inPreferredConfig = Config.ARGB_8888;
-            this.bitmapWidth = (float) SquareActivity.this.sourceBitmap.getWidth();
-            this.bitmapHeight = (float) SquareActivity.this.sourceBitmap.getHeight();
-            float bitmapScale = Math.min(((float) this.viewWidth) / this.bitmapWidth, ((float) this.viewHeight) / this.bitmapHeight);
-            float bitmapOffsetX = ((float) this.offsetX) + ((((float) this.viewWidth) - (this.bitmapWidth * bitmapScale)) / 2.0f);
-            float bitmapOffsetY = ((float) this.offsetY) + ((((float) this.viewHeight) - (this.bitmapHeight * bitmapScale)) / 2.0f);
-            this.bitmapMatrix.postScale(bitmapScale, bitmapScale);
-            this.bitmapMatrix.postTranslate(bitmapOffsetX, bitmapOffsetY);
-            SquareActivity.this.mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-            this.mRotationDetector = new RotationGestureDetector(this.rotateListener);
-            this.grayPaint = new Paint();
-            this.grayPaint.setColor(-12303292);
-            this.pointPaint = new Paint();
-            this.pointPaint.setColor(InputDeviceCompat.SOURCE_ANY);
-            this.pointPaint.setStrokeWidth(20.0f);
-            this.blurBitmapMatrix = new Matrix();
-            this.patternPaint = new Paint(INVALID_POINTER_ID);
-            this.patternPaint.setColor(PATTERN_SENTINEL);
-            this.dashPaint.setColor(-7829368);
-            this.dashPaint.setStyle(Style.STROKE);
-            float strokeW = ((float) this.screenWidth) / 120.0f;
-            if (strokeW <= 0.0f) {
-                strokeW = 5.0f;
-            }
-            this.dashPaint.setStrokeWidth(strokeW);
-            Paint paint = this.dashPaint;
-            float[] fArr = new float[SquareActivity.TAB_INDEX_SQUARE_BLUR];
-            fArr[BACKGROUND_PATTERN] = strokeW;
-            fArr[INVALID_POINTER_ID] = strokeW;
-            paint.setPathEffect(new DashPathEffect(fArr, 0.0f));
-            this.dashPathVertical = new Path();
-            this.dashPathHorizontal = new Path();
-            setPathPositions();
-        }
-
-        private void setPathPositions() {
-            this.dashPathVertical.reset();
-            this.dashPathHorizontal.reset();
-            this.dashPathVertical.moveTo(this.bitmapWidth / 2.0f, (-this.bitmapHeight) / 5.0f);
-            this.dashPathVertical.lineTo(this.bitmapWidth / 2.0f, (this.bitmapHeight * 6.0f) / 5.0f);
-            this.dashPathHorizontal.moveTo((-this.bitmapWidth) / 5.0f, this.bitmapHeight / 2.0f);
-            this.dashPathHorizontal.lineTo((this.bitmapWidth * 6.0f) / 5.0f, this.bitmapHeight / 2.0f);
-        }
-
-        public void onDraw(Canvas canvas) {
-            if (this.backgroundMode == 0) {
-                canvas.drawRect((float) this.offsetX, (float) this.offsetY, (float) (this.offsetX + this.viewWidth), (float) (this.offsetY + this.viewHeight), this.patternPaint);
-            }
-            if (!(this.blurBitmap == null || this.blurBitmap.isRecycled() || this.backgroundMode != INVALID_POINTER_ID)) {
-                canvas.drawBitmap(this.blurBitmap, this.blurBitmapMatrix, this.paint);
-            }
-            canvas.drawBitmap(SquareActivity.this.sourceBitmap, this.bitmapMatrix, this.paint);
-            if (!(this.filterBitmap == null || this.filterBitmap.isRecycled())) {
-                canvas.drawBitmap(this.filterBitmap, this.bitmapMatrix, this.paint);
-            }
-            if (this.isOrthogonal) {
-                this.dashPathVertical.transform(this.bitmapMatrix, this.dashPathVerticalTemp);
-                this.dashPathHorizontal.transform(this.bitmapMatrix, this.dashPathHorizontalTemp);
-                canvas.drawPath(this.dashPathVerticalTemp, this.dashPaint);
-                canvas.drawPath(this.dashPathHorizontalTemp, this.dashPaint);
-            }
-            if (SquareActivity.this.showText) {
-                for (int i = BACKGROUND_PATTERN; i < SquareActivity.this.textDataList.size(); i += INVALID_POINTER_ID) {
-                    this.textMatrix.set(((TextData) SquareActivity.this.textDataList.get(i)).imageSaveMatrix);
-                    canvas.setMatrix(this.textMatrix);
-                    canvas.drawText(((TextData) SquareActivity.this.textDataList.get(i)).message, ((TextData) SquareActivity.this.textDataList.get(i)).xPos, ((TextData) SquareActivity.this.textDataList.get(i)).yPos, ((TextData) SquareActivity.this.textDataList.get(i)).textPaint);
-                    canvas.setMatrix(this.identityMatrix);
-                }
-            }
-            if (this.offsetX == 0) {
-                canvas.drawRect(0.0f, 0.0f, (float) this.screenWidth, (float) this.offsetY, this.grayPaint);
-                canvas.drawRect((float) this.offsetX, (float) (this.offsetY + this.viewHeight), (float) this.screenWidth, (float) this.screenHeight, this.grayPaint);
-            } else if (this.offsetY == 0) {
-                canvas.drawRect(0.0f, 0.0f, (float) this.offsetX, (float) this.screenHeight, this.grayPaint);
-                canvas.drawRect((float) (this.offsetX + this.viewHeight), (float) this.offsetY, (float) this.screenWidth, (float) this.screenHeight, this.grayPaint);
-            }
-        }
-
-        private String saveBitmap() {
-            int i;
-            float max = (float) Math.max(this.viewHeight, this.viewWidth);
-            float btmScale = ((float) Utility.maxSizeForSave(SquareActivity.this.context, 2048.0f)) / max;
-            int newBtmWidth = (int) (((float) this.viewWidth) * btmScale);
-            int newBtmHeight = (int) (((float) this.viewHeight) * btmScale);
-            if (newBtmWidth <= 0) {
-                newBtmWidth = this.viewWidth;
-                Log.e(SquareActivity.TAG, "newBtmWidth");
-            }
-            if (newBtmHeight <= 0) {
-                newBtmHeight = this.viewHeight;
-                Log.e(SquareActivity.TAG, "newBtmHeight");
-            }
-            Bitmap savedBitmap = Bitmap.createBitmap(newBtmWidth, newBtmHeight, Config.ARGB_8888);
-            Canvas bitmapCanvas = new Canvas(savedBitmap);
-            Matrix sizeMat = new Matrix();
-            sizeMat.reset();
-            sizeMat.postTranslate((float) (-this.offsetX), (float) (-this.offsetY));
-            sizeMat.postScale(btmScale, btmScale);
-            bitmapCanvas.setMatrix(sizeMat);
-            if (this.backgroundMode == 0) {
-                bitmapCanvas.drawRect((float) this.offsetX, (float) this.offsetY, (float) (this.offsetX + this.viewWidth), (float) (this.offsetY + this.viewHeight), this.patternPaint);
-            }
-            if (!(this.blurBitmap == null || this.blurBitmap.isRecycled() || this.backgroundMode != INVALID_POINTER_ID)) {
-                bitmapCanvas.drawBitmap(this.blurBitmap, this.blurBitmapMatrix, this.paint);
-            }
-            bitmapCanvas.drawBitmap(SquareActivity.this.sourceBitmap, this.bitmapMatrix, this.paint);
-            if (!(this.filterBitmap == null || this.filterBitmap.isRecycled())) {
-                bitmapCanvas.drawBitmap(this.filterBitmap, this.bitmapMatrix, this.paint);
-            }
-            Matrix mat;
-            if (SquareActivity.this.textDataList != null) {
-                for (i = BACKGROUND_PATTERN; i < SquareActivity.this.textDataList.size(); i += INVALID_POINTER_ID) {
-                    mat = new Matrix();
-                    mat.set(((TextData) SquareActivity.this.textDataList.get(i)).imageSaveMatrix);
-                    mat.postTranslate((float) (-this.offsetX), (float) (-this.offsetY));
-                    mat.postScale(btmScale, btmScale);
-                    bitmapCanvas.setMatrix(mat);
-                    bitmapCanvas.drawText(((TextData) SquareActivity.this.textDataList.get(i)).message, ((TextData) SquareActivity.this.textDataList.get(i)).xPos, ((TextData) SquareActivity.this.textDataList.get(i)).yPos, ((TextData) SquareActivity.this.textDataList.get(i)).textPaint);
-                }
-            }
-            for (i = BACKGROUND_PATTERN; i < SquareActivity.this.stickerViewContainer.getChildCount(); i += INVALID_POINTER_ID) {
-                mat = new Matrix();
-                StickerView view = (StickerView) SquareActivity.this.stickerViewContainer.getChildAt(i);
-                StickerData data = view.getStickerData();
-                mat.set(data.getCanvasMatrix());
-                mat.postTranslate((float) (-this.offsetX), (float) (-this.offsetY));
-                mat.postScale(btmScale, btmScale);
-                bitmapCanvas.setMatrix(mat);
-                if (!(view.stickerBitmap == null || view.stickerBitmap.isRecycled())) {
-                    bitmapCanvas.drawBitmap(view.stickerBitmap, data.xPos, data.yPos, view.paint);
-                }
-            }
-            String resultPath = new StringBuilder(String.valueOf(Environment.getExternalStorageDirectory().toString())).append(SquareActivity.this.getString(R.string.directory)).append(String.valueOf(System.currentTimeMillis())).append(".jpg").toString();
-            new File(resultPath).getParentFile().mkdirs();
-            try {
-                OutputStream out = new FileOutputStream(resultPath);
-                savedBitmap.compress(CompressFormat.JPEG, 90, out);
-                out.flush();
-                out.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
-            savedBitmap.recycle();
-            return resultPath;
-        }
-
-        void setPatternPaint(int resId) {
-            if (this.patternPaint == null) {
-                this.patternPaint = new Paint(1);
-                this.patternPaint.setColor(PATTERN_SENTINEL);
-            }
-            if (resId == PATTERN_SENTINEL) {
-                this.patternPaint.setShader(null);
-                this.patternPaint.setColor(PATTERN_SENTINEL);
-                postInvalidate();
-                return;
-            }
-            this.patternBitmap = BitmapFactory.decodeResource(getResources(), resId);
-            this.patternPaint.setShader(new BitmapShader(this.patternBitmap, TileMode.REPEAT, TileMode.REPEAT));
-            postInvalidate();
-        }
-
-        void setPatternPaintColor(int color) {
-            if (this.patternPaint == null) {
-                this.patternPaint = new Paint(INVALID_POINTER_ID);
-            }
-            this.patternPaint.setShader(null);
-            this.patternPaint.setColor(color);
-            postInvalidate();
-        }
-
-        public void setBlurBitmap(int radius) {
-            if (this.blurBuilderNormal == null) {
-                this.blurBuilderNormal = new BlurBuilderNormal();
-            }
-            this.backgroundMode = INVALID_POINTER_ID;
-            this.blurBitmap = this.blurBuilderNormal.createBlurBitmapNDK(SquareActivity.this.sourceBitmap, radius);
-
-            this.blurRadius = this.blurBuilderNormal.getBlur();
-            setMatrixCenter(this.blurBitmapMatrix, (float) this.blurBitmap.getWidth(), (float) this.blurBitmap.getHeight());
-            postInvalidate();
-        }
-
-        public void setCropBitmap(int left, int top, int right, int bottom) {
-            Bitmap localCropBtm = SquareActivity.this.sourceBitmap;
-            if (((float) right) > this.bitmapWidth) {
-                right = (int) this.bitmapWidth;
-            }
-            if (((float) bottom) > this.bitmapHeight) {
-                bottom = (int) this.bitmapHeight;
-            }
-            if (VERSION.SDK_INT < 12) {
-                SquareActivity.this.sourceBitmap = BlurBuilderNormal.createCroppedBitmap(localCropBtm, left, top, right - left, bottom - top, false);
-            } else {
-                SquareActivity.this.sourceBitmap = Bitmap.createBitmap(localCropBtm, left, top, right - left, bottom - top);
-            }
-            SquareActivity.this.effectFragment.setBitmap(SquareActivity.this.sourceBitmap);
-            SquareActivity.this.effectFragment.execQueue();
-            if (localCropBtm != SquareActivity.this.sourceBitmap) {
-                localCropBtm.recycle();
-            }
-            this.bitmapHeight = (float) SquareActivity.this.sourceBitmap.getHeight();
-            this.bitmapWidth = (float) SquareActivity.this.sourceBitmap.getWidth();
-            setPathPositions();
-            setScaleMatrix(BACKGROUND_PATTERN);
-        }
-
-        public void setScaleMatrix(int mode) {
-            PointF centerOfImage = getCenterOfImage();
-            if (mode == 0) {
-                this.bitmapMatrix.reset();
-                float bitmapScale = Math.min(((float) this.viewWidth) / this.bitmapWidth, ((float) this.viewHeight) / this.bitmapHeight);
-                float bitmapOffsetX = ((float) this.offsetX) + ((((float) this.viewWidth) - (this.bitmapWidth * bitmapScale)) / 2.0f);
-                float bitmapOffsetY = ((float) this.offsetY) + ((((float) this.viewHeight) - (this.bitmapHeight * bitmapScale)) / 2.0f);
-                this.bitmapMatrix.postScale(bitmapScale, bitmapScale);
-                this.bitmapMatrix.postTranslate(bitmapOffsetX, bitmapOffsetY);
-            } else if (mode == INVALID_POINTER_ID) {
-                setMatrixCenter(this.bitmapMatrix, this.bitmapWidth, this.bitmapHeight);
-            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_FRAME) {
-                this.bitmapMatrix.postRotate(-90.0f, centerOfImage.x, centerOfImage.y);
-            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_BLUR) {
-                this.bitmapMatrix.postRotate(90.0f, centerOfImage.x, centerOfImage.y);
-            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_FX) {
-                this.bitmapMatrix.postScale(-1.0f, 1.0f, centerOfImage.x, centerOfImage.y);
-            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_ADJ) {
-                this.bitmapMatrix.postScale(1.0f, -1.0f, centerOfImage.x, centerOfImage.y);
-            }
-            postInvalidate();
-        }
-
-        void setMatrixCenter(Matrix matrix, float btmwidth, float btmheight) {
-            matrix.reset();
-            float bitmapScale = Math.max(((float) this.viewWidth) / btmwidth, ((float) this.viewHeight) / btmheight);
-            float bitmapOffsetX = ((float) this.offsetX) + ((((float) this.viewWidth) - (bitmapScale * btmwidth)) / 2.0f);
-            float bitmapOffsetY = ((float) this.offsetY) + ((((float) this.viewHeight) - (bitmapScale * btmheight)) / 2.0f);
-            matrix.postScale(bitmapScale, bitmapScale);
-            matrix.postTranslate(bitmapOffsetX, bitmapOffsetY);
-        }
-
-        PointF getCenterOfImage() {
-            if (this.centerOriginal == null) {
-                this.centerOriginal = new PointF();
-            }
-            if (this.f509f == null) {
-                this.f509f = new float[SquareActivity.TAB_INDEX_SQUARE_BLUR];
-            }
-            float y = this.bitmapHeight / 2.0f;
-            this.f509f[BACKGROUND_PATTERN] = this.bitmapWidth / 2.0f;
-            this.f509f[INVALID_POINTER_ID] = y;
-            this.bitmapMatrix.mapPoints(this.f509f);
-            this.centerOriginal.set(this.f509f[BACKGROUND_PATTERN], this.f509f[INVALID_POINTER_ID]);
-            return this.centerOriginal;
-        }
-
-        public boolean onTouchEvent(MotionEvent ev) {
-            int newPointerIndex = BACKGROUND_PATTERN;
-            SquareActivity.this.mScaleDetector.onTouchEvent(ev);
-            this.mRotationDetector.onTouchEvent(ev);
-            int action = ev.getAction();
-            float x;
-            float y;
-            int pointerIndex;
-            switch (action & MotionEventCompat.ACTION_MASK) {
-                case BACKGROUND_PATTERN /*0*/:
-                    x = ev.getX();
-                    y = ev.getY();
-                    if (x >= ((float) this.offsetX) && y >= ((float) this.offsetY) && x <= ((float) (this.offsetX + this.viewWidth)) && y <= ((float) (this.offsetY + this.viewHeight))) {
-                        this.mLastTouchX = x;
-                        this.mLastTouchY = y;
-                        this.mActivePointerId = ev.getPointerId(BACKGROUND_PATTERN);
-                        break;
-                    }
-                    return false;
-                case INVALID_POINTER_ID /*1*/:
-                    this.isOrthogonal = false;
-                    this.mActivePointerId = INVALID_POINTER_ID;
-                    break;
-                case SquareActivity.TAB_INDEX_SQUARE_BLUR /*2*/:
-                    pointerIndex = ev.findPointerIndex(this.mActivePointerId);
-                    x = ev.getX(pointerIndex);
-                    y = ev.getY(pointerIndex);
-                    this.bitmapMatrix.postTranslate(x - this.mLastTouchX, y - this.mLastTouchY);
-                    this.mLastTouchX = x;
-                    this.mLastTouchY = y;
-                    break;
-                case SquareActivity.TAB_INDEX_SQUARE_FRAME /*3*/:
-                    this.isOrthogonal = false;
-                    this.mActivePointerId = INVALID_POINTER_ID;
-                    break;
-                case SquareActivity.TAB_SIZE /*6*/:
-                    this.isOrthogonal = false;
-                    this.finalAngle = 0.0f;
-                    pointerIndex = (MotionEventCompat.ACTION_POINTER_INDEX_MASK & action) >> 8;
-                    if (ev.getPointerId(pointerIndex) == this.mActivePointerId) {
-                        if (pointerIndex == 0) {
-                            newPointerIndex = INVALID_POINTER_ID;
-                        }
-                        this.mLastTouchX = ev.getX(newPointerIndex);
-                        this.mLastTouchY = ev.getY(newPointerIndex);
-                        this.mActivePointerId = ev.getPointerId(newPointerIndex);
-                        break;
-                    }
-                    break;
-            }
-            invalidate();
-            return true;
-        }
-
-        float getMatrixRotation(Matrix matrix) {
-            matrix.getValues(this.values);
-            return (float) Math.round(Math.atan2((double) this.values[INVALID_POINTER_ID], (double) this.values[BACKGROUND_PATTERN]) * 57.29577951308232d);
-        }
-    }
-
-    class C09551 implements FontFragment.FontChoosedListener {
-        C09551() {
-        }
-
-        public void onOk(TextData textData) {
-            SquareActivity.this.canvasText.addTextView(textData);
-            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.fontFragment).commit();
-            Log.e(SquareActivity.TAG, "onOK called");
-        }
-    }
-
-    class C09562 implements StickerView.StickerViewSelectedListener {
-        C09562() {
-        }
-
-        public void setSelectedView(StickerView stickerView) {
-            Log.e("Sticker", "Coming here");
-            stickerView.bringToFront();
-            stickerView.bringToFront();
-            if (VERSION.SDK_INT < 19) {
-                SquareActivity.this.stickerViewContainer.requestLayout();
-            }
-        }
-
-        public void onTouchUp(StickerData data) {
-            Log.e("Sticker", "onTouchUp");
-        }
-    }
-
-    class C09573 implements FragmentCrop.CropListener {
-        C09573() {
-        }
-
-        public void cropCancelled() {
-            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
-        }
-
-        public void cropApply(int leftPos, int topPos, int rightPos, int bottomPos) {
-            SquareActivity.this.mSqView.setCropBitmap(leftPos, topPos, rightPos, bottomPos);
-            SquareActivity.this.cropFragment.setBitmap(null);
-            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
-        }
-    }
-
-
-    private class SaveImageTask extends AsyncTask<Object, Object, Object> {
-        ProgressDialog progressDialog;
-        String resultPath;
-        int saveMode;
-
-        private SaveImageTask() {
-            this.saveMode = SquareActivity.TAB_INDEX_SQUARE;
-            this.resultPath = null;
-        }
-
-        protected Object doInBackground(Object... arg0) {
-            if (arg0 != null) {
-                this.saveMode = ((Integer) arg0[SquareActivity.TAB_INDEX_SQUARE]).intValue();
-            }
-            this.resultPath = SquareActivity.this.mSqView.saveBitmap();
-            return null;
-        }
-
-        protected void onPreExecute() {
-            this.progressDialog = new ProgressDialog(SquareActivity.this.context);
-            this.progressDialog.setMessage("Saving image ...");
-            this.progressDialog.show();
-        }
-
-        protected void onPostExecute(Object result) {
-            Toast msg;
-            try {
-                if (this.progressDialog != null && this.progressDialog.isShowing()) {
-                    this.progressDialog.cancel();
-                }
-            } catch (Exception e) {
-            }
-            if (this.saveMode == SquareActivity.this.SAVE_FINISH) {
-                super.onPostExecute(result);
-                msg = Toast.makeText(SquareActivity.this.context, "Image has been saved to the /SD" + SquareActivity.this.getString(R.string.directory) + " folder.", SquareActivity.TAB_INDEX_SQUARE_BACKGROUND);
-                msg.setGravity(17, msg.getXOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR, msg.getYOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR);
-                msg.show();
-                MediaScannerConnectionClient client = new MyMediaScannerConnectionClient(SquareActivity.this.getApplicationContext(), new File(this.resultPath), null);
-                SquareActivity.this.finish();
-            } else if (this.saveMode == SquareActivity.this.SAVE_INSTAGRAM) {
-                try {
-                    Intent instagram = new Intent("android.intent.action.SEND");
-                    instagram.setType("image/*");
-                    instagram.putExtra("android.intent.extra.STREAM", Uri.fromFile(new File(this.resultPath)));
-                    instagram.putExtra("android.intent.extra.TEXT", new StringBuilder(String.valueOf(SquareActivity.this.getString(R.string.hashtag_twitter))).append(" ").toString());
-                    instagram.setPackage("com.instagram.android");
-                    SquareActivity.this.startActivityForResult(instagram, SquareActivity.INSTAGRAM_ID);
-                } catch (Exception e2) {
-                    msg = Toast.makeText(SquareActivity.this.context, SquareActivity.this.getString(R.string.no_instagram_app), SquareActivity.TAB_INDEX_SQUARE_BACKGROUND);
-                    msg.setGravity(17, msg.getXOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR, msg.getYOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR);
-                    msg.show();
-                    SquareActivity.this.saveNormal(this.resultPath);
-                }
-            } else if (this.saveMode == SquareActivity.this.SAVE_NORMAL) {
-                SquareActivity.this.saveNormal(this.resultPath);
-            }
-            MyMediaScannerConnectionClient myMediaScannerConnectionClient = new MyMediaScannerConnectionClient(SquareActivity.this.getApplicationContext(), new File(this.resultPath), null);
-        }
-    }
-
     public /* bridge */ /* synthetic */ View onCreateView(View view, String str, Context context, AttributeSet attributeSet) {
         return super.onCreateView(view, str, context, attributeSet);
     }
@@ -996,11 +357,13 @@ public class SquareActivity extends FragmentActivity {
         this.mSqView.invalidate();
         this.mainLayout.addView(this.canvasText);
         ((RelativeLayout) findViewById(R.id.square_text_view_fragment_container)).bringToFront();
-        this.fontFragment = new FontFragment();
-        this.fontFragment.setArguments(new Bundle());
-        getSupportFragmentManager().beginTransaction().add(R.id.square_text_view_fragment_container, this.fontFragment, "FONT_FRAGMENT").commit();
-        Log.e(TAG, "add fragment");
-        this.fontFragment.setFontChoosedListener(this.fontChoosedListener);
+        if (textDataList.size() == 0) {
+            this.fontFragment = new FontFragment();
+            this.fontFragment.setArguments(new Bundle());
+            getSupportFragmentManager().beginTransaction().add(R.id.square_text_view_fragment_container, this.fontFragment, "FONT_FRAGMENT").commit();
+            Log.e(TAG, "add fragment");
+            this.fontFragment.setFontChoosedListener(this.fontChoosedListener);
+        }
     }
 
     public void addStickerGalleryFragment() {
@@ -1287,10 +650,10 @@ public class SquareActivity extends FragmentActivity {
             } else {
                 clearViewFlipper();
             }
-        } else if (this.colorContainer.getVisibility() == 0) {
+        } else if (this.colorContainer.getVisibility() == View.VISIBLE) {
             hideColorContainer();
         } else if (this.selectImageForAdj) {
-            this.selectFilterTextView.setVisibility(TAB_INDEX_SQUARE_FX);
+            this.selectFilterTextView.setVisibility(View.INVISIBLE);
             this.selectImageForAdj = false;
         } else if (this.viewFlipper == null || this.viewFlipper.getDisplayedChild() == TAB_INDEX_SQUARE_FX) {
             backButtonAlertBuilder();
@@ -1418,5 +781,649 @@ public class SquareActivity extends FragmentActivity {
         }
         this.cropFragment.setCropListener(this.cropListener);
         this.cropFragment.setBitmap(this.sourceBitmap);
+    }
+
+    class C05926 implements Runnable {
+        private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
+
+        C05926(HorizontalScrollView horizontalScrollView) {
+            this.val$horizontalScrollView = horizontalScrollView;
+        }
+
+        public void run() {
+            this.val$horizontalScrollView.scrollTo(this.val$horizontalScrollView.getChildAt(SquareActivity.TAB_INDEX_SQUARE).getMeasuredWidth(), SquareActivity.TAB_INDEX_SQUARE);
+        }
+    }
+
+    class C05937 implements Runnable {
+        private final /* synthetic */ HorizontalScrollView val$horizontalScrollView;
+
+        C05937(HorizontalScrollView horizontalScrollView) {
+            this.val$horizontalScrollView = horizontalScrollView;
+        }
+
+        public void run() {
+            this.val$horizontalScrollView.fullScroll(17);
+        }
+    }
+
+    /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.8 */
+    class C05948 implements OnSeekBarChangeListener {
+        C05948() {
+        }
+
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            float radius = ((float) seekBar.getProgress()) / 4.0f;
+            if (radius > BlurBuilder.BLUR_RADIUS_MAX) {
+                radius = BlurBuilder.BLUR_RADIUS_MAX;
+            }
+            if (radius < 0.0f) {
+                radius = 0.0f;
+            }
+            SquareActivity.this.blurText.setText("" + ((int) radius));
+            Log.e(SquareActivity.TAG, "blur radius " + radius);
+            SquareActivity.this.mSqView.setBlurBitmap((int) radius);
+        }
+
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            SquareActivity.this.blurText.setText("" + ((int) (((float) progress) / 4.0f)));
+        }
+    }
+
+    class MyGestureListener extends SimpleOnGestureListener {
+        private static final String DEBUG_TAG = "Gestures";
+
+        MyGestureListener() {
+        }
+
+        public boolean onSingleTapConfirmed(MotionEvent event) {
+            Log.d(DEBUG_TAG, "onSingleTapConfirmed: ");
+            return true;
+        }
+
+        public boolean onSingleTapUp(MotionEvent event) {
+            Log.d(DEBUG_TAG, "onSingleTapUp: ");
+            return true;
+        }
+    }
+
+    final class MyMediaScannerConnectionClient implements MediaScannerConnectionClient {
+        private MediaScannerConnection mConn;
+        private String mFilename;
+        private String mMimetype;
+
+        public MyMediaScannerConnectionClient(Context ctx, File file, String mimetype) {
+            this.mFilename = file.getAbsolutePath();
+            this.mConn = new MediaScannerConnection(ctx, this);
+            this.mConn.connect();
+        }
+
+        public void onMediaScannerConnected() {
+            this.mConn.scanFile(this.mFilename, this.mMimetype);
+        }
+
+        public void onScanCompleted(String path, Uri uri) {
+            this.mConn.disconnect();
+        }
+    }
+
+    class SquareView extends View {
+        public static final int BACKGROUND_BLUR = 1;
+        public static final int BACKGROUND_PATTERN = 0;
+        public static final int PATTERN_SENTINEL = -1;
+        private static final int INVALID_POINTER_ID = 1;
+        private static final int UPPER_SIZE_LIMIT = 2048;
+        int backgroundMode;
+        float bitmapHeight;
+        Matrix bitmapMatrix;
+        float bitmapWidth;
+        Bitmap blurBitmap;
+        Matrix blurBitmapMatrix;
+        BlurBuilderNormal blurBuilderNormal;
+        PointF centerOriginal;
+        Paint dashPaint;
+        Path dashPathHorizontal;
+        Path dashPathHorizontalTemp;
+        Path dashPathVertical;
+        Path dashPathVerticalTemp;
+        float epsilon;
+        float[] f509f;
+        Bitmap filterBitmap;
+        float finalAngle = 0.0f;
+        Paint grayPaint;
+        Matrix identityMatrix;
+        Matrix inverseMatrix;
+        boolean isOrthogonal;
+        float mLastTouchX;
+        float mLastTouchY;
+        float mScaleFactor;
+        int offsetX;
+        int offsetY;
+        Paint paint;
+        Parameter parameter;
+        Bitmap patternBitmap;
+        Paint patternPaint;
+        Paint pointPaint;
+        RotationGestureDetector.OnRotationGestureListener rotateListener;
+        int screenHeight;
+        int screenWidth;
+        Matrix textMatrix;
+        float[] values;
+        int viewHeight;
+        int viewWidth;
+        private int blurRadius;
+        private int mActivePointerId;
+        private RotationGestureDetector mRotationDetector;
+
+        public SquareView(Context context, int w, int h) {
+            super(context);
+            this.identityMatrix = new Matrix();
+            this.textMatrix = new Matrix();
+            this.backgroundMode = BACKGROUND_PATTERN;
+            this.dashPaint = new Paint();
+            this.dashPathVerticalTemp = new Path();
+            this.dashPathHorizontalTemp = new Path();
+            this.isOrthogonal = false;
+            this.blurRadius = 14;
+            this.inverseMatrix = new Matrix();
+            this.f509f = new float[SquareActivity.TAB_INDEX_SQUARE_BLUR];
+            this.centerOriginal = new PointF();
+            this.mActivePointerId = INVALID_POINTER_ID;
+            this.values = new float[9];
+            this.mScaleFactor = 1.0f;
+            this.finalAngle = 0.0f;
+            this.epsilon = 4.0f;
+            this.rotateListener = new C09611();
+            this.screenWidth = w;
+            this.screenHeight = h;
+            this.paint = new Paint();
+            this.bitmapMatrix = new Matrix();
+            this.paint.setColor(-3355444);
+
+            int min = Math.min(w, h);
+            this.viewWidth = min;
+            this.viewHeight = min;
+            this.offsetX = Math.abs(w - this.viewWidth) / SquareActivity.TAB_INDEX_SQUARE_BLUR;
+            this.offsetY = Math.abs(h - this.viewHeight) / SquareActivity.TAB_INDEX_SQUARE_BLUR;
+            new Options().inPreferredConfig = Config.ARGB_8888;
+            this.bitmapWidth = (float) SquareActivity.this.sourceBitmap.getWidth();
+            this.bitmapHeight = (float) SquareActivity.this.sourceBitmap.getHeight();
+            float bitmapScale = Math.min(((float) this.viewWidth) / this.bitmapWidth, ((float) this.viewHeight) / this.bitmapHeight);
+            float bitmapOffsetX = ((float) this.offsetX) + ((((float) this.viewWidth) - (this.bitmapWidth * bitmapScale)) / 2.0f);
+            float bitmapOffsetY = ((float) this.offsetY) + ((((float) this.viewHeight) - (this.bitmapHeight * bitmapScale)) / 2.0f);
+            this.bitmapMatrix.postScale(bitmapScale, bitmapScale);
+            this.bitmapMatrix.postTranslate(bitmapOffsetX, bitmapOffsetY);
+            SquareActivity.this.mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+            this.mRotationDetector = new RotationGestureDetector(this.rotateListener);
+            this.grayPaint = new Paint();
+            this.grayPaint.setColor(-12303292);
+            this.pointPaint = new Paint();
+            this.pointPaint.setColor(InputDeviceCompat.SOURCE_ANY);
+            this.pointPaint.setStrokeWidth(20.0f);
+            this.blurBitmapMatrix = new Matrix();
+            this.patternPaint = new Paint(INVALID_POINTER_ID);
+            this.patternPaint.setColor(PATTERN_SENTINEL);
+            this.dashPaint.setColor(-7829368);
+            this.dashPaint.setStyle(Style.STROKE);
+            float strokeW = ((float) this.screenWidth) / 120.0f;
+            if (strokeW <= 0.0f) {
+                strokeW = 5.0f;
+            }
+            this.dashPaint.setStrokeWidth(strokeW);
+            Paint paint = this.dashPaint;
+            float[] fArr = new float[SquareActivity.TAB_INDEX_SQUARE_BLUR];
+            fArr[BACKGROUND_PATTERN] = strokeW;
+            fArr[INVALID_POINTER_ID] = strokeW;
+            paint.setPathEffect(new DashPathEffect(fArr, 0.0f));
+            this.dashPathVertical = new Path();
+            this.dashPathHorizontal = new Path();
+            setPathPositions();
+        }
+
+        private void setPathPositions() {
+            this.dashPathVertical.reset();
+            this.dashPathHorizontal.reset();
+            this.dashPathVertical.moveTo(this.bitmapWidth / 2.0f, (-this.bitmapHeight) / 5.0f);
+            this.dashPathVertical.lineTo(this.bitmapWidth / 2.0f, (this.bitmapHeight * 6.0f) / 5.0f);
+            this.dashPathHorizontal.moveTo((-this.bitmapWidth) / 5.0f, this.bitmapHeight / 2.0f);
+            this.dashPathHorizontal.lineTo((this.bitmapWidth * 6.0f) / 5.0f, this.bitmapHeight / 2.0f);
+        }
+
+        public void onDraw(Canvas canvas) {
+            if (this.backgroundMode == 0) {
+                canvas.drawRect((float) this.offsetX, (float) this.offsetY, (float) (this.offsetX + this.viewWidth), (float) (this.offsetY + this.viewHeight), this.patternPaint);
+            }
+            if (!(this.blurBitmap == null || this.blurBitmap.isRecycled() || this.backgroundMode != INVALID_POINTER_ID)) {
+                canvas.drawBitmap(this.blurBitmap, this.blurBitmapMatrix, this.paint);
+            }
+            canvas.drawBitmap(SquareActivity.this.sourceBitmap, this.bitmapMatrix, this.paint);
+            if (!(this.filterBitmap == null || this.filterBitmap.isRecycled())) {
+                canvas.drawBitmap(this.filterBitmap, this.bitmapMatrix, this.paint);
+            }
+            if (this.isOrthogonal) {
+                this.dashPathVertical.transform(this.bitmapMatrix, this.dashPathVerticalTemp);
+                this.dashPathHorizontal.transform(this.bitmapMatrix, this.dashPathHorizontalTemp);
+                canvas.drawPath(this.dashPathVerticalTemp, this.dashPaint);
+                canvas.drawPath(this.dashPathHorizontalTemp, this.dashPaint);
+            }
+            if (SquareActivity.this.showText) {
+                for (int i = BACKGROUND_PATTERN; i < SquareActivity.this.textDataList.size(); i += INVALID_POINTER_ID) {
+                    this.textMatrix.set(((TextData) SquareActivity.this.textDataList.get(i)).imageSaveMatrix);
+                    canvas.setMatrix(this.textMatrix);
+                    canvas.drawText(((TextData) SquareActivity.this.textDataList.get(i)).message, ((TextData) SquareActivity.this.textDataList.get(i)).xPos, ((TextData) SquareActivity.this.textDataList.get(i)).yPos, ((TextData) SquareActivity.this.textDataList.get(i)).textPaint);
+                    canvas.setMatrix(this.identityMatrix);
+                }
+            }
+            if (this.offsetX == 0) {
+                canvas.drawRect(0.0f, 0.0f, (float) this.screenWidth, (float) this.offsetY, this.grayPaint);
+                canvas.drawRect((float) this.offsetX, (float) (this.offsetY + this.viewHeight), (float) this.screenWidth, (float) this.screenHeight, this.grayPaint);
+            } else if (this.offsetY == 0) {
+                canvas.drawRect(0.0f, 0.0f, (float) this.offsetX, (float) this.screenHeight, this.grayPaint);
+                canvas.drawRect((float) (this.offsetX + this.viewHeight), (float) this.offsetY, (float) this.screenWidth, (float) this.screenHeight, this.grayPaint);
+            }
+        }
+
+        private String saveBitmap() {
+            int i;
+            float max = (float) Math.max(this.viewHeight, this.viewWidth);
+            float btmScale = ((float) Utility.maxSizeForSave(SquareActivity.this.context, 2048.0f)) / max;
+            int newBtmWidth = (int) (((float) this.viewWidth) * btmScale);
+            int newBtmHeight = (int) (((float) this.viewHeight) * btmScale);
+            if (newBtmWidth <= 0) {
+                newBtmWidth = this.viewWidth;
+                Log.e(SquareActivity.TAG, "newBtmWidth");
+            }
+            if (newBtmHeight <= 0) {
+                newBtmHeight = this.viewHeight;
+                Log.e(SquareActivity.TAG, "newBtmHeight");
+            }
+            Bitmap savedBitmap = Bitmap.createBitmap(newBtmWidth, newBtmHeight, Config.ARGB_8888);
+            Canvas bitmapCanvas = new Canvas(savedBitmap);
+            Matrix sizeMat = new Matrix();
+            sizeMat.reset();
+            sizeMat.postTranslate((float) (-this.offsetX), (float) (-this.offsetY));
+            sizeMat.postScale(btmScale, btmScale);
+            bitmapCanvas.setMatrix(sizeMat);
+            if (this.backgroundMode == 0) {
+                bitmapCanvas.drawRect((float) this.offsetX, (float) this.offsetY, (float) (this.offsetX + this.viewWidth), (float) (this.offsetY + this.viewHeight), this.patternPaint);
+            }
+            if (!(this.blurBitmap == null || this.blurBitmap.isRecycled() || this.backgroundMode != INVALID_POINTER_ID)) {
+                bitmapCanvas.drawBitmap(this.blurBitmap, this.blurBitmapMatrix, this.paint);
+            }
+            bitmapCanvas.drawBitmap(SquareActivity.this.sourceBitmap, this.bitmapMatrix, this.paint);
+            if (!(this.filterBitmap == null || this.filterBitmap.isRecycled())) {
+                bitmapCanvas.drawBitmap(this.filterBitmap, this.bitmapMatrix, this.paint);
+            }
+            Matrix mat;
+            if (SquareActivity.this.textDataList != null) {
+                for (i = BACKGROUND_PATTERN; i < SquareActivity.this.textDataList.size(); i += INVALID_POINTER_ID) {
+                    mat = new Matrix();
+                    mat.set(((TextData) SquareActivity.this.textDataList.get(i)).imageSaveMatrix);
+                    mat.postTranslate((float) (-this.offsetX), (float) (-this.offsetY));
+                    mat.postScale(btmScale, btmScale);
+                    bitmapCanvas.setMatrix(mat);
+                    bitmapCanvas.drawText(((TextData) SquareActivity.this.textDataList.get(i)).message, ((TextData) SquareActivity.this.textDataList.get(i)).xPos, ((TextData) SquareActivity.this.textDataList.get(i)).yPos, ((TextData) SquareActivity.this.textDataList.get(i)).textPaint);
+                }
+            }
+            for (i = BACKGROUND_PATTERN; i < SquareActivity.this.stickerViewContainer.getChildCount(); i += INVALID_POINTER_ID) {
+                mat = new Matrix();
+                StickerView view = (StickerView) SquareActivity.this.stickerViewContainer.getChildAt(i);
+                StickerData data = view.getStickerData();
+                mat.set(data.getCanvasMatrix());
+                mat.postTranslate((float) (-this.offsetX), (float) (-this.offsetY));
+                mat.postScale(btmScale, btmScale);
+                bitmapCanvas.setMatrix(mat);
+                if (!(view.stickerBitmap == null || view.stickerBitmap.isRecycled())) {
+                    bitmapCanvas.drawBitmap(view.stickerBitmap, data.xPos, data.yPos, view.paint);
+                }
+            }
+            String resultPath = new StringBuilder(String.valueOf(Environment.getExternalStorageDirectory().toString())).append(SquareActivity.this.getString(R.string.directory)).append(String.valueOf(System.currentTimeMillis())).append(".jpg").toString();
+            new File(resultPath).getParentFile().mkdirs();
+            try {
+                OutputStream out = new FileOutputStream(resultPath);
+                savedBitmap.compress(CompressFormat.JPEG, 90, out);
+                out.flush();
+                out.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+            savedBitmap.recycle();
+            return resultPath;
+        }
+
+        void setPatternPaint(int resId) {
+            if (this.patternPaint == null) {
+                this.patternPaint = new Paint(1);
+                this.patternPaint.setColor(PATTERN_SENTINEL);
+            }
+            if (resId == PATTERN_SENTINEL) {
+                this.patternPaint.setShader(null);
+                this.patternPaint.setColor(PATTERN_SENTINEL);
+                postInvalidate();
+                return;
+            }
+            this.patternBitmap = BitmapFactory.decodeResource(getResources(), resId);
+            this.patternPaint.setShader(new BitmapShader(this.patternBitmap, TileMode.REPEAT, TileMode.REPEAT));
+            postInvalidate();
+        }
+
+        void setPatternPaintColor(int color) {
+            if (this.patternPaint == null) {
+                this.patternPaint = new Paint(INVALID_POINTER_ID);
+            }
+            this.patternPaint.setShader(null);
+            this.patternPaint.setColor(color);
+            postInvalidate();
+        }
+
+        public void setBlurBitmap(int radius) {
+            if (this.blurBuilderNormal == null) {
+                this.blurBuilderNormal = new BlurBuilderNormal();
+            }
+            this.backgroundMode = INVALID_POINTER_ID;
+            this.blurBitmap = this.blurBuilderNormal.createBlurBitmapNDK(SquareActivity.this.sourceBitmap, radius);
+
+            this.blurRadius = this.blurBuilderNormal.getBlur();
+            setMatrixCenter(this.blurBitmapMatrix, (float) this.blurBitmap.getWidth(), (float) this.blurBitmap.getHeight());
+            postInvalidate();
+        }
+
+        public void setCropBitmap(int left, int top, int right, int bottom) {
+            Bitmap localCropBtm = SquareActivity.this.sourceBitmap;
+            if (((float) right) > this.bitmapWidth) {
+                right = (int) this.bitmapWidth;
+            }
+            if (((float) bottom) > this.bitmapHeight) {
+                bottom = (int) this.bitmapHeight;
+            }
+            if (VERSION.SDK_INT < 12) {
+                SquareActivity.this.sourceBitmap = BlurBuilderNormal.createCroppedBitmap(localCropBtm, left, top, right - left, bottom - top, false);
+            } else {
+                SquareActivity.this.sourceBitmap = Bitmap.createBitmap(localCropBtm, left, top, right - left, bottom - top);
+            }
+            SquareActivity.this.effectFragment.setBitmap(SquareActivity.this.sourceBitmap);
+            SquareActivity.this.effectFragment.execQueue();
+            if (localCropBtm != SquareActivity.this.sourceBitmap) {
+                localCropBtm.recycle();
+            }
+            this.bitmapHeight = (float) sourceBitmap.getHeight();
+            this.bitmapWidth = (float) sourceBitmap.getWidth();
+            setPathPositions();
+            setScaleMatrix(0);
+        }
+
+        public void setScaleMatrix(int mode) {
+            PointF centerOfImage = getCenterOfImage();
+            if (mode == 0) {
+                this.bitmapMatrix.reset();
+                float bitmapScale = Math.min(((float) this.viewWidth) / this.bitmapWidth, ((float) this.viewHeight) / this.bitmapHeight);
+                float bitmapOffsetX = ((float) this.offsetX) + ((((float) this.viewWidth) - (this.bitmapWidth * bitmapScale)) / 2.0f);
+                float bitmapOffsetY = ((float) this.offsetY) + ((((float) this.viewHeight) - (this.bitmapHeight * bitmapScale)) / 2.0f);
+                this.bitmapMatrix.postScale(bitmapScale, bitmapScale);
+                this.bitmapMatrix.postTranslate(bitmapOffsetX, bitmapOffsetY);
+            } else if (mode == INVALID_POINTER_ID) {
+                setMatrixCenter(this.bitmapMatrix, this.bitmapWidth, this.bitmapHeight);
+            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_FRAME) {
+                this.bitmapMatrix.postRotate(-90.0f, centerOfImage.x, centerOfImage.y);
+            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_BLUR) {
+                this.bitmapMatrix.postRotate(90.0f, centerOfImage.x, centerOfImage.y);
+            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_FX) {
+                this.bitmapMatrix.postScale(-1.0f, 1.0f, centerOfImage.x, centerOfImage.y);
+            } else if (mode == SquareActivity.TAB_INDEX_SQUARE_ADJ) {
+                this.bitmapMatrix.postScale(1.0f, -1.0f, centerOfImage.x, centerOfImage.y);
+            }
+            postInvalidate();
+        }
+
+        void setMatrixCenter(Matrix matrix, float btmwidth, float btmheight) {
+            matrix.reset();
+            float bitmapScale = Math.max(((float) this.viewWidth) / btmwidth, ((float) this.viewHeight) / btmheight);
+            float bitmapOffsetX = ((float) this.offsetX) + ((((float) this.viewWidth) - (bitmapScale * btmwidth)) / 2.0f);
+            float bitmapOffsetY = ((float) this.offsetY) + ((((float) this.viewHeight) - (bitmapScale * btmheight)) / 2.0f);
+            matrix.postScale(bitmapScale, bitmapScale);
+            matrix.postTranslate(bitmapOffsetX, bitmapOffsetY);
+        }
+
+        PointF getCenterOfImage() {
+            if (this.centerOriginal == null) {
+                this.centerOriginal = new PointF();
+            }
+            if (this.f509f == null) {
+                this.f509f = new float[SquareActivity.TAB_INDEX_SQUARE_BLUR];
+            }
+            float y = this.bitmapHeight / 2.0f;
+            this.f509f[BACKGROUND_PATTERN] = this.bitmapWidth / 2.0f;
+            this.f509f[INVALID_POINTER_ID] = y;
+            this.bitmapMatrix.mapPoints(this.f509f);
+            this.centerOriginal.set(this.f509f[BACKGROUND_PATTERN], this.f509f[INVALID_POINTER_ID]);
+            return this.centerOriginal;
+        }
+
+        public boolean onTouchEvent(MotionEvent ev) {
+            int newPointerIndex = BACKGROUND_PATTERN;
+            SquareActivity.this.mScaleDetector.onTouchEvent(ev);
+            this.mRotationDetector.onTouchEvent(ev);
+            int action = ev.getAction();
+            float x;
+            float y;
+            int pointerIndex;
+            switch (action & MotionEventCompat.ACTION_MASK) {
+                case BACKGROUND_PATTERN /*0*/:
+                    x = ev.getX();
+                    y = ev.getY();
+                    if (x >= ((float) this.offsetX) && y >= ((float) this.offsetY) && x <= ((float) (this.offsetX + this.viewWidth)) && y <= ((float) (this.offsetY + this.viewHeight))) {
+                        this.mLastTouchX = x;
+                        this.mLastTouchY = y;
+                        this.mActivePointerId = ev.getPointerId(BACKGROUND_PATTERN);
+                        break;
+                    }
+                    return false;
+                case INVALID_POINTER_ID /*1*/:
+                    this.isOrthogonal = false;
+                    this.mActivePointerId = INVALID_POINTER_ID;
+                    break;
+                case SquareActivity.TAB_INDEX_SQUARE_BLUR /*2*/:
+                    pointerIndex = ev.findPointerIndex(this.mActivePointerId);
+                    x = ev.getX(pointerIndex);
+                    y = ev.getY(pointerIndex);
+                    this.bitmapMatrix.postTranslate(x - this.mLastTouchX, y - this.mLastTouchY);
+                    this.mLastTouchX = x;
+                    this.mLastTouchY = y;
+                    break;
+                case SquareActivity.TAB_INDEX_SQUARE_FRAME /*3*/:
+                    this.isOrthogonal = false;
+                    this.mActivePointerId = INVALID_POINTER_ID;
+                    break;
+                case SquareActivity.TAB_SIZE /*6*/:
+                    this.isOrthogonal = false;
+                    this.finalAngle = 0.0f;
+                    pointerIndex = (MotionEventCompat.ACTION_POINTER_INDEX_MASK & action) >> 8;
+                    if (ev.getPointerId(pointerIndex) == this.mActivePointerId) {
+                        if (pointerIndex == 0) {
+                            newPointerIndex = INVALID_POINTER_ID;
+                        }
+                        this.mLastTouchX = ev.getX(newPointerIndex);
+                        this.mLastTouchY = ev.getY(newPointerIndex);
+                        this.mActivePointerId = ev.getPointerId(newPointerIndex);
+                        break;
+                    }
+                    break;
+            }
+            invalidate();
+            return true;
+        }
+
+        float getMatrixRotation(Matrix matrix) {
+            matrix.getValues(this.values);
+            return (float) Math.round(Math.atan2((double) this.values[INVALID_POINTER_ID], (double) this.values[BACKGROUND_PATTERN]) * 57.29577951308232d);
+        }
+
+        private class ScaleListener extends SimpleOnScaleGestureListener {
+            private ScaleListener() {
+            }
+
+            public boolean onScale(ScaleGestureDetector detector) {
+                SquareView.this.mScaleFactor = detector.getScaleFactor();
+                PointF center;
+                if (detector.isInProgress()) {
+                    SquareView.this.mScaleFactor = Math.max(0.1f, Math.min(SquareView.this.mScaleFactor, 5.0f));
+                    center = SquareView.this.getCenterOfImage();
+                    SquareView.this.bitmapMatrix.postScale(SquareView.this.mScaleFactor, SquareView.this.mScaleFactor, center.x, center.y);
+                    SquareView.this.invalidate();
+                } else {
+                    SquareView.this.mScaleFactor = Math.max(0.1f, Math.min(SquareView.this.mScaleFactor, 5.0f));
+                    center = SquareView.this.getCenterOfImage();
+                    SquareView.this.bitmapMatrix.postScale(SquareView.this.mScaleFactor, SquareView.this.mScaleFactor, center.x, center.y);
+                    SquareView.this.invalidate();
+                }
+                return true;
+            }
+        }
+
+        /* renamed from: com.lyrebirdstudio.instasquare.lib.SquareActivity.SquareView.1 */
+        class C09611 implements RotationGestureDetector.OnRotationGestureListener {
+            C09611() {
+            }
+
+            public void OnRotation(RotationGestureDetector rotationDetector) {
+                float angle = rotationDetector.getAngle();
+                float rotation = getMatrixRotation(bitmapMatrix);
+                if ((rotation == 0.0f || rotation == 90.0f || rotation == 180.0f || rotation == -180.0f || rotation == -90.0f) && Math.abs(finalAngle - angle) < epsilon) {
+                    isOrthogonal = true;
+                    return;
+                }
+                if (Math.abs((rotation - finalAngle) + angle) < epsilon) {
+                    angle = finalAngle - rotation;
+                    isOrthogonal = true;
+                } else if (Math.abs(90.0f - ((rotation - finalAngle) + angle)) < epsilon) {
+                    angle = (finalAngle + 90.0f) - rotation;
+                    isOrthogonal = true;
+                } else if (Math.abs(180.0f - ((rotation - finalAngle) + angle)) < epsilon) {
+                    angle = (finalAngle + 180.0f) - rotation;
+                    isOrthogonal = true;
+                } else if (Math.abs(-180.0f - ((rotation - finalAngle) + angle)) < epsilon) {
+                    angle = (finalAngle - 0.024902344f) - rotation;
+                    isOrthogonal = true;
+                } else if (Math.abs(-90.0f - ((rotation - finalAngle) + angle)) < epsilon) {
+                    angle = (finalAngle - 0.049804688f) - rotation;
+                    isOrthogonal = true;
+                } else {
+                    isOrthogonal = false;
+                }
+                PointF center = getCenterOfImage();
+                bitmapMatrix.postRotate(finalAngle - angle, center.x, center.y);
+                finalAngle = angle;
+                invalidate();
+            }
+        }
+    }
+
+    class C09551 implements FontFragment.FontChoosedListener {
+        C09551() {
+        }
+
+        public void onOk(TextData textData) {
+            SquareActivity.this.canvasText.addTextView(textData);
+            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.fontFragment).commit();
+            Log.e(SquareActivity.TAG, "onOK called");
+        }
+    }
+
+    class C09562 implements StickerView.StickerViewSelectedListener {
+        C09562() {
+        }
+
+        public void setSelectedView(StickerView stickerView) {
+            Log.e("Sticker", "Coming here");
+            stickerView.bringToFront();
+            stickerView.bringToFront();
+            if (VERSION.SDK_INT < 19) {
+                SquareActivity.this.stickerViewContainer.requestLayout();
+            }
+        }
+
+        public void onTouchUp(StickerData data) {
+            Log.e("Sticker", "onTouchUp");
+        }
+    }
+
+    class C09573 implements FragmentCrop.CropListener {
+        C09573() {
+        }
+
+        public void cropCancelled() {
+            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
+        }
+
+        public void cropApply(int leftPos, int topPos, int rightPos, int bottomPos) {
+            SquareActivity.this.mSqView.setCropBitmap(leftPos, topPos, rightPos, bottomPos);
+            SquareActivity.this.cropFragment.setBitmap(null);
+            SquareActivity.this.getSupportFragmentManager().beginTransaction().remove(SquareActivity.this.cropFragment).commit();
+        }
+    }
+
+    private class SaveImageTask extends AsyncTask<Object, Object, Object> {
+        ProgressDialog progressDialog;
+        String resultPath;
+        int saveMode;
+
+        private SaveImageTask() {
+            this.saveMode = SquareActivity.TAB_INDEX_SQUARE;
+            this.resultPath = null;
+        }
+
+        protected Object doInBackground(Object... arg0) {
+            if (arg0 != null) {
+                this.saveMode = ((Integer) arg0[SquareActivity.TAB_INDEX_SQUARE]).intValue();
+            }
+            this.resultPath = SquareActivity.this.mSqView.saveBitmap();
+            return null;
+        }
+
+        protected void onPreExecute() {
+            this.progressDialog = new ProgressDialog(SquareActivity.this.context);
+            this.progressDialog.setMessage("Saving image ...");
+            this.progressDialog.show();
+        }
+
+        protected void onPostExecute(Object result) {
+            Toast msg;
+            try {
+                if (this.progressDialog != null && this.progressDialog.isShowing()) {
+                    this.progressDialog.cancel();
+                }
+            } catch (Exception e) {
+            }
+            if (this.saveMode == SquareActivity.this.SAVE_FINISH) {
+                super.onPostExecute(result);
+                msg = Toast.makeText(SquareActivity.this.context, "Image has been saved to the /SD" + SquareActivity.this.getString(R.string.directory) + " folder.", SquareActivity.TAB_INDEX_SQUARE_BACKGROUND);
+                msg.setGravity(17, msg.getXOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR, msg.getYOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR);
+                msg.show();
+                MediaScannerConnectionClient client = new MyMediaScannerConnectionClient(SquareActivity.this.getApplicationContext(), new File(this.resultPath), null);
+                SquareActivity.this.finish();
+            } else if (this.saveMode == SquareActivity.this.SAVE_INSTAGRAM) {
+                try {
+                    Intent instagram = new Intent("android.intent.action.SEND");
+                    instagram.setType("image/*");
+                    instagram.putExtra("android.intent.extra.STREAM", Uri.fromFile(new File(this.resultPath)));
+                    instagram.putExtra("android.intent.extra.TEXT", new StringBuilder(String.valueOf(SquareActivity.this.getString(R.string.hashtag_twitter))).append(" ").toString());
+                    instagram.setPackage("com.instagram.android");
+                    SquareActivity.this.startActivityForResult(instagram, SquareActivity.INSTAGRAM_ID);
+                } catch (Exception e2) {
+                    msg = Toast.makeText(SquareActivity.this.context, SquareActivity.this.getString(R.string.no_instagram_app), SquareActivity.TAB_INDEX_SQUARE_BACKGROUND);
+                    msg.setGravity(17, msg.getXOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR, msg.getYOffset() / SquareActivity.TAB_INDEX_SQUARE_BLUR);
+                    msg.show();
+                    SquareActivity.this.saveNormal(this.resultPath);
+                }
+            } else if (this.saveMode == SquareActivity.this.SAVE_NORMAL) {
+                SquareActivity.this.saveNormal(this.resultPath);
+            }
+            MyMediaScannerConnectionClient myMediaScannerConnectionClient = new MyMediaScannerConnectionClient(SquareActivity.this.getApplicationContext(), new File(this.resultPath), null);
+        }
     }
 }

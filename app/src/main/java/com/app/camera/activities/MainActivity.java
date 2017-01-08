@@ -1,16 +1,18 @@
 package com.app.camera.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -50,23 +52,15 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // Activity request codes
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int MEDIA_TYPE_IMAGE = 1;
-
     // directory name to store captured images and videos
     private static final String IMAGE_DIRECTORY_NAME = "ResizePhotoApp";
     private static final int REQUEST_GET_CAMERA = 0;
     private static final int REQUEST_GET_GALALRY = 1;
-    private static final int REQUEST_GET_MIRROR = 2;
     private static final int SELECT_IMAGE_SQUARE = 5;
     private static final String TAG = MainActivity.class.getName();
-    private static final String FILES_AUTHORITY = "file";
     private static final int TAKE_PICTURE_COLLAGE = 42;
-
     private Uri fileUri;
-    public static final int REQUEST_CODE = 1;
-    private Uri imageUri;
     private LinearLayout mGalleryLayout, mCameraLayout, mCollegeLayout, mMirrorLayout, mBlurLayout, mRateLayout;
     private Animation animation;
     private LinearLayout top_holder;
@@ -76,9 +70,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String CurrentSelectionTab = "";
     private RelativeLayout mMainLayout;
     private GalleryFragment galleryFragment;
-    private InterstitialAd interstitial;
     private ImageLoader imageLoader;
+    private boolean doubleBackToExitPressedOnce;
+    private Handler mHandler;
+    private Runnable mRunnable;
 
+    /**
+     * returning image / video
+     */
+    private static File getOutputMediaFile(int type) {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create "
+                        + IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fileSizeAlertDialogBuilder();
             }
         });
+        mRunnable = new C07252();
     }
 
     private void findViewbyIds() {
@@ -149,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (mRateLayout == v) {
             CurrentSelectionTab = Constants.CurrentFunction.RATE;
-            Toast.makeText(this, "Comming soon", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -206,22 +233,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 != PackageManager.PERMISSION_GRANTED) {
             requestGallaryPermission();
         } else {
-//            Intent intent = new Intent();
-//            intent.setType("image/*");
-//            intent.setAction("android.intent.action.GET_CONTENT");
-//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_GET_GALALRY);
-
-            if (Build.VERSION.SDK_INT <19){
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_GET_GALALRY);
-            } else {
-                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent1.addCategory(Intent.CATEGORY_OPENABLE);
-                intent1.setType("image/*");
-                startActivityForResult(intent1, REQUEST_GET_GALALRY);
-            }
+            Intent intent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_GET_GALALRY);
         }
     }
 
@@ -231,9 +245,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 != PackageManager.PERMISSION_GRANTED) {
             requestGallaryPermission();
         } else {
-            Intent galleryIntent = new Intent();
-            galleryIntent.setType("image/*");
-            galleryIntent.setAction("android.intent.action.GET_CONTENT");
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), Constants.REQUEST_MIRROR);
         }
     }
@@ -346,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.e("is imageUri null xx", String.valueOf(imageUri == null));
                     startActivityForResult(intent, REQUEST_GET_CAMERA);
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "There is no Camera app to handle this request!", 1).show();
+                    Toast.makeText(getApplicationContext(), "There is no Camera app to handle this request!", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -371,44 +384,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fileUri = savedInstanceState.getParcelable("file_uri");
     }
 
-    private Uri getOutputMediaFile() {
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "Camera Pro");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "www.appsroid.org");
-        return getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-    }
-
-    public void displayPhotoActivity(int source_id) {
-        if (CurrentSelectionTab.equalsIgnoreCase(Constants.CurrentFunction.CAMERA) || CurrentSelectionTab.equalsIgnoreCase(Constants.CurrentFunction.GALLERY)) {
-//            Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-//            intent.putExtra(Constants.EXTRA_KEY_IMAGE_SOURCE, source_id);
-//            intent.setData(fileUri);
-//            startActivity(intent);
-
-            int maxSize = Utility.maxSizeForDimension(this, 1, 1500.0f);
-            Intent shaderIntent = new Intent(getApplicationContext(), SquareActivity.class);
-            shaderIntent.putExtra("selectedImagePath", this.imageLoader.selectedImagePath);
-            shaderIntent.putExtra("isSession", false);
-            shaderIntent.putExtra("MAX_SIZE", maxSize);
-            Utility.logFreeMemory(this);
-            startActivityForResult(shaderIntent, 422);
-
-            overridePendingTransition(0, 0);
-        } else if (CurrentSelectionTab.equalsIgnoreCase(Constants.CurrentFunction.BLUR)) {
-            Intent intent = new Intent(getApplicationContext(), BlurActivity.class);
-            intent.putExtra(Constants.EXTRA_KEY_IMAGE_SOURCE, source_id);
-            intent.setData(fileUri);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (CurrentSelectionTab.equalsIgnoreCase(Constants.CurrentFunction.MIRROR)) {
-            Intent intent = new Intent(getApplicationContext(), MirrorActivity.class);
-            intent.putExtra(Constants.EXTRA_KEY_IMAGE_SOURCE, source_id);
-            intent.setData(fileUri);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        }
-    }
-
     @Override
     protected void onStart() {
         overridePendingTransition(0, 0);
@@ -429,12 +404,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Uri selectedImage = getImageUri();
                 imageLoader.selectedImagePath = selectedImage.getPath();
                 if (this.imageLoader.selectedImagePath != null) {
-                    Utility.decodeImageFileSize(imageLoader.selectedImagePath);
-                    startShaderActivity();
+                    if (this.imageLoader.selectedImagePath != null && BitmapResizer.decodeFileSize(new File(this.imageLoader.selectedImagePath), Utility.maxSizeForDimension(this, 1, 1500.0f)) != null) {
+                        startShaderActivity();
+                    }
+//
                 }
             } else if (resultCode == RESULT_OK && requestCode == REQUEST_GET_GALALRY) {
                 try {
                     this.imageLoader.getImageFromIntent(data);
+                    Utility.decodeImageFileSize(imageLoader.selectedImagePath);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toaster.make(getApplicationContext(), R.string.error_img_not_found);
@@ -469,31 +447,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private Uri getImageUri() {
-        return Uri.fromFile(new File( Environment
+        return Uri.fromFile(new File(Environment
                 .getExternalStorageDirectory(), "pic.jpg"));
-    }
-
-    /**
-     * Display image from a path to ImageView
-     */
-    private void previewCapturedImage() {
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 8;
-            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
-                    options);
-
-            ((AppController) getApplication()).MainBitmap = bitmap;
-
-            if (bitmap != null) {
-                Log.e("Got0", "Bitmap");
-            } else {
-                Log.e("Got0", "null");
-            }
-
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
     }
 
     private void flyOut(final String method_name) {
@@ -538,59 +493,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        flyOut("finish");
-        super.onBackPressed();
+        GalleryFragment galleryFragment = CollageHelper.getGalleryFragment(this);
+        if (galleryFragment != null && galleryFragment.isVisible()) {
+            galleryFragment.onBackPressed();
+        } else if (!checkDoubleClickWhenExit()) {
+            //finish();
+            backButtonAlertBuilder();
+
+        } else if (this.doubleBackToExitPressedOnce) {
+            //finish();
+            backButtonAlertBuilder();
+        } else {
+            this.doubleBackToExitPressedOnce = true;
+            this.mHandler = new Handler();
+            this.mHandler.postDelayed(this.mRunnable, 2000);
+        }
+    }
+
+    private boolean checkDoubleClickWhenExit() {
+        return false;
     }
 
     private void flyIn() {
         click_status = true;
-
         animation = AnimationUtils.loadAnimation(this, R.anim.holder_top);
         top_holder.startAnimation(animation);
-
         animation = AnimationUtils.loadAnimation(this, R.anim.holder_bottom);
         bottom_holder.startAnimation(animation);
-
     }
 
-    /**
-     * Creating file uri to store image/video
-     */
-    public Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
-    }
+    private void backButtonAlertBuilder() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit application?").setCancelable(true).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               // flyOut("finish");
+                dialog.dismiss();
+               finish();
 
-    /**
-     * returning image / video
-     */
-    private static File getOutputMediaFile(int type) {
-        // External sdcard location
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                IMAGE_DIRECTORY_NAME);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create "
-                        + IMAGE_DIRECTORY_NAME + " directory");
-                return null;
             }
-        }
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "IMG_" + timeStamp + ".jpg");
-        } else {
-            return null;
-        }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
 
-        return mediaFile;
     }
 
+    class C07252 implements Runnable {
+        C07252() {
+        }
 
+        public void run() {
+            MainActivity.this.doubleBackToExitPressedOnce = false;
+        }
+    }
 }

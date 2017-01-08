@@ -1,21 +1,19 @@
 package com.app.camera.imagesavelib;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Debug;
 import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v8.renderscript.Allocation;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,8 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.lang.ref.WeakReference;
-import java.util.List;
 
 
 public class ImageUtility {
@@ -215,7 +211,7 @@ public class ImageUtility {
         if (localBitmap == null) {
             return null;
         }
-        Bitmap graySourceBtm = localBitmap;
+        Bitmap graySourceBtm = rotateImage(localBitmap, selectedImagePath);
         if (graySourceBtm == null || VERSION.SDK_INT >= 13) {
             return graySourceBtm;
         }
@@ -349,4 +345,59 @@ public class ImageUtility {
             return false;
         }
     }
+
+    private static Bitmap rotateImage(Bitmap img, String selectedImagePath) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(getImageOrientation(selectedImagePath));
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        //img.recycle();
+        return rotatedImg;
+    }
+
+
+    public static int getImageOrientation(String imagePath){
+        int rotate = 0;
+        try {
+
+            File imageFile = new File(imagePath);
+            ExifInterface exif = new ExifInterface(
+                    imageFile.getAbsolutePath());
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            Log.e("Image Orientation", ""+orientation);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rotate;
+    }
+
+//    private int getImageOrientation(){
+//        int rotate = 0;
+//        final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.ORIENTATION };
+//        final String imageOrderBy = MediaStore.Images.Media._ID+" DESC";
+//        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                imageColumns, null, null, imageOrderBy);
+//
+//        if(cursor.moveToFirst()){
+//            int orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
+//            rotate = orientation;
+//            System.out.println("orientation==="+orientation);
+//            cursor.close();
+//            return orientation;
+//        } else {
+//            return 0;
+//        }
+//    }
 }

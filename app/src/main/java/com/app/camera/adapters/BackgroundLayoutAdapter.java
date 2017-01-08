@@ -11,7 +11,6 @@ import com.app.camera.R;
 import com.app.camera.activities.BlurActivity;
 import com.app.camera.activities.PhotoActivity;
 import com.app.camera.utils.Constants;
-import com.squareup.picasso.Picasso;
 
 
 public class BackgroundLayoutAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

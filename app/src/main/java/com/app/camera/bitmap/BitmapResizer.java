@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Debug;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
@@ -22,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class BitmapResizer {
+    private static final String TAG = BitmapResizer.class.getName();
+
     public static Bitmap decodeFile(File f, int requiredSize) {
         try {
             Options o = new Options();
@@ -49,7 +52,7 @@ public class BitmapResizer {
     }
 
     public static long getFreeMemory(Context context) {
-        return ((long) (((ActivityManager) context.getSystemService("activity")).getMemoryClass() * AccessibilityNodeInfoCompat.ACTION_DISMISS)) - Debug.getNativeHeapAllocatedSize();
+        return ((long) (((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass() * AccessibilityNodeInfoCompat.ACTION_DISMISS)) - Debug.getNativeHeapAllocatedSize();
     }
 
     public static Bitmap decodeX(String selectedImagePath, int requiredSize, int[] scaler, int[] rotation) {
@@ -155,12 +158,23 @@ public class BitmapResizer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         Bitmap localBitmap = decodeFile(selectedImagePath, MAX_SIZE);
         if (localBitmap == null) {
             return null;
         }
-      //  Bitmap graySourceBtm = rotateBitmap(localBitmap, orientation);
-        Bitmap graySourceBtm = localBitmap;
+        Bitmap graySourceBtm = null;
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                graySourceBtm = rotateImage(localBitmap, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                graySourceBtm = rotateImage(localBitmap, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                graySourceBtm = rotateImage(localBitmap, 270);
+            default:
+                graySourceBtm = localBitmap;
+        }
+
         if (graySourceBtm == null || VERSION.SDK_INT >= 13) {
             return graySourceBtm;
         }
@@ -173,88 +187,63 @@ public class BitmapResizer {
 
     /* JADX WARNING: inconsistent code. */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static Bitmap rotateBitmap(Bitmap r9, int r10) {
-        /*
-        r5 = new android.graphics.Matrix;	 Catch:{ Exception -> 0x002d }
-        r5.<init>();	 Catch:{ Exception -> 0x002d }
-        switch(r10) {
-            case 1: goto L_0x0008;
-            case 2: goto L_0x0009;
-            case 3: goto L_0x0027;
-            case 4: goto L_0x0033;
-            case 5: goto L_0x0040;
-            case 6: goto L_0x004d;
-            case 7: goto L_0x0053;
-            case 8: goto L_0x0060;
-            default: goto L_0x0008;
-        };	 Catch:{ Exception -> 0x002d }
-    L_0x0008:
-        return r9;
-    L_0x0009:
-        r0 = -1082130432; // 0xffffffffbf800000 float:-1.0 double:NaN;
-        r1 = 1065353216; // 0x3f800000 float:1.0 double:5.263544247E-315;
-        r5.setScale(r0, r1);	 Catch:{ Exception -> 0x002d }
-    L_0x0010:
-        r1 = 0;
-        r2 = 0;
-        r3 = r9.getWidth();	 Catch:{ OutOfMemoryError -> 0x0066 }
-        r4 = r9.getHeight();	 Catch:{ OutOfMemoryError -> 0x0066 }
-        r6 = 1;
-        r0 = r9;
-        r7 = android.graphics.Bitmap.createBitmap(r0, r1, r2, r3, r4, r5, r6);	 Catch:{ OutOfMemoryError -> 0x0066 }
-        if (r7 == r9) goto L_0x0025;
-    L_0x0022:
-        r9.recycle();	 Catch:{ OutOfMemoryError -> 0x0066 }
-    L_0x0025:
-        r9 = r7;
-        goto L_0x0008;
-    L_0x0027:
-        r0 = 1127481344; // 0x43340000 float:180.0 double:5.570497984E-315;
-        r5.setRotate(r0);	 Catch:{ Exception -> 0x002d }
-        goto L_0x0010;
-    L_0x002d:
-        r8 = move-exception;
-        r8.printStackTrace();
-        r9 = 0;
-        goto L_0x0008;
-    L_0x0033:
-        r0 = 1127481344; // 0x43340000 float:180.0 double:5.570497984E-315;
-        r5.setRotate(r0);	 Catch:{ Exception -> 0x002d }
-        r0 = -1082130432; // 0xffffffffbf800000 float:-1.0 double:NaN;
-        r1 = 1065353216; // 0x3f800000 float:1.0 double:5.263544247E-315;
-        r5.postScale(r0, r1);	 Catch:{ Exception -> 0x002d }
-        goto L_0x0010;
-    L_0x0040:
-        r0 = 1119092736; // 0x42b40000 float:90.0 double:5.529052754E-315;
-        r5.setRotate(r0);	 Catch:{ Exception -> 0x002d }
-        r0 = -1082130432; // 0xffffffffbf800000 float:-1.0 double:NaN;
-        r1 = 1065353216; // 0x3f800000 float:1.0 double:5.263544247E-315;
-        r5.postScale(r0, r1);	 Catch:{ Exception -> 0x002d }
-        goto L_0x0010;
-    L_0x004d:
-        r0 = 1119092736; // 0x42b40000 float:90.0 double:5.529052754E-315;
-        r5.setRotate(r0);	 Catch:{ Exception -> 0x002d }
-        goto L_0x0010;
-    L_0x0053:
-        r0 = -1028390912; // 0xffffffffc2b40000 float:-90.0 double:NaN;
-        r5.setRotate(r0);	 Catch:{ Exception -> 0x002d }
-        r0 = -1082130432; // 0xffffffffbf800000 float:-1.0 double:NaN;
-        r1 = 1065353216; // 0x3f800000 float:1.0 double:5.263544247E-315;
-        r5.postScale(r0, r1);	 Catch:{ Exception -> 0x002d }
-        goto L_0x0010;
-    L_0x0060:
-        r0 = -1028390912; // 0xffffffffc2b40000 float:-90.0 double:NaN;
-        r5.setRotate(r0);	 Catch:{ Exception -> 0x002d }
-        goto L_0x0010;
-    L_0x0066:
-        r8 = move-exception;
-        r8.printStackTrace();	 Catch:{ Exception -> 0x002d }
-        r9 = 0;
-        goto L_0x0008;
-        */
-        throw new UnsupportedOperationException("Method not decompiled: BitmapResizer.rotateBitmap(android.graphics.Bitmap, int):android.graphics.Bitmap");
+    public static Bitmap rotateBitmap(Bitmap img, int degree) {
+//        if (degrees != 0 && bitmap != null)
+//        {
+//            Matrix m = new Matrix();
+//            m.setRotate(degrees, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
+//            Bitmap b2 = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+//            if (b2 != null)
+//            {
+//                if (bitmap != b2)
+//                {
+//                    bitmap.recycle();
+//                    bitmap = b2;
+//                }
+//            }
+//        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
+       // return bitmap;
     }
 
+    public static Bitmap createBitmap(Bitmap bm, int i, int j, int width, int height, Matrix m, boolean c)
+    {
+        Bitmap b = null;
+        try
+        {
+            b = Bitmap.createBitmap(bm, i, j, width, height, m, c);
+           // Log.wtf(TAG, "Bitmap size in createBitmap : " + BitmapUtils.getBitmapSize(b));
+        }
+        catch (OutOfMemoryError e)
+        {
+            Log.wtf(TAG, "Out of Memory");
+
+            System.gc();
+
+            try
+            {
+                b = Bitmap.createBitmap(bm, i, j, width, height, m, c);
+               // Log.wtf(TAG, "Bitmap size in createBitmap : " + BitmapUtils.getBitmapSize(b));
+            }
+            catch (OutOfMemoryError ex)
+            {
+                Log.wtf(TAG, "Out of Memory even after System.gc");
+            }
+            catch (Exception exc)
+            {
+                Log.e(TAG, "Exception in createBitmap : ", exc);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, "Exception in createBitmap : ", e);
+        }
+        return b;
+    }
     private static Bitmap decodeFile(String selectedImagePath, int MAX_SIZE) {
         Options o = new Options();
         o.inJustDecodeBounds = true;
@@ -275,5 +264,37 @@ public class BitmapResizer {
             Log.e("decoded file width", String.valueOf(b.getWidth()));
         }
         return b;
+    }
+
+    /**
+     * Rotate an image if required.
+     *
+     * @param img           The image bitmap
+     * @param selectedImage Image URI
+     * @return The resulted Bitmap after manipulation
+     */
+    private static Bitmap rotateImageIfRequired(Bitmap img, Uri selectedImage) throws IOException {
+
+        ExifInterface ei = new ExifInterface(selectedImage.getPath());
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
+        }
+    }
+
+    private static Bitmap rotateImage(Bitmap img, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
     }
 }

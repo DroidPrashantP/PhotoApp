@@ -93,49 +93,34 @@ public class CropActivity extends AppCompatActivity {
                     break;
                 case R.id.button1_1:
                     mCropView.setCustomRatio(1, 1);
-                   // mCropView.setCropMode(CropImageView.CropMode.RATIO_1_1);
                     break;
                 case R.id.button2_1:
                     mCropView.setCustomRatio(2, 1);
-                   // mCropView.setCropMode(CropImageView.CropMode.RATIO_1_1);
                     break;
                 case R.id.button1_2:
                     mCropView.setCustomRatio(1, 2);
-                   // mCropView.setCropMode(CropImageView.CropMode.RATIO_1_1);
                     break;
                 case R.id.button3_2:
                     mCropView.setCustomRatio(3, 2);
-                   // mCropView.setCropMode(CropImageView.CropMode.RATIO_3_4);
                     break;
                 case R.id.button2_3:
                     mCropView.setCustomRatio(2, 3);
-//                    mCropView.setCropMode(CropImageView.CropMode.RATIO_4_3);
                     break;
                 case R.id.button4_3:
                     mCropView.setCustomRatio(4, 3);
-//                    mCropView.setCropMode(CropImageView.CropMode.RATIO_9_16);
                     break;
                 case R.id.button3_4:
                     mCropView.setCustomRatio(3, 4);
-//                    mCropView.setCropMode(CropImageView.CropMode.RATIO_9_16);
                     break;
                 case R.id.button4_5:
                     mCropView.setCustomRatio(4, 5);
-//                    mCropView.setCropMode(CropImageView.CropMode.RATIO_9_16);
                     break;
                 case R.id.button5_7:
                     mCropView.setCustomRatio(5, 7);
-//                    mCropView.setCropMode(CropImageView.CropMode.RATIO_9_16);
                     break;
                 case R.id.button16_9:
                     mCropView.setCropMode(CropImageView.CropMode.RATIO_16_9);
                     break;
-//                case R.id.buttonCustom:
-//                    mCropView.setCustomRatio(7, 5);
-//                    break;
-//                case R.id.buttonFree:
-//                    mCropView.setCropMode(CropImageView.CropMode.RATIO_FREE);
-//                    break;
                 case R.id.buttonCircle:
                     mCropView.setCropMode(CropImageView.CropMode.CIRCLE);
                     break;

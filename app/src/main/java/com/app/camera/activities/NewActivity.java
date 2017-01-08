@@ -1,8 +1,6 @@
 package com.app.camera.activities;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -12,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.app.camera.R;
 import com.app.camera.multitouchview.CustomTextView;

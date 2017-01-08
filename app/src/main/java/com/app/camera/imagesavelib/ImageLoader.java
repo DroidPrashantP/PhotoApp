@@ -21,14 +21,10 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Audio;
-import android.provider.MediaStore.Images.Media;
-import android.provider.MediaStore.Video;
 import android.util.Log;
 
 import com.app.camera.BuildConfig;
 import com.app.camera.R;
-import com.app.camera.common_lib.MyAsyncTask;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,7 +1,6 @@
 package com.app.camera.collagelib;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -18,7 +17,6 @@ import android.os.Environment;
 import android.provider.MediaStore.Images.Media;
 import android.support.v8.renderscript.Allocation;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.app.camera.R;
 

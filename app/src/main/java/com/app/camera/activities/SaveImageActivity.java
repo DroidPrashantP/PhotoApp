@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.app.camera.R;
 import com.app.camera.bitmap.BitmapLoader;
 import com.app.camera.utils.Toaster;
-import com.app.camera.utils.UriToUrl;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 

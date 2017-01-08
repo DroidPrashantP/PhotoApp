@@ -16,10 +16,6 @@ import android.webkit.WebView;
 
 import com.app.camera.R;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 public class ChangeLog {
     private static final String EOCL = "END_OF_CHANGE_LOG";
     private static final String TAG = "ChangeLog";

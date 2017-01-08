@@ -1,6 +1,7 @@
 package com.app.camera.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -32,6 +33,7 @@ public class StickerFragment extends Fragment implements StickerCustomAdapter.St
     public StickerFragment() {
     }
 
+    @SuppressLint("ValidFragment")
     public StickerFragment(String currentStricker){
         mCurrentStricker = currentStricker;
     }

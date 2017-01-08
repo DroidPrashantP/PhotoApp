@@ -29,8 +29,6 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +53,6 @@ import com.app.camera.canvastext.TextData;
 import com.app.camera.collagelib.Utility;
 import com.app.camera.fragments.EffectFragment;
 import com.app.camera.fragments.FontFragment;
-import com.app.camera.imagesavelib.ImageUtility;
 import com.app.camera.sticker.StickerData;
 import com.app.camera.sticker.StickerGalleryFragment;
 import com.app.camera.sticker.StickerGalleryListener;
@@ -955,7 +952,7 @@ public class MirrorNewActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         this.screenHeightPixels = metrics.heightPixels;
         this.screenWidthPixels = metrics.widthPixels;
-        Display display = ((WindowManager) getSystemService("window")).getDefaultDisplay();
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         if (Build.VERSION.SDK_INT >= 13) {
             Point size = new Point();
             display.getSize(size);
@@ -1355,11 +1352,13 @@ public class MirrorNewActivity extends AppCompatActivity {
         this.mirrorView.invalidate();
         this.mainLayout.addView(this.canvasText);
         ((RelativeLayout) findViewById(R.id.text_view_fragment_container)).bringToFront();
-        this.fontFragment = new FontFragment();
-        this.fontFragment.setArguments(new Bundle());
-        getSupportFragmentManager().beginTransaction().add(R.id.text_view_fragment_container, this.fontFragment, "FONT_FRAGMENT").commit();
-        Log.e(TAG, "add fragment");
-        this.fontFragment.setFontChoosedListener(this.fontChoosedListener);
+        if (textDataList.size() == 0) {
+            this.fontFragment = new FontFragment();
+            this.fontFragment.setArguments(new Bundle());
+            getSupportFragmentManager().beginTransaction().add(R.id.text_view_fragment_container, this.fontFragment, "FONT_FRAGMENT").commit();
+            Log.e(TAG, "add fragment");
+            this.fontFragment.setFontChoosedListener(this.fontChoosedListener);
+        }
     }
 
     public void addStickerGalleryFragment() {

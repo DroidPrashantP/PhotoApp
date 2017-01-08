@@ -6,8 +6,6 @@ import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.app.camera.R;
-
 public class LoadingView extends RelativeLayout {
     private static final String TAG;
 

@@ -1,11 +1,8 @@
 package com.app.camera.cropimages;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -18,9 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.app.camera.R;
-import com.app.camera.activities.CropActivity;
-
-import java.io.File;
+import com.app.camera.cropImages.CropImageView;
+import com.app.camera.fragments.CropView;
 
 public class FragmentCrop extends Fragment {
     private static final String TAG = "FragmentCrop";
@@ -161,7 +157,9 @@ public class FragmentCrop extends Fragment {
         } else if (id == R.id.button16_9) {
             this.cropView.setMode(10);
             setRatioButtonListBackgroundColor(10);
-        } else if (id == R.id.button_apply_action) {
+        }else if (id == R.id.buttonCircle) {
+
+        }else if (id == R.id.button_apply_action) {
             okCrop();
         } else if (id == R.id.button_cancel_action) {
             cancelCrop();

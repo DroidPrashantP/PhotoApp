@@ -12,7 +12,6 @@ import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.app.camera.R;
 import com.app.camera.activities.MirrorActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.app.camera.tiltshift.TiltContext.TiltMode;
@@ -59,7 +58,6 @@ public class TiltHelper {
     View tiltView;
     int f519w;
 
-    /* renamed from: com.lyrebirdstudio.tiltshift.TiltHelper.1 */
     class C06241 implements Runnable {
         C06241() {
         }

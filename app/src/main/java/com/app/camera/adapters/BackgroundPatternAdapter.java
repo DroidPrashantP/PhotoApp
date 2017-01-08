@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.app.camera.R;
-import com.app.camera.activities.SquareActivity;
 
 /**
  * Created by Prashant on 21/3/16.

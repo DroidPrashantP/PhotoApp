@@ -23,7 +23,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.app.camera.R;
 import com.app.camera.bitmap.BitmapWriter;
 
 import java.io.File;

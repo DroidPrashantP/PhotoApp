@@ -9,13 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.app.camera.Domain.LayoutObj;
 import com.app.camera.R;
 import com.app.camera.activities.BlurActivity;
 import com.app.camera.activities.PhotoActivity;
 import com.app.camera.utils.Constants;
-
-import java.util.ArrayList;
 
 /**
  * Created by Prashant on 5/1/16.

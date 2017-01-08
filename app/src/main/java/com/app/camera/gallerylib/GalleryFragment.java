@@ -64,7 +64,7 @@ public class GalleryFragment extends Fragment implements OnItemClickListener {
                 if (parent != null && parent.getParent() != null) {
                     int location = ((ViewGroup) parent.getParent()).indexOfChild(parent);
                     GalleryFragment.this.footer.removeView(parent);
-                    GalleryFragment.this.buttonFooterCounter.setText(""+footer.getChildCount());
+                    GalleryFragment.this.buttonFooterCounter.setText(" "+footer.getChildCount());
                     long imageid = ((Long) GalleryFragment.this.selectedImageIdList.remove(location)).longValue();
                     GalleryFragment.this.selectedImageOrientationList.remove(location);
                     Point index = GalleryFragment.this.findItemById(imageid);
@@ -125,7 +125,7 @@ public class GalleryFragment extends Fragment implements OnItemClickListener {
                         int value = ((GridViewItem) ((Album) this.albumList.get(index.x)).gridItems.get(index.y)).selectedItemCount;
                         if (((Album) this.albumList.get(index.x)).gridItems == this.adapter.items && this.gridView.getFirstVisiblePosition() <= index.y && index.y <= this.gridView.getLastVisiblePosition() && this.gridView.getChildAt(index.y) != null) {
                             TextView text = (TextView) this.gridView.getChildAt(index.y).findViewById(R.id.textViewSelectedItemCount);
-                            text.setText(value);
+                            text.setText(""+value);
                             if (value <= 0 && text.getVisibility() == View.VISIBLE) {
                                 text.setVisibility(View.INVISIBLE);
                             }
@@ -140,7 +140,7 @@ public class GalleryFragment extends Fragment implements OnItemClickListener {
                 this.footer.removeAllViews();
             }
             if (this.buttonFooterCounter != null) {
-                this.buttonFooterCounter.setText(0);
+                this.buttonFooterCounter.setText(""+0);
             }
         }
     }
@@ -259,7 +259,7 @@ public class GalleryFragment extends Fragment implements OnItemClickListener {
         this.adapter.notifyDataSetChanged();
         this.gridView.smoothScrollToPosition(0);
         this.isOnBucket = true;
-        this.headerText.setText(getString(R.string.gallery_select_an_album));
+        this.headerText.setText("  "+getString(R.string.gallery_select_an_album));
         return false;
     }
 
@@ -270,7 +270,7 @@ public class GalleryFragment extends Fragment implements OnItemClickListener {
             this.gridView.smoothScrollToPosition(0);
             this.isOnBucket = false;
             this.selectedBucketId = location;
-            this.headerText.setText(((Album) this.albumList.get(location)).name);
+            this.headerText.setText(" "+((Album) this.albumList.get(location)).name);
         } else if (this.footer.getChildCount() >= COLLAGE_IMAGE_LIMIT) {
             Toast msg = Toast.makeText(this.context, String.format(getString(R.string.gallery_no_more), new Object[]{Integer.valueOf(COLLAGE_IMAGE_LIMIT)}), Toast.LENGTH_SHORT);
             msg.setGravity(17, msg.getXOffset() / 2, msg.getYOffset() / 2);
@@ -284,11 +284,11 @@ public class GalleryFragment extends Fragment implements OnItemClickListener {
             this.selectedImageOrientationList.add((Integer) ((Album) this.albumList.get(this.selectedBucketId)).orientationList.get(location));
             im.setImageBitmap(GalleryUtility.getThumbnailBitmap(this.context, id, ((Integer) ((Album) this.albumList.get(this.selectedBucketId)).orientationList.get(location)).intValue()));
             this.footer.addView(retval);
-            this.buttonFooterCounter.setText(""+this.footer.getChildCount());
+            this.buttonFooterCounter.setText(" "+this.footer.getChildCount());
             GridViewItem gridViewItem = (GridViewItem) this.adapter.items.get(location);
             gridViewItem.selectedItemCount++;
             TextView text = (TextView) arg1.findViewById(R.id.textViewSelectedItemCount);
-            text.setText(""+(adapter.items.get(location)).selectedItemCount);
+            text.setText(" "+(adapter.items.get(location)).selectedItemCount);
             if (text.getVisibility() == View.INVISIBLE) {
                 text.setVisibility(View.VISIBLE);
             }

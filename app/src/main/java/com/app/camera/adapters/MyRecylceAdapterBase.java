@@ -4,30 +4,20 @@
 
 package com.app.camera.adapters;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-
-public class MyRecylceAdapterBase<V> extends android.support.v7.widget.RecyclerView.Adapter
-{
-
-    public MyRecylceAdapterBase()
-    {
-    }
-
-    public int getItemCount()
-    {
+public class MyRecylceAdapterBase<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+    public int getItemCount() {
         return 0;
     }
 
-    public void onBindViewHolder(android.support.v7.widget.RecyclerView.ViewHolder viewholder, int i)
-    {
+    public void onBindViewHolder(VH vh, int arg1) {
     }
 
-    public android.support.v7.widget.RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewgroup, int i)
-    {
+    public VH onCreateViewHolder(ViewGroup arg0, int arg1) {
         return null;
     }
 
-    public void setSelectedPositinVoid()
-    {
+    public void setSelectedPositinVoid() {
     }
 }

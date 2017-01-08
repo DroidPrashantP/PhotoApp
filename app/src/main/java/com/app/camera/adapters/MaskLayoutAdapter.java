@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.app.camera.R;
 import com.app.camera.activities.BlurActivity;
-import com.app.camera.activities.PhotoActivity;
 import com.app.camera.utils.Constants;
 
 
