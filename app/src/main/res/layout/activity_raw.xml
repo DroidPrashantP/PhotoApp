@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.camera.activities.RawActivity"
+    tools:context="com.app.paddycameraeditior.activities.RawActivity"
     xmlns:soulwolf="http://schemas.android.com/apk/res-auto">
 
-    <com.app.camera.utils.CustomViews.CustomImageView
+    <com.app.paddycameraeditior.utils.CustomViews.CustomImageView
         android:id="@+id/source_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

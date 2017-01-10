@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.app.camera" >
+    package="com.app.paddycameraeditior" >
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".AppController"
+        android:name="com.app.paddycameraeditior.AppController"
         android:allowBackup="true"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
@@ -32,12 +32,12 @@
             android:theme="@android:style/Theme.Translucent"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.app.camera.activities.SplashActivity"
+            android:name="com.app.paddycameraeditior.activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.app.camera.activities.MainActivity"
+            android:name="com.app.paddycameraeditior.activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -47,57 +47,57 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.app.camera.activities.PhotoActivity"
+            android:name="com.app.paddycameraeditior.activities.PhotoActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.app.camera.activities.CropActivity"
+            android:name="com.app.paddycameraeditior.activities.CropActivity"
             android:label="@string/title_activity_crop"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.app.camera.activities.SaveImageActivity"
+            android:name="com.app.paddycameraeditior.activities.SaveImageActivity"
             android:label="@string/title_activity_save_image"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.BlurActivity"
+            android:name="com.app.paddycameraeditior.activities.BlurActivity"
             android:label="@string/title_activity_blur"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.MotionViewsActivity"
+            android:name="com.app.paddycameraeditior.activities.MotionViewsActivity"
             android:label="@string/title_activity_raw"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.RawActivity"
+            android:name="com.app.paddycameraeditior.activities.RawActivity"
             android:label="@string/title_activity_text_view"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.TextViewActivity"
+            android:name="com.app.paddycameraeditior.activities.TextViewActivity"
             android:label="@string/title_activity_text_view"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.multitouchview.PhotoSortrActivityStrip"
+            android:name="com.app.paddycameraeditior.multitouchview.PhotoSortrActivityStrip"
             android:label="@string/title_activity_text_view"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.StickerActivity"
+            android:name="com.app.paddycameraeditior.activities.StickerActivity"
             android:label="@string/title_activity_stricker"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.NewActivity"
+            android:name="com.app.paddycameraeditior.activities.NewActivity"
             android:label="@string/title_activity_new"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.EffectActivity"
+            android:name="com.app.paddycameraeditior.activities.EffectActivity"
             android:label="@string/title_activity_effect"
             android:screenOrientation="portrait">
         </activity>
@@ -107,21 +107,21 @@
         <!-- android:value="739d74db64e52dd95e3ee8d463daac8d8169c16c" /> -->
 
         <activity
-            android:name="com.app.camera.activities.MirrorActivity"
+            android:name="com.app.paddycameraeditior.activities.MirrorActivity"
             android:label="@string/title_activity_mirror"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.activities.SquareActivity"
+            android:name="com.app.paddycameraeditior.activities.SquareActivity"
             android:label="@string/title_activity_square"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.camera.collagelib.CollageActivity"
+            android:name="com.app.paddycameraeditior.collagelib.CollageActivity"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name="com.app.camera.mirror.MirrorNewActivity"
+            android:name="com.app.paddycameraeditior.mirror.MirrorNewActivity"
             android:label="@string/title_activity_mirror_new"
             android:screenOrientation="portrait">
         </activity>

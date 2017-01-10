@@ -43,7 +43,7 @@
     </LinearLayout>
 
 
-    <com.app.camera.utils.CustomViews.MyViewFlipper
+    <com.app.paddycameraeditior.utils.CustomViews.MyViewFlipper
         android:id="@+id/collage_view_flipper"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -283,7 +283,7 @@
             android:layout_width="1.0dip"
             android:layout_height="1.0dip"
             android:visibility="invisible" />
-    </com.app.camera.utils.CustomViews.MyViewFlipper>
+    </com.app.paddycameraeditior.utils.CustomViews.MyViewFlipper>
 
     <HorizontalScrollView
         android:id="@+id/collage_footer"

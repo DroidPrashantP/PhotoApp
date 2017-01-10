@@ -167,7 +167,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.app.camera.utils.CustomViews.ZoomableView
+                <com.app.paddycameraeditior.utils.CustomViews.ZoomableView
                     android:id="@+id/source_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

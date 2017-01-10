@@ -99,7 +99,7 @@
 
     <!--<ImageButton--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:id="@+id/button_save_mirror_image"--><!--android:src="@drawable/save"--><!--android:text="SAVE" />--><!--</LinearLayout>-->
 
-    <com.app.camera.utils.CustomViews.MyViewFlipper
+    <com.app.paddycameraeditior.utils.CustomViews.MyViewFlipper
         android:id="@+id/mirror_view_flipper"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -476,7 +476,7 @@
         <View
             android:layout_width="1.0dip"
             android:layout_height="1.0dip" />
-    </com.app.camera.utils.CustomViews.MyViewFlipper>
+    </com.app.paddycameraeditior.utils.CustomViews.MyViewFlipper>
 
     <LinearLayout
         android:id="@+id/mirror_footer"

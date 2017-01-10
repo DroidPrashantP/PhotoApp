@@ -221,7 +221,7 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.app.camera.cropImages.CropImageView
+    <com.app.paddycameraeditior.cropImages.CropImageView
         android:id="@+id/cropImageView"
         android:layout_below="@+id/headerView"
         android:layout_above="@id/tab_bar"

@@ -22,7 +22,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <com.app.camera.utils.CustomViews.MyViewFlipper
+                <com.app.paddycameraeditior.utils.CustomViews.MyViewFlipper
                     android:id="@+id/control_container"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                             android:singleLine="true"
                             android:textColor="#ffffffff" />
 
-                        <com.app.camera.common_lib.SeekBarHint
+                        <com.app.paddycameraeditior.common_lib.SeekBarHint
                             android:id="@+id/seek_bar_adjustment"
                             style="@style/effect_seek_bar_style"
                             android:padding="@dimen/padding_normal"
@@ -87,7 +87,7 @@
                         android:id="@+id/lyrebird_lib_flipper_void"
                         android:layout_width="0.0dip"
                         android:layout_height="0.0dip" />
-                </com.app.camera.utils.CustomViews.MyViewFlipper>
+                </com.app.paddycameraeditior.utils.CustomViews.MyViewFlipper>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
