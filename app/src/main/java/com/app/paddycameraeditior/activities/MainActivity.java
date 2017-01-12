@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.app.paddycameraeditior.R;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.bitmap.BitmapResizer;
 import com.app.paddycameraeditior.collagelib.CollageActivity;
 import com.app.paddycameraeditior.collagelib.CollageHelper;
@@ -123,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         mRunnable = new C07252();
+
+        AnalyticBasic.hitGoogleAnalytics(this, MainActivity.class.getName());
     }
 
     private void findViewbyIds() {

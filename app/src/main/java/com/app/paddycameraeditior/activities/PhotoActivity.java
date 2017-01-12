@@ -52,6 +52,7 @@ import com.app.paddycameraeditior.adapters.FilterLayoutAdapter;
 import com.app.paddycameraeditior.adapters.FramesLayoutAdapter;
 import com.app.paddycameraeditior.adapters.MainLayoutAdapter;
 import com.app.paddycameraeditior.adapters.ToolLayoutAdapter;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.bitmap.BitmapLoader;
 import com.app.paddycameraeditior.bitmap.BitmapProcessing;
 import com.app.paddycameraeditior.canvastext.ApplyTextInterface;
@@ -60,7 +61,6 @@ import com.app.paddycameraeditior.canvastext.SingleTap;
 import com.app.paddycameraeditior.canvastext.TextData;
 import com.app.paddycameraeditior.common_lib.Parameter;
 import com.app.paddycameraeditior.fragments.FontFragment;
-import com.app.paddycameraeditior.multitouchview.StickerCustomView;
 import com.app.paddycameraeditior.sticker.StickerData;
 import com.app.paddycameraeditior.sticker.StickerView;
 import com.app.paddycameraeditior.sticker.Utility;
@@ -190,6 +190,8 @@ public class PhotoActivity extends FragmentActivity implements View.OnClickListe
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        AnalyticBasic.hitGoogleAnalytics(this, PhotoActivity.class.getName());
     }
 
     private void findViewByIds() {

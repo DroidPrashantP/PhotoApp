@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.app.paddycameraeditior.R;
-import com.app.paddycameraeditior.activities.MirrorActivity;
 import com.app.paddycameraeditior.bitmap.BitmapResizer;
 import com.app.paddycameraeditior.utils.CustomViews.BlurBuilder;
 

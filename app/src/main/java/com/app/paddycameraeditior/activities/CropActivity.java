@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 
 import com.app.paddycameraeditior.AppController;
 import com.app.paddycameraeditior.R;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.bitmap.BitmapLoader;
 import com.app.paddycameraeditior.cropImages.CropImageView;
 import com.app.paddycameraeditior.utils.Constants;
@@ -46,6 +47,7 @@ public class CropActivity extends AppCompatActivity {
         // bind Views
         findViews();
         initiView();
+        AnalyticBasic.hitGoogleAnalytics(this, CropActivity.class.getName());
     }
 
     private void initiView() {

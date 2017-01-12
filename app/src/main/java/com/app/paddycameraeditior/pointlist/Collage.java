@@ -9,11 +9,6 @@ import com.app.paddycameraeditior.R;
 import java.util.ArrayList;
 import java.util.List;
 
-// Referenced classes of package pointlist:
-//            Collage1, Collage2, Collage3, Collage4, 
-//            Collage5, Collage6, Collage7, Collage8, 
-//            Collage9, CollageScrapBook, CollageLayout
-
 public class Collage
 {
 

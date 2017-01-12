@@ -49,7 +49,6 @@ public class GalleryFragment extends Fragment implements OnItemClickListener {
     List<Long> selectedImageIdList;
     List<Integer> selectedImageOrientationList;
 
-    /* renamed from: com.lyrebirdstudio.gallerylib.GalleryFragment.1 */
     class C05811 implements OnClickListener {
         C05811() {
         }

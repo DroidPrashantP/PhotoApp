@@ -67,16 +67,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.app.paddycameraeditior.activities.MotionViewsActivity"
-            android:label="@string/title_activity_raw"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.app.paddycameraeditior.activities.RawActivity"
-            android:label="@string/title_activity_text_view"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name="com.app.paddycameraeditior.activities.TextViewActivity"
             android:label="@string/title_activity_text_view"
             android:screenOrientation="portrait">
@@ -91,26 +81,11 @@
             android:label="@string/title_activity_stricker"
             android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name="com.app.paddycameraeditior.activities.NewActivity"
-            android:label="@string/title_activity_new"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.app.paddycameraeditior.activities.EffectActivity"
-            android:label="@string/title_activity_effect"
-            android:screenOrientation="portrait">
-        </activity>
 
         <!-- <meta-data -->
         <!-- android:name="io.fabric.ApiKey" -->
         <!-- android:value="739d74db64e52dd95e3ee8d463daac8d8169c16c" /> -->
 
-        <activity
-            android:name="com.app.paddycameraeditior.activities.MirrorActivity"
-            android:label="@string/title_activity_mirror"
-            android:screenOrientation="portrait">
-        </activity>
         <activity
             android:name="com.app.paddycameraeditior.activities.SquareActivity"
             android:label="@string/title_activity_square"
@@ -125,6 +100,9 @@
             android:label="@string/title_activity_mirror_new"
             android:screenOrientation="portrait">
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="739d74db64e52dd95e3ee8d463daac8d8169c16c" />
     </application>
 
 </manifest>

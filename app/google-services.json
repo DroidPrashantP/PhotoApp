@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "818738680315",
+    "project_id": "firebase-photomodifier"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818738680315:android:261c4d1bf9247ca3",
+        "android_client_info": {
+          "package_name": "com.app.paddycameraeditior"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7oFaib2yXfTQohLYrEAF8efkwk30hd4k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-75899562-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

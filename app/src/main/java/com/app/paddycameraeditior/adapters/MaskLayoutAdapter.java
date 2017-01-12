@@ -25,17 +25,6 @@ public class MaskLayoutAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             R.drawable.shape_twitter
     };
 
-//    private static int[] mShapeImages = {
-//            R.drawable.effect_0_thumb,
-//            R.drawable.collage_1_0,
-//            R.drawable.collage_1_1,
-//            R.drawable.collage_1_2,
-//            R.drawable.collage_1_3,
-//            R.drawable.collage_1_4,
-//            R.drawable.collage_1_5,
-//            R.drawable.collage_1_6
-//    };
-
     private Context mContext;
     private String mCategoryType;
     private String Mode;

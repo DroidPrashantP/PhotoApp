@@ -30,7 +30,6 @@ public class StickerActivity extends FragmentActivity {
     FrameLayout stickerViewContainer;
     StickerView.StickerViewSelectedListener stickerViewSelectedListner;
 
-    /* renamed from: com.lyrebirdstudio.sticker.StickerActivity.2 */
     class C06122 implements OnClickListener {
         C06122() {
         }
@@ -39,8 +38,6 @@ public class StickerActivity extends FragmentActivity {
             StickerActivity.this.addStickerGalleryFragment();
         }
     }
-
-    /* renamed from: com.lyrebirdstudio.sticker.StickerActivity.1 */
     class C09831 implements StickerView.StickerViewSelectedListener {
         C09831() {
         }
@@ -65,7 +62,6 @@ public class StickerActivity extends FragmentActivity {
         }
     }
 
-    /* renamed from: com.lyrebirdstudio.sticker.StickerActivity.3 */
     class C09843 implements StickerGalleryListener {
         C09843() {
         }

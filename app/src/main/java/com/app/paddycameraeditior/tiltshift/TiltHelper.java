@@ -12,7 +12,6 @@ import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.app.paddycameraeditior.activities.MirrorActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.app.paddycameraeditior.tiltshift.TiltContext.TiltMode;
 public class TiltHelper {

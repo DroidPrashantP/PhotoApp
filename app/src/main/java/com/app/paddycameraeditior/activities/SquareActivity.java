@@ -61,6 +61,7 @@ import com.app.paddycameraeditior.R;
 import com.app.paddycameraeditior.adapters.BackgroundPatternAdapter;
 import com.app.paddycameraeditior.adapters.MyRecylceAdapterBase;
 import com.app.paddycameraeditior.adapters.SquareColorPickerAdapter;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.canvastext.ApplyTextInterface;
 import com.app.paddycameraeditior.canvastext.CustomRelativeLayout;
 import com.app.paddycameraeditior.canvastext.SingleTap;
@@ -280,6 +281,8 @@ public class SquareActivity extends FragmentActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        AnalyticBasic.hitGoogleAnalytics(this, SquareActivity.class.getName());
     }
 
     public /* bridge */ /* synthetic */ View onCreateView(View view, String str, Context context, AttributeSet attributeSet) {

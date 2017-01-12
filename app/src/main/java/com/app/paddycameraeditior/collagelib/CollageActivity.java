@@ -70,7 +70,9 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.app.paddycameraeditior.R;
+import com.app.paddycameraeditior.activities.MainActivity;
 import com.app.paddycameraeditior.activities.SaveImageActivity;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.canvastext.ApplyTextInterface;
 import com.app.paddycameraeditior.canvastext.CustomRelativeLayout;
 import com.app.paddycameraeditior.canvastext.SingleTap;
@@ -264,6 +266,8 @@ public class CollageActivity extends FragmentActivity {
         horizontalScrollView.postDelayed(new C05717(horizontalScrollView), 50);
         horizontalScrollView.postDelayed(new C05728(horizontalScrollView), 600);
         new BitmapWorkerTask().execute(new Bundle[]{extras, bundle});
+
+        AnalyticBasic.hitGoogleAnalytics(this, CollageActivity.class.getName());
 
     }
 

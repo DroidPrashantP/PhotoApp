@@ -20,7 +20,6 @@ public class StickerData implements Serializable, Parcelable {
     public float xPos;
     public float yPos;
 
-    /* renamed from: com.lyrebirdstudio.sticker.StickerData.1 */
     static class C06131 implements Creator<StickerData> {
         C06131() {
         }

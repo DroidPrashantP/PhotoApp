@@ -11,9 +11,6 @@ import com.app.paddycameraeditior.R;
 import java.util.ArrayList;
 import java.util.List;
 
-// Referenced classes of package pointlist:
-//            Collage, CollageLayout, MaskPair
-
 public class Collage1 extends Collage
 {
 

@@ -4,11 +4,11 @@ buildscript {
     }
 
     dependencies {
-       // classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 apply plugin: 'com.android.application'
-//apply plugin: 'io.fabric'
+apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -47,10 +47,11 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'com.isseiaoki:simplecropview:1.0.14'
     compile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile 'com.google.android.gms:play-services-analytics:9.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.commit451:NativeStackBlur:1.0.2'
 
-//    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-//        transitive = true;
-//    }
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
 }

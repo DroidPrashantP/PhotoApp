@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.paddycameraeditior.R;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class GalleryActivity extends Activity implements OnItemClickListener {
         this.buttonFooterCounter = (Button) findViewById(R.id.button_footer_count);
         logGalleryFolders();
         setGridAdapter();
+        AnalyticBasic.hitGoogleAnalytics(this, GalleryActivity.class.getName());
     }
 
     private void setGridAdapter() {

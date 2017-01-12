@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.app.paddycameraeditior.R;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.bitmap.BitmapLoader;
 import com.app.paddycameraeditior.utils.Toaster;
 import com.google.android.gms.ads.AdRequest;
@@ -61,6 +62,8 @@ public class SaveImageActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        AnalyticBasic.hitGoogleAnalytics(this, SaveImageActivity.class.getName());
     }
 
     @Override

@@ -45,7 +45,6 @@ import android.widget.ViewSwitcher;
 
 import com.app.paddycameraeditior.R;
 import com.app.paddycameraeditior.adapters.MyRecyclerViewAdapter;
-import com.app.paddycameraeditior.common_lib.MyAsyncTask;
 import com.app.paddycameraeditior.common_lib.Parameter;
 import com.app.paddycameraeditior.common_lib.SeekBarHint;
 import com.app.paddycameraeditior.tiltshift.TiltContext;
@@ -470,7 +469,7 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    private class InitializeEffectThumbTask extends MyAsyncTask<Void, Void, Void> {
+    private class InitializeEffectThumbTask extends AsyncTask<Void, Void, Void> {
         private Bitmap[] filterBitmapArray;
 
         private InitializeEffectThumbTask() {
@@ -529,7 +528,7 @@ public class EffectFragment extends Fragment {
         }
     }
 
-    private class SaveThumbTask extends MyAsyncTask<Void, Void, Void> {
+    private class SaveThumbTask extends AsyncTask<Void, Void, Void> {
         private SaveThumbTask() {
         }
 

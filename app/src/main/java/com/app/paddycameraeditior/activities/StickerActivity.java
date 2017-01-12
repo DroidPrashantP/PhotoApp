@@ -18,6 +18,7 @@ import com.app.paddycameraeditior.Domain.StickerTab;
 import com.app.paddycameraeditior.Domain.StickerTabSelection;
 import com.app.paddycameraeditior.R;
 import com.app.paddycameraeditior.adapters.CustomVerticalTabAdapter;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.fragments.StickerFragment;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class StickerActivity extends AppCompatActivity implements View.OnClickLi
         setTabData();
         intiTabRecyclerView();
         SelectedTab(0);
+
+        AnalyticBasic.hitGoogleAnalytics(this, StickerActivity.class.getName());
 
     }
 

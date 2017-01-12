@@ -45,6 +45,7 @@ import com.app.paddycameraeditior.Domain.MirrorMode;
 import com.app.paddycameraeditior.R;
 import com.app.paddycameraeditior.activities.SaveImageActivity;
 import com.app.paddycameraeditior.adapters.MyRecyclerViewAdapter;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.bitmap.BitmapResizer;
 import com.app.paddycameraeditior.canvastext.ApplyTextInterface;
 import com.app.paddycameraeditior.canvastext.CustomRelativeLayout;
@@ -986,21 +987,7 @@ public class MirrorNewActivity extends AppCompatActivity {
         this.slideLeftOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_left);
         this.slideRightIn = AnimationUtils.loadAnimation(this.activity, R.anim.slide_in_right);
         this.slideRightOut = AnimationUtils.loadAnimation(this.activity, R.anim.slide_out_right);
-//        if (CommonLibrary.isAppPro(this.context)) {
-//            this.adWhirlLayout = (AdView) findViewById(R.id.mirror_edit_ad_id);
-//            this.adWhirlLayout.setVisibility(8);
-//        } else {
-//            this.adWhirlLayout = (AdView) findViewById(R.id.mirror_edit_ad_id);
-//            AdRequest adRequest = new AdRequest.Builder().build();
-//            this.adWhirlLayout.loadAd(adRequest);
-//            this.adWhirlLayout.bringToFront();
-//            if (this.context.getResources().getBoolean(R.bool.showInterstitialAds)) {
-//                this.interstitial = new InterstitialAd(this.context);
-//                this.interstitial.setAdUnitId(getString(R.string.interstital_ad_id));
-//                AdRequest req = new AdRequest.Builder().build();
-//                this.interstitial.loadAd(req);
-//            }
-//        }
+
         findViewById(R.id.mirror_header).bringToFront();
      //   addEffectFragment();
         Utility.logFreeMemory(this);
@@ -1022,6 +1009,8 @@ public class MirrorNewActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        AnalyticBasic.hitGoogleAnalytics(this, MirrorNewActivity.class.getName());
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

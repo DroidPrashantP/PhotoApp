@@ -8,8 +8,6 @@ import android.graphics.PointF;
 import java.util.ArrayList;
 import java.util.List;
 
-// Referenced classes of package pointlist:
-//            Collage, CollageLayout
 
 public class CollageScrapBook extends Collage
 {

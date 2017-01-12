@@ -41,6 +41,7 @@ import com.app.paddycameraeditior.adapters.FramesLayoutAdapter;
 import com.app.paddycameraeditior.adapters.MainLayoutAdapter;
 import com.app.paddycameraeditior.adapters.MaskLayoutAdapter;
 import com.app.paddycameraeditior.adapters.ToolLayoutAdapter;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.bitmap.BitmapLoader;
 import com.app.paddycameraeditior.bitmap.BitmapProcessing;
 import com.app.paddycameraeditior.multitouchview.StickerCustomView;
@@ -162,6 +163,7 @@ public class BlurActivity extends Activity implements View.OnClickListener {
         setRotationsToolsLayout();
         setFilterLayout();
         setFxLayout();
+        AnalyticBasic.hitGoogleAnalytics(this, PhotoActivity.class.getName());
 
     }
 

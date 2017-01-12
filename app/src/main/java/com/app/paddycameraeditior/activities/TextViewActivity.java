@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.app.paddycameraeditior.R;
 import com.app.paddycameraeditior.adapters.FontGridViewAdapter;
+import com.app.paddycameraeditior.analytics.AnalyticBasic;
 import com.app.paddycameraeditior.utils.Constants;
 import com.app.paddycameraeditior.utils.widget.ColorPickerDialog;
 
@@ -29,6 +30,8 @@ public class TextViewActivity extends AppCompatActivity implements ColorPickerDi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_view);
         findIds();
+
+        AnalyticBasic.hitGoogleAnalytics(this, TextViewActivity.class.getName());
     }
 
     private void findIds() {

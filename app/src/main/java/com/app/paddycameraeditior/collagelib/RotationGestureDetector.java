@@ -2,8 +2,6 @@ package com.app.paddycameraeditior.collagelib;
 
 import android.view.MotionEvent;
 
-import com.app.paddycameraeditior.activities.MirrorActivity;
-
 public class RotationGestureDetector {
     private static final int INVALID_POINTER_ID = -1;
     private float fX;

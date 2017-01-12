@@ -296,10 +296,6 @@ public class ImageLoader {
         return null;
     }
 
-    public static boolean isLocalStorageDocument(Uri uri) {
-        return LocalStorageProvider.AUTHORITY.equals(uri.getAuthority());
-    }
-
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
