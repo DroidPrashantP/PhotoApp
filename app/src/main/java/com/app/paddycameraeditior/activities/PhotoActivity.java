@@ -61,6 +61,7 @@ import com.app.paddycameraeditior.canvastext.SingleTap;
 import com.app.paddycameraeditior.canvastext.TextData;
 import com.app.paddycameraeditior.common_lib.Parameter;
 import com.app.paddycameraeditior.fragments.FontFragment;
+import com.app.paddycameraeditior.multitouchview.StickerCustomView;
 import com.app.paddycameraeditior.sticker.StickerData;
 import com.app.paddycameraeditior.sticker.StickerView;
 import com.app.paddycameraeditior.sticker.Utility;

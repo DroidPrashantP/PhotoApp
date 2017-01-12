@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.app.paddycameraeditior.R;
+import com.app.paddycameraeditior.mirror.MirrorActivity;
 
 public class CanvasTextView extends View {
     static final float MIN_ZOOM = 0.8f;

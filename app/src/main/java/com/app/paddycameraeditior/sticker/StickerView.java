@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.paddycameraeditior.R;
-import com.app.paddycameraeditior.mirror.MirrorNewActivity;
+import com.app.paddycameraeditior.mirror.MirrorActivity;
 import com.app.paddycameraeditior.utils.CustomViews.BlurBuilder;
 
 
@@ -343,7 +343,7 @@ public class StickerView extends View {
         float x = event.getX();
         float y = event.getY();
         switch (event.getAction() & MotionEventCompat.ACTION_MASK) {
-            case MirrorNewActivity.INDEX_MIRROR :
+            case MirrorActivity.INDEX_MIRROR :
                 this.savedViewSelected = this.viewSelected;
                 this.isOnTouch = true;
                 this.pts[0] = x;
@@ -370,13 +370,13 @@ public class StickerView extends View {
                 onDestroy();
                 }
                 break;
-            case MirrorNewActivity.INDEX_MIRROR_3D /*1*/:
+            case MirrorActivity.INDEX_MIRROR_3D /*1*/:
                 this.orthogonal = false;
                 this.viewSelectedListener.onTouchUp(this.stickerData);
                 this.isOnTouch = false;
                 this.isOnRect = false;
                 break;
-            case MirrorNewActivity.INDEX_MIRROR_RATIO /*2*/:
+            case MirrorActivity.INDEX_MIRROR_RATIO /*2*/:
                 if (!this.isInCircle) {
                     if (this.isOnRect) {
                         this.stickerData.canvasMatrix.set(this.startMatrix);

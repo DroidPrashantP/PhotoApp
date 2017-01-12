@@ -5,6 +5,8 @@ package com.app.paddycameraeditior.utils.CustomViews;
  */
 import android.view.MotionEvent;
 
+import com.app.paddycameraeditior.mirror.MirrorActivity;
+
 public class RotationGestureDetector {
     private static final int INVALID_POINTER_ID = -1;
     private float fX;

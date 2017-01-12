@@ -96,7 +96,7 @@
             android:screenOrientation="portrait"
             />
         <activity
-            android:name="com.app.paddycameraeditior.mirror.MirrorNewActivity"
+            android:name="com.app.paddycameraeditior.mirror.MirrorActivity"
             android:label="@string/title_activity_mirror_new"
             android:screenOrientation="portrait">
         </activity>

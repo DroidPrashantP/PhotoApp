@@ -31,13 +31,15 @@ import com.app.paddycameraeditior.collagelib.CollageActivity;
 import com.app.paddycameraeditior.collagelib.CollageHelper;
 import com.app.paddycameraeditior.gallerylib.GalleryFragment;
 import com.app.paddycameraeditior.imagesavelib.ImageLoader;
-import com.app.paddycameraeditior.mirror.MirrorNewActivity;
+import com.app.paddycameraeditior.mirror.MirrorActivity;
 import com.app.paddycameraeditior.sticker.Utility;
 import com.app.paddycameraeditior.utils.Constants;
 import com.app.paddycameraeditior.utils.PermissionChecker;
 import com.app.paddycameraeditior.utils.Toaster;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean doubleBackToExitPressedOnce;
     private Handler mHandler;
     private Runnable mRunnable;
+    InterstitialAd mInterstitialAd;
 
     /**
      * returning image / video
@@ -126,6 +129,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRunnable = new C07252();
 
         AnalyticBasic.hitGoogleAnalytics(this, MainActivity.class.getName());
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-7037705036334941/9235313319");
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+
+            }
+        });
+
     }
 
     private void findViewbyIds() {
@@ -174,6 +190,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (mRateLayout == v) {
             CurrentSelectionTab = Constants.CurrentFunction.RATE;
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.app.paddycameraeditior"));
+            startActivity(intent);
         }
     }
 
@@ -190,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent shaderIntent = null;
         int maxSize = Utility.maxSizeForDimension(this, 1, 1500.0f);
         if (CurrentSelectionTab == Constants.CurrentFunction.MIRROR) {
-            shaderIntent = new Intent(getApplicationContext(), MirrorNewActivity.class);
+            shaderIntent = new Intent(getApplicationContext(), MirrorActivity.class);
         } else if (CurrentSelectionTab == Constants.CurrentFunction.GALLERY || CurrentSelectionTab == Constants.CurrentFunction.CAMERA) {
             shaderIntent = new Intent(getApplicationContext(), SquareActivity.class);
         }
@@ -523,9 +542,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to exit application?").setCancelable(true).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               // flyOut("finish");
+                // flyOut("finish");
+                showInterstitial();
                 dialog.dismiss();
-               finish();
+                finish();
 
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -543,6 +563,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         public void run() {
             MainActivity.this.doubleBackToExitPressedOnce = false;
+        }
+    }
+
+    private void showInterstitial() {
+        // Show the ad if it's ready. Otherwise toast and restart the game.
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
         }
     }
 }

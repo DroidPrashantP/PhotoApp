@@ -70,7 +70,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class MirrorNewActivity extends AppCompatActivity {
+public class MirrorActivity extends AppCompatActivity {
 
     public static final int INDEX_MIRROR = 0;
     public static final int INDEX_MIRROR_3D = 1;
@@ -82,7 +82,7 @@ public class MirrorNewActivity extends AppCompatActivity {
     public static final int INDEX_MIRROR_RATIO = 2;
     static final int SAVE_IMAGE_ID = 1348;
     public static final int TAB_SIZE = 6;
-    private static final String TAG = "MirrorNewActivity";
+    private static final String TAG = "MirrorActivity";
     int D3_BUTTON_SIZE;
     int MIRROR_BUTTON_SIZE;
     int RATIO_BUTTON_SIZE;
@@ -218,16 +218,16 @@ public class MirrorNewActivity extends AppCompatActivity {
             this.isVerticle = false;
             this.defaultColor = R.color.bg;
             this.mirrorModeList = new MirrorMode[20];
-            this.currentModeIndex = MirrorNewActivity.INDEX_MIRROR;
+            this.currentModeIndex = MirrorActivity.INDEX_MIRROR;
             this.drawSavedImage = false;
             this.d3Mode = false;
             this.textMatrix = new Matrix();
-            this.textRectPaint = new Paint(MirrorNewActivity.INDEX_MIRROR_3D);
+            this.textRectPaint = new Paint(MirrorActivity.INDEX_MIRROR_3D);
             this.m1 = new Matrix();
             this.m2 = new Matrix();
             this.m3 = new Matrix();
-            this.width = MirrorNewActivity.this.sourceBitmap.getWidth();
-            this.height = MirrorNewActivity.this.sourceBitmap.getHeight();
+            this.width = MirrorActivity.this.sourceBitmap.getWidth();
+            this.height = MirrorActivity.this.sourceBitmap.getHeight();
             int widthPixels = screenWidth;
             int heightPixels = screenHeight;
             createMatrix(widthPixels, heightPixels);
@@ -257,42 +257,42 @@ public class MirrorNewActivity extends AppCompatActivity {
             float minDimen = (float) Math.min(widthPixel, heightPixel);
             float upperScale = (float) Utility.maxSizeForSave();
             float scale = upperScale / minDimen;
-            Log.e(MirrorNewActivity.TAG, "upperScale" + upperScale);
-            Log.e(MirrorNewActivity.TAG, "scale" + scale);
-            if (MirrorNewActivity.this.mulY > MirrorNewActivity.this.mulX) {
-                float f = MirrorNewActivity.this.mulX;
+            Log.e(MirrorActivity.TAG, "upperScale" + upperScale);
+            Log.e(MirrorActivity.TAG, "scale" + scale);
+            if (MirrorActivity.this.mulY > MirrorActivity.this.mulX) {
+                float f = MirrorActivity.this.mulX;
                 float r0 = 1.0f;
-                scale = (r0 * scale) / MirrorNewActivity.this.mulY;
+                scale = (r0 * scale) / MirrorActivity.this.mulY;
             }
             if (scale <= 0.0f) {
                 scale = 1.0f;
             }
-            Log.e(MirrorNewActivity.TAG, "scale" + scale);
+            Log.e(MirrorActivity.TAG, "scale" + scale);
             int wP = Math.round(((float) widthPixel) * scale);
             int wH = Math.round(((float) heightPixel) * scale);
             RectF srcRect = this.mirrorModeList[this.currentModeIndex].getSrcRect();
             reset(wP, wH, false);
-            int btmWidth = Math.round(MirrorNewActivity.this.mirrorView.getCurrentMirrorMode().rectTotalArea.width());
-            int btmHeight = Math.round(MirrorNewActivity.this.mirrorView.getCurrentMirrorMode().rectTotalArea.height());
-            if (btmWidth % MirrorNewActivity.INDEX_MIRROR_RATIO == MirrorNewActivity.INDEX_MIRROR_3D) {
+            int btmWidth = Math.round(MirrorActivity.this.mirrorView.getCurrentMirrorMode().rectTotalArea.width());
+            int btmHeight = Math.round(MirrorActivity.this.mirrorView.getCurrentMirrorMode().rectTotalArea.height());
+            if (btmWidth % MirrorActivity.INDEX_MIRROR_RATIO == MirrorActivity.INDEX_MIRROR_3D) {
                 btmWidth--;
             }
-            if (btmHeight % MirrorNewActivity.INDEX_MIRROR_RATIO == MirrorNewActivity.INDEX_MIRROR_3D) {
+            if (btmHeight % MirrorActivity.INDEX_MIRROR_RATIO == MirrorActivity.INDEX_MIRROR_3D) {
                 btmHeight--;
             }
             Bitmap savedBitmap = Bitmap.createBitmap(btmWidth, btmHeight, Bitmap.Config.ARGB_8888);
             Canvas bitmapCanvas = new Canvas(savedBitmap);
             Matrix matrix = new Matrix();
             matrix.reset();
-            Log.e(MirrorNewActivity.TAG, "btmWidth " + btmWidth);
-            Log.e(MirrorNewActivity.TAG, "btmHeight " + btmHeight);
+            Log.e(MirrorActivity.TAG, "btmWidth " + btmWidth);
+            Log.e(MirrorActivity.TAG, "btmHeight " + btmHeight);
             matrix.postTranslate(((float) (-(wP - btmWidth))) / 2.0f, ((float) (-(wH - btmHeight))) / 2.0f);
             MirrorMode saveMode = this.mirrorModeList[this.currentModeIndex];
             saveMode.setSrcRect(srcRect);
-            if (MirrorNewActivity.this.filterBitmap == null) {
-                drawMode(bitmapCanvas, MirrorNewActivity.this.sourceBitmap, saveMode, matrix);
+            if (MirrorActivity.this.filterBitmap == null) {
+                drawMode(bitmapCanvas, MirrorActivity.this.sourceBitmap, saveMode, matrix);
             } else {
-                drawMode(bitmapCanvas, MirrorNewActivity.this.filterBitmap, saveMode, matrix);
+                drawMode(bitmapCanvas, MirrorActivity.this.filterBitmap, saveMode, matrix);
             }
             if (this.d3Mode && this.d3Bitmap != null) {
                 if (!this.d3Bitmap.isRecycled()) {
@@ -301,28 +301,28 @@ public class MirrorNewActivity extends AppCompatActivity {
                 }
             }
             Matrix mat;
-            if (MirrorNewActivity.this.textDataList != null) {
-                i = MirrorNewActivity.INDEX_MIRROR;
+            if (MirrorActivity.this.textDataList != null) {
+                i = MirrorActivity.INDEX_MIRROR;
                 while (true) {
-                    if (i >= MirrorNewActivity.this.textDataList.size()) {
+                    if (i >= MirrorActivity.this.textDataList.size()) {
                         break;
                     }
                     mat = new Matrix();
-                    mat.set(((TextData) MirrorNewActivity.this.textDataList.get(i)).imageSaveMatrix);
+                    mat.set(((TextData) MirrorActivity.this.textDataList.get(i)).imageSaveMatrix);
                     mat.postScale(scale, scale);
                     mat.postTranslate(((float) (-(wP - btmWidth))) / 2.0f, ((float) (-(wH - btmHeight))) / 2.0f);
                     bitmapCanvas.setMatrix(mat);
-                    bitmapCanvas.drawText(((TextData) MirrorNewActivity.this.textDataList.get(i)).message, ((TextData) MirrorNewActivity.this.textDataList.get(i)).xPos, ((TextData) MirrorNewActivity.this.textDataList.get(i)).yPos, ((TextData) MirrorNewActivity.this.textDataList.get(i)).textPaint);
-                    i += MirrorNewActivity.INDEX_MIRROR_3D;
+                    bitmapCanvas.drawText(((TextData) MirrorActivity.this.textDataList.get(i)).message, ((TextData) MirrorActivity.this.textDataList.get(i)).xPos, ((TextData) MirrorActivity.this.textDataList.get(i)).yPos, ((TextData) MirrorActivity.this.textDataList.get(i)).textPaint);
+                    i += MirrorActivity.INDEX_MIRROR_3D;
                 }
             }
-            i = MirrorNewActivity.INDEX_MIRROR;
+            i = MirrorActivity.INDEX_MIRROR;
             while (true) {
-                if (i >= MirrorNewActivity.this.stickerViewContainer.getChildCount()) {
+                if (i >= MirrorActivity.this.stickerViewContainer.getChildCount()) {
                     break;
                 }
                 mat = new Matrix();
-                StickerView view = (StickerView) MirrorNewActivity.this.stickerViewContainer.getChildAt(i);
+                StickerView view = (StickerView) MirrorActivity.this.stickerViewContainer.getChildAt(i);
                 StickerData data = view.getStickerData();
                 mat.set(data.getCanvasMatrix());
                 mat.postScale(scale, scale);
@@ -333,7 +333,7 @@ public class MirrorNewActivity extends AppCompatActivity {
                         bitmapCanvas.drawBitmap(view.stickerBitmap, data.xPos, data.yPos, view.paint);
                     }
                 }
-                i += MirrorNewActivity.INDEX_MIRROR_3D;
+                i += MirrorActivity.INDEX_MIRROR_3D;
             }
             if (this.frameBitmap != null) {
                 if (!this.frameBitmap.isRecycled()) {
@@ -344,7 +344,7 @@ public class MirrorNewActivity extends AppCompatActivity {
             String resultPath = null;
             if (saveToFile) {
                 String twitterUploadFile = String.valueOf(System.currentTimeMillis());
-                resultPath = new StringBuilder(String.valueOf(Environment.getExternalStorageDirectory().toString())).append(MirrorNewActivity.this.getString(R.string.directory)).append(twitterUploadFile).append(".jpg").toString();
+                resultPath = new StringBuilder(String.valueOf(Environment.getExternalStorageDirectory().toString())).append(MirrorActivity.this.getString(R.string.directory)).append(twitterUploadFile).append(".jpg").toString();
                 new File(resultPath).getParentFile().mkdirs();
                 try {
                     FileOutputStream out = new FileOutputStream(resultPath);
@@ -372,58 +372,58 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
 
         private void createModes() {
-            this.modeX = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect1, this.destRect1, this.destRect3, this.destRect3, MirrorNewActivity.this.matrixMirror1, this.f510I, MirrorNewActivity.this.matrixMirror1, this.tMode3, this.totalArea3);
-            this.modeX2 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect1, this.destRect4, this.destRect1, this.destRect4, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror1, this.f510I, this.tMode3, this.totalArea3);
-            this.modeX3 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect3, this.destRect2, this.destRect3, this.destRect2, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror1, this.f510I, this.tMode3, this.totalArea3);
-            this.modeX8 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect1, this.destRect1, this.destRect1, this.destRect1, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror2, MirrorNewActivity.this.matrixMirror3, this.tMode3, this.totalArea3);
-            int m9TouchMode = MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX;
+            this.modeX = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect1, this.destRect1, this.destRect3, this.destRect3, MirrorActivity.this.matrixMirror1, this.f510I, MirrorActivity.this.matrixMirror1, this.tMode3, this.totalArea3);
+            this.modeX2 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect1, this.destRect4, this.destRect1, this.destRect4, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror1, this.f510I, this.tMode3, this.totalArea3);
+            this.modeX3 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect3, this.destRect2, this.destRect3, this.destRect2, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror1, this.f510I, this.tMode3, this.totalArea3);
+            this.modeX8 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect1, this.destRect1, this.destRect1, this.destRect1, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror2, MirrorActivity.this.matrixMirror3, this.tMode3, this.totalArea3);
+            int m9TouchMode = MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX;
             if (this.tMode3 == 0) {
-                m9TouchMode = MirrorNewActivity.INDEX_MIRROR;
+                m9TouchMode = MirrorActivity.INDEX_MIRROR;
             }
-            this.modeX9 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect2, this.destRect2, this.destRect2, this.destRect2, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror2, MirrorNewActivity.this.matrixMirror3, m9TouchMode, this.totalArea3);
-            int m10TouchMode = MirrorNewActivity.INDEX_MIRROR_EFFECT;
-            if (this.tMode3 == MirrorNewActivity.INDEX_MIRROR_3D) {
-                m10TouchMode = MirrorNewActivity.INDEX_MIRROR_3D;
+            this.modeX9 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect2, this.destRect2, this.destRect2, this.destRect2, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror2, MirrorActivity.this.matrixMirror3, m9TouchMode, this.totalArea3);
+            int m10TouchMode = MirrorActivity.INDEX_MIRROR_EFFECT;
+            if (this.tMode3 == MirrorActivity.INDEX_MIRROR_3D) {
+                m10TouchMode = MirrorActivity.INDEX_MIRROR_3D;
             }
-            this.modeX10 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect3, this.destRect3, this.destRect3, this.destRect3, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror2, MirrorNewActivity.this.matrixMirror3, m10TouchMode, this.totalArea3);
-            int m11TouchMode = MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX;
+            this.modeX10 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect3, this.destRect3, this.destRect3, this.destRect3, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror2, MirrorActivity.this.matrixMirror3, m10TouchMode, this.totalArea3);
+            int m11TouchMode = MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX;
             if (this.tMode3 == 0) {
-                m11TouchMode = MirrorNewActivity.INDEX_MIRROR_EFFECT;
+                m11TouchMode = MirrorActivity.INDEX_MIRROR_EFFECT;
             }
-            this.modeX11 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect4, this.destRect4, this.destRect4, this.destRect4, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror2, MirrorNewActivity.this.matrixMirror3, m11TouchMode, this.totalArea3);
-            this.modeX4 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect1X, this.destRect1X, MirrorNewActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
-            int m5TouchMode = MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX;
+            this.modeX11 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRect3, this.destRect4, this.destRect4, this.destRect4, this.destRect4, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror2, MirrorActivity.this.matrixMirror3, m11TouchMode, this.totalArea3);
+            this.modeX4 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect1X, this.destRect1X, MirrorActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
+            int m5TouchMode = MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX;
             if (this.tMode1 == 0) {
-                m5TouchMode = MirrorNewActivity.INDEX_MIRROR;
-            } else if (this.tMode1 == MirrorNewActivity.INDEX_MIRROR_ADJUSTMENT) {
-                m5TouchMode = MirrorNewActivity.INDEX_MIRROR_ADJUSTMENT;
+                m5TouchMode = MirrorActivity.INDEX_MIRROR;
+            } else if (this.tMode1 == MirrorActivity.INDEX_MIRROR_ADJUSTMENT) {
+                m5TouchMode = MirrorActivity.INDEX_MIRROR_ADJUSTMENT;
             }
-            this.modeX5 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect2X, this.destRect2X, MirrorNewActivity.this.matrixMirror1, m5TouchMode, this.totalArea1);
-            this.modeX6 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect1Y, this.destRect1Y, MirrorNewActivity.this.matrixMirror2, this.tMode2, this.totalArea2);
-            int m7TouchMode = MirrorNewActivity.INDEX_MIRROR_EFFECT;
-            if (this.tMode2 == MirrorNewActivity.INDEX_MIRROR_3D) {
-                m7TouchMode = MirrorNewActivity.INDEX_MIRROR_3D;
-            } else if (this.tMode2 == MirrorNewActivity.TAB_SIZE) {
-                m7TouchMode = MirrorNewActivity.TAB_SIZE;
+            this.modeX5 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect2X, this.destRect2X, MirrorActivity.this.matrixMirror1, m5TouchMode, this.totalArea1);
+            this.modeX6 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect1Y, this.destRect1Y, MirrorActivity.this.matrixMirror2, this.tMode2, this.totalArea2);
+            int m7TouchMode = MirrorActivity.INDEX_MIRROR_EFFECT;
+            if (this.tMode2 == MirrorActivity.INDEX_MIRROR_3D) {
+                m7TouchMode = MirrorActivity.INDEX_MIRROR_3D;
+            } else if (this.tMode2 == MirrorActivity.TAB_SIZE) {
+                m7TouchMode = MirrorActivity.TAB_SIZE;
             }
-            this.modeX7 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect2Y, this.destRect2Y, MirrorNewActivity.this.matrixMirror2, m7TouchMode, this.totalArea2);
-            this.modeX12 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect1X, this.destRect2X, MirrorNewActivity.this.matrixMirror4, this.tMode1, this.totalArea1);
-            this.modeX13 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect1Y, this.destRect2Y, MirrorNewActivity.this.matrixMirror4, this.tMode2, this.totalArea2);
-            this.modeX14 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect1X, this.destRect1X, MirrorNewActivity.this.matrixMirror3, this.tMode1, this.totalArea1);
-            this.modeX15 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect1Y, this.destRect1Y, MirrorNewActivity.this.matrixMirror3, this.tMode2, this.totalArea2);
-            this.modeX16 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper1, this.dstRectPaper2, this.dstRectPaper3, this.dstRectPaper4, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror1, this.f510I, this.tMode1, this.totalArea1);
-            this.modeX17 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper1, this.dstRectPaper3, this.dstRectPaper3, this.dstRectPaper1, this.f510I, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
-            this.modeX18 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper2, this.dstRectPaper4, this.dstRectPaper2, this.dstRectPaper4, this.f510I, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
-            this.modeX19 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper1, this.dstRectPaper2, this.dstRectPaper2, this.dstRectPaper1, this.f510I, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
-            this.modeX20 = new MirrorMode(MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper4, this.dstRectPaper3, this.dstRectPaper3, this.dstRectPaper4, this.f510I, MirrorNewActivity.this.matrixMirror1, MirrorNewActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
-            this.mirrorModeList[MirrorNewActivity.INDEX_MIRROR] = this.modeX4;
-            this.mirrorModeList[MirrorNewActivity.INDEX_MIRROR_3D] = this.modeX5;
-            this.mirrorModeList[MirrorNewActivity.INDEX_MIRROR_RATIO] = this.modeX6;
-            this.mirrorModeList[MirrorNewActivity.INDEX_MIRROR_EFFECT] = this.modeX7;
-            this.mirrorModeList[MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX] = this.modeX8;
-            this.mirrorModeList[MirrorNewActivity.INDEX_MIRROR_ADJUSTMENT] = this.modeX9;
-            this.mirrorModeList[MirrorNewActivity.TAB_SIZE] = this.modeX10;
-            this.mirrorModeList[MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW] = this.modeX11;
+            this.modeX7 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect2Y, this.destRect2Y, MirrorActivity.this.matrixMirror2, m7TouchMode, this.totalArea2);
+            this.modeX12 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect1X, this.destRect2X, MirrorActivity.this.matrixMirror4, this.tMode1, this.totalArea1);
+            this.modeX13 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect1Y, this.destRect2Y, MirrorActivity.this.matrixMirror4, this.tMode2, this.totalArea2);
+            this.modeX14 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect1, this.destRect1X, this.destRect1X, MirrorActivity.this.matrixMirror3, this.tMode1, this.totalArea1);
+            this.modeX15 = new MirrorMode(MirrorActivity.INDEX_MIRROR_RATIO, this.srcRect2, this.destRect1Y, this.destRect1Y, MirrorActivity.this.matrixMirror3, this.tMode2, this.totalArea2);
+            this.modeX16 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper1, this.dstRectPaper2, this.dstRectPaper3, this.dstRectPaper4, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror1, this.f510I, this.tMode1, this.totalArea1);
+            this.modeX17 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper1, this.dstRectPaper3, this.dstRectPaper3, this.dstRectPaper1, this.f510I, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
+            this.modeX18 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper2, this.dstRectPaper4, this.dstRectPaper2, this.dstRectPaper4, this.f510I, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
+            this.modeX19 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper1, this.dstRectPaper2, this.dstRectPaper2, this.dstRectPaper1, this.f510I, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
+            this.modeX20 = new MirrorMode(MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX, this.srcRectPaper, this.dstRectPaper4, this.dstRectPaper3, this.dstRectPaper3, this.dstRectPaper4, this.f510I, MirrorActivity.this.matrixMirror1, MirrorActivity.this.matrixMirror1, this.tMode1, this.totalArea1);
+            this.mirrorModeList[MirrorActivity.INDEX_MIRROR] = this.modeX4;
+            this.mirrorModeList[MirrorActivity.INDEX_MIRROR_3D] = this.modeX5;
+            this.mirrorModeList[MirrorActivity.INDEX_MIRROR_RATIO] = this.modeX6;
+            this.mirrorModeList[MirrorActivity.INDEX_MIRROR_EFFECT] = this.modeX7;
+            this.mirrorModeList[MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX] = this.modeX8;
+            this.mirrorModeList[MirrorActivity.INDEX_MIRROR_ADJUSTMENT] = this.modeX9;
+            this.mirrorModeList[MirrorActivity.TAB_SIZE] = this.modeX10;
+            this.mirrorModeList[MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW] = this.modeX11;
             this.mirrorModeList[8] = this.modeX12;
             this.mirrorModeList[9] = this.modeX13;
             this.mirrorModeList[10] = this.modeX14;
@@ -461,28 +461,28 @@ public class MirrorNewActivity extends AppCompatActivity {
 
         private void createMatrix(int widthPixels, int heightPixels) {
             this.f510I.reset();
-            MirrorNewActivity.this.matrixMirror1.reset();
-            MirrorNewActivity.this.matrixMirror1.postScale(-1.0f, 1.0f);
-            MirrorNewActivity.this.matrixMirror1.postTranslate((float) widthPixels, 0.0f);
-            MirrorNewActivity.this.matrixMirror2.reset();
-            MirrorNewActivity.this.matrixMirror2.postScale(1.0f, -1.0f);
-            MirrorNewActivity.this.matrixMirror2.postTranslate(0.0f, (float) heightPixels);
-            MirrorNewActivity.this.matrixMirror3.reset();
-            MirrorNewActivity.this.matrixMirror3.postScale(-1.0f, -1.0f);
-            MirrorNewActivity.this.matrixMirror3.postTranslate((float) widthPixels, (float) heightPixels);
+            MirrorActivity.this.matrixMirror1.reset();
+            MirrorActivity.this.matrixMirror1.postScale(-1.0f, 1.0f);
+            MirrorActivity.this.matrixMirror1.postTranslate((float) widthPixels, 0.0f);
+            MirrorActivity.this.matrixMirror2.reset();
+            MirrorActivity.this.matrixMirror2.postScale(1.0f, -1.0f);
+            MirrorActivity.this.matrixMirror2.postTranslate(0.0f, (float) heightPixels);
+            MirrorActivity.this.matrixMirror3.reset();
+            MirrorActivity.this.matrixMirror3.postScale(-1.0f, -1.0f);
+            MirrorActivity.this.matrixMirror3.postTranslate((float) widthPixels, (float) heightPixels);
         }
 
         private void createRectX(int widthPixels, int heightPixels) {
-            float destH = ((float) widthPixels) * (MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX);
+            float destH = ((float) widthPixels) * (MirrorActivity.this.mulY / MirrorActivity.this.mulX);
             float destW = ((float) widthPixels) / 2.0f;
             float destX = 0.0f;
-            float destY = (float) MirrorNewActivity.this.initialYPos;
+            float destY = (float) MirrorActivity.this.initialYPos;
             if (destH > ((float) heightPixels)) {
                 destH = (float) heightPixels;
-                destW = ((MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY) * destH) / 2.0f;
+                destW = ((MirrorActivity.this.mulX / MirrorActivity.this.mulY) * destH) / 2.0f;
                 destX = (((float) widthPixels) / 2.0f) - destW;
             }
-            destY = ((float) MirrorNewActivity.this.initialYPos) + ((((float) heightPixels) - destH) / 2.0f);
+            destY = ((float) MirrorActivity.this.initialYPos) + ((((float) heightPixels) - destH) / 2.0f);
             float srcX = 0.0f;
             float srcY = 0.0f;
             float srcX2 = (float) this.width;
@@ -491,14 +491,14 @@ public class MirrorNewActivity extends AppCompatActivity {
             float destXX = destX + destW;
             this.destRect2X = new RectF(destXX, destY, destW + destXX, destH + destY);
             this.totalArea1 = new RectF(destX, destY, destW + destXX, destH + destY);
-            this.tMode1 = MirrorNewActivity.INDEX_MIRROR_3D;
-            if (MirrorNewActivity.this.mulX * ((float) this.height) <= (MirrorNewActivity.this.mulY * 2.0f) * ((float) this.width)) {
-                srcX = (((float) this.width) - (((MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY) * ((float) this.height)) / 2.0f)) / 2.0f;
-                srcX2 = srcX + (((MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY) * ((float) this.height)) / 2.0f);
+            this.tMode1 = MirrorActivity.INDEX_MIRROR_3D;
+            if (MirrorActivity.this.mulX * ((float) this.height) <= (MirrorActivity.this.mulY * 2.0f) * ((float) this.width)) {
+                srcX = (((float) this.width) - (((MirrorActivity.this.mulX / MirrorActivity.this.mulY) * ((float) this.height)) / 2.0f)) / 2.0f;
+                srcX2 = srcX + (((MirrorActivity.this.mulX / MirrorActivity.this.mulY) * ((float) this.height)) / 2.0f);
             } else {
-                srcY = (((float) this.height) - (((float) (this.width * MirrorNewActivity.INDEX_MIRROR_RATIO)) * (MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX))) / 2.0f;
-                srcY2 = srcY + (((float) (this.width * MirrorNewActivity.INDEX_MIRROR_RATIO)) * (MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX));
-                this.tMode1 = MirrorNewActivity.INDEX_MIRROR_ADJUSTMENT;
+                srcY = (((float) this.height) - (((float) (this.width * MirrorActivity.INDEX_MIRROR_RATIO)) * (MirrorActivity.this.mulY / MirrorActivity.this.mulX))) / 2.0f;
+                srcY2 = srcY + (((float) (this.width * MirrorActivity.INDEX_MIRROR_RATIO)) * (MirrorActivity.this.mulY / MirrorActivity.this.mulX));
+                this.tMode1 = MirrorActivity.INDEX_MIRROR_ADJUSTMENT;
             }
             this.srcRect1 = new RectF(srcX, srcY, srcX2, srcY2);
             this.srcRectPaper = new RectF(srcX, srcY, ((srcX2 - srcX) / 2.0f) + srcX, srcY2);
@@ -513,16 +513,16 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
 
         private void createRectY(int widthPixels, int heightPixels) {
-            float destH = (((float) widthPixels) * (MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX)) / 2.0f;
+            float destH = (((float) widthPixels) * (MirrorActivity.this.mulY / MirrorActivity.this.mulX)) / 2.0f;
             float destW = (float) widthPixels;
             float destX = 0.0f;
-            float destY = (float) MirrorNewActivity.this.initialYPos;
+            float destY = (float) MirrorActivity.this.initialYPos;
             if (destH > ((float) heightPixels)) {
                 destH = (float) heightPixels;
-                destW = ((MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY) * destH) / 2.0f;
+                destW = ((MirrorActivity.this.mulX / MirrorActivity.this.mulY) * destH) / 2.0f;
                 destX = (((float) widthPixels) / 2.0f) - destW;
             }
-            destY = ((float) MirrorNewActivity.this.initialYPos) + ((((float) heightPixels) - (2.0f * destH)) / 2.0f);
+            destY = ((float) MirrorActivity.this.initialYPos) + ((((float) heightPixels) - (2.0f * destH)) / 2.0f);
             this.destRect1Y = new RectF(destX, destY, destW + destX, destH + destY);
             float destYY = destY + destH;
             this.destRect2Y = new RectF(destX, destYY, destW + destX, destH + destYY);
@@ -531,29 +531,29 @@ public class MirrorNewActivity extends AppCompatActivity {
             float srcY = 0.0f;
             float srcX2 = (float) this.width;
             float srcY2 = (float) this.height;
-            this.tMode2 = MirrorNewActivity.INDEX_MIRROR;
-            if ((MirrorNewActivity.this.mulX * 2.0f) * ((float) this.height) > MirrorNewActivity.this.mulY * ((float) this.width)) {
-                srcY = (((float) this.height) - (((MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX) * ((float) this.width)) / 2.0f)) / 2.0f;
-                srcY2 = srcY + (((MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX) * ((float) this.width)) / 2.0f);
+            this.tMode2 = MirrorActivity.INDEX_MIRROR;
+            if ((MirrorActivity.this.mulX * 2.0f) * ((float) this.height) > MirrorActivity.this.mulY * ((float) this.width)) {
+                srcY = (((float) this.height) - (((MirrorActivity.this.mulY / MirrorActivity.this.mulX) * ((float) this.width)) / 2.0f)) / 2.0f;
+                srcY2 = srcY + (((MirrorActivity.this.mulY / MirrorActivity.this.mulX) * ((float) this.width)) / 2.0f);
             } else {
-                srcX = (((float) this.width) - (((float) (this.height * MirrorNewActivity.INDEX_MIRROR_RATIO)) * (MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY))) / 2.0f;
-                srcX2 = srcX + (((float) (this.height * MirrorNewActivity.INDEX_MIRROR_RATIO)) * (MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY));
-                this.tMode2 = MirrorNewActivity.TAB_SIZE;
+                srcX = (((float) this.width) - (((float) (this.height * MirrorActivity.INDEX_MIRROR_RATIO)) * (MirrorActivity.this.mulX / MirrorActivity.this.mulY))) / 2.0f;
+                srcX2 = srcX + (((float) (this.height * MirrorActivity.INDEX_MIRROR_RATIO)) * (MirrorActivity.this.mulX / MirrorActivity.this.mulY));
+                this.tMode2 = MirrorActivity.TAB_SIZE;
             }
             this.srcRect2 = new RectF(srcX, srcY, srcX2, srcY2);
         }
 
         private void createRectXY(int widthPixels, int heightPixels) {
-            float destH = (((float) widthPixels) * (MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX)) / 2.0f;
+            float destH = (((float) widthPixels) * (MirrorActivity.this.mulY / MirrorActivity.this.mulX)) / 2.0f;
             float destW = ((float) widthPixels) / 2.0f;
             float destX = 0.0f;
-            float destY = (float) MirrorNewActivity.this.initialYPos;
+            float destY = (float) MirrorActivity.this.initialYPos;
             if (destH > ((float) heightPixels)) {
                 destH = (float) heightPixels;
-                destW = ((MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY) * destH) / 2.0f;
+                destW = ((MirrorActivity.this.mulX / MirrorActivity.this.mulY) * destH) / 2.0f;
                 destX = (((float) widthPixels) / 2.0f) - destW;
             }
-            destY = ((float) MirrorNewActivity.this.initialYPos) + ((((float) heightPixels) - (2.0f * destH)) / 2.0f);
+            destY = ((float) MirrorActivity.this.initialYPos) + ((((float) heightPixels) - (2.0f * destH)) / 2.0f);
             float srcX = 0.0f;
             float srcY = 0.0f;
             float srcX2 = (float) this.width;
@@ -565,40 +565,40 @@ public class MirrorNewActivity extends AppCompatActivity {
             this.destRect3 = new RectF(destX, destY2, destW + destX, destH + destY2);
             this.destRect4 = new RectF(destX2, destY2, destW + destX2, destH + destY2);
             this.totalArea3 = new RectF(destX, destY, destW + destX2, destH + destY2);
-            if (MirrorNewActivity.this.mulX * ((float) this.height) <= MirrorNewActivity.this.mulY * ((float) this.width)) {
-                srcX = (((float) this.width) - ((MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY) * ((float) this.height))) / 2.0f;
-                srcX2 = srcX + ((MirrorNewActivity.this.mulX / MirrorNewActivity.this.mulY) * ((float) this.height));
-                this.tMode3 = MirrorNewActivity.INDEX_MIRROR_3D;
+            if (MirrorActivity.this.mulX * ((float) this.height) <= MirrorActivity.this.mulY * ((float) this.width)) {
+                srcX = (((float) this.width) - ((MirrorActivity.this.mulX / MirrorActivity.this.mulY) * ((float) this.height))) / 2.0f;
+                srcX2 = srcX + ((MirrorActivity.this.mulX / MirrorActivity.this.mulY) * ((float) this.height));
+                this.tMode3 = MirrorActivity.INDEX_MIRROR_3D;
             } else {
-                srcY = (((float) this.height) - (((float) this.width) * (MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX))) / 2.0f;
-                srcY2 = srcY + (((float) this.width) * (MirrorNewActivity.this.mulY / MirrorNewActivity.this.mulX));
-                this.tMode3 = MirrorNewActivity.INDEX_MIRROR;
+                srcY = (((float) this.height) - (((float) this.width) * (MirrorActivity.this.mulY / MirrorActivity.this.mulX))) / 2.0f;
+                srcY2 = srcY + (((float) this.width) * (MirrorActivity.this.mulY / MirrorActivity.this.mulX));
+                this.tMode3 = MirrorActivity.INDEX_MIRROR;
             }
             this.srcRect3 = new RectF(srcX, srcY, srcX2, srcY2);
         }
 
         public void onDraw(Canvas canvas) {
             canvas.drawColor(this.defaultColor);
-            if (MirrorNewActivity.this.filterBitmap == null) {
-                drawMode(canvas, MirrorNewActivity.this.sourceBitmap, this.mirrorModeList[this.currentModeIndex], this.f510I);
+            if (MirrorActivity.this.filterBitmap == null) {
+                drawMode(canvas, MirrorActivity.this.sourceBitmap, this.mirrorModeList[this.currentModeIndex], this.f510I);
             } else {
-                drawMode(canvas, MirrorNewActivity.this.filterBitmap, this.mirrorModeList[this.currentModeIndex], this.f510I);
+                drawMode(canvas, MirrorActivity.this.filterBitmap, this.mirrorModeList[this.currentModeIndex], this.f510I);
             }
             if (!(!this.d3Mode || this.d3Bitmap == null || this.d3Bitmap.isRecycled())) {
                 canvas.setMatrix(this.f510I);
                 canvas.drawBitmap(this.d3Bitmap, null, this.mirrorModeList[this.currentModeIndex].rectTotalArea, this.framePaint);
             }
-            if (MirrorNewActivity.this.showText) {
-                for (int i = MirrorNewActivity.INDEX_MIRROR; i < MirrorNewActivity.this.textDataList.size(); i += MirrorNewActivity.INDEX_MIRROR_3D) {
-                    this.textMatrix.set(((TextData) MirrorNewActivity.this.textDataList.get(i)).imageSaveMatrix);
+            if (MirrorActivity.this.showText) {
+                for (int i = MirrorActivity.INDEX_MIRROR; i < MirrorActivity.this.textDataList.size(); i += MirrorActivity.INDEX_MIRROR_3D) {
+                    this.textMatrix.set(((TextData) MirrorActivity.this.textDataList.get(i)).imageSaveMatrix);
                     this.textMatrix.postConcat(this.f510I);
                     canvas.setMatrix(this.textMatrix);
-                    canvas.drawText(((TextData) MirrorNewActivity.this.textDataList.get(i)).message, ((TextData) MirrorNewActivity.this.textDataList.get(i)).xPos, ((TextData) MirrorNewActivity.this.textDataList.get(i)).yPos, ((TextData) MirrorNewActivity.this.textDataList.get(i)).textPaint);
+                    canvas.drawText(((TextData) MirrorActivity.this.textDataList.get(i)).message, ((TextData) MirrorActivity.this.textDataList.get(i)).xPos, ((TextData) MirrorActivity.this.textDataList.get(i)).yPos, ((TextData) MirrorActivity.this.textDataList.get(i)).textPaint);
                     canvas.setMatrix(this.f510I);
-                    canvas.drawRect(0.0f, 0.0f, this.mirrorModeList[this.currentModeIndex].rectTotalArea.left, (float) MirrorNewActivity.this.screenHeightPixels, this.textRectPaint);
-                    canvas.drawRect(0.0f, 0.0f, (float) MirrorNewActivity.this.screenWidthPixels, this.mirrorModeList[this.currentModeIndex].rectTotalArea.top, this.textRectPaint);
-                    canvas.drawRect(this.mirrorModeList[this.currentModeIndex].rectTotalArea.right, 0.0f, (float) MirrorNewActivity.this.screenWidthPixels, (float) MirrorNewActivity.this.screenHeightPixels, this.textRectPaint);
-                    canvas.drawRect(0.0f, this.mirrorModeList[this.currentModeIndex].rectTotalArea.bottom, (float) MirrorNewActivity.this.screenWidthPixels, (float) MirrorNewActivity.this.screenHeightPixels, this.textRectPaint);
+                    canvas.drawRect(0.0f, 0.0f, this.mirrorModeList[this.currentModeIndex].rectTotalArea.left, (float) MirrorActivity.this.screenHeightPixels, this.textRectPaint);
+                    canvas.drawRect(0.0f, 0.0f, (float) MirrorActivity.this.screenWidthPixels, this.mirrorModeList[this.currentModeIndex].rectTotalArea.top, this.textRectPaint);
+                    canvas.drawRect(this.mirrorModeList[this.currentModeIndex].rectTotalArea.right, 0.0f, (float) MirrorActivity.this.screenWidthPixels, (float) MirrorActivity.this.screenHeightPixels, this.textRectPaint);
+                    canvas.drawRect(0.0f, this.mirrorModeList[this.currentModeIndex].rectTotalArea.bottom, (float) MirrorActivity.this.screenWidthPixels, (float) MirrorActivity.this.screenHeightPixels, this.textRectPaint);
                 }
             }
             if (!(this.frameBitmap == null || this.frameBitmap.isRecycled())) {
@@ -617,7 +617,7 @@ public class MirrorNewActivity extends AppCompatActivity {
             if (!(bitmap == null || bitmap.isRecycled())) {
                 canvas.drawBitmap(bitmap, mirrorMode.getDrawBitmapSrc(), mirrorMode.rect2, this.framePaint);
             }
-            if (mirrorMode.count == MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
+            if (mirrorMode.count == MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
                 this.m2.set(mirrorMode.matrix2);
                 this.m2.postConcat(matrix);
                 canvas.setMatrix(this.m2);
@@ -637,13 +637,13 @@ public class MirrorNewActivity extends AppCompatActivity {
             float x = event.getX();
             float y = event.getY();
             switch (event.getAction()) {
-                case MirrorNewActivity.INDEX_MIRROR /*0*/:
-                    if (x < ((float) (MirrorNewActivity.this.screenWidthPixels / MirrorNewActivity.INDEX_MIRROR_RATIO))) {
+                case MirrorActivity.INDEX_MIRROR /*0*/:
+                    if (x < ((float) (MirrorActivity.this.screenWidthPixels / MirrorActivity.INDEX_MIRROR_RATIO))) {
                         this.isTouchStartedLeft = true;
                     } else {
                         this.isTouchStartedLeft = false;
                     }
-                    if (y < ((float) (MirrorNewActivity.this.screenHeightPixels / MirrorNewActivity.INDEX_MIRROR_RATIO))) {
+                    if (y < ((float) (MirrorActivity.this.screenHeightPixels / MirrorActivity.INDEX_MIRROR_RATIO))) {
                         this.isTouchStartedTop = true;
                     } else {
                         this.isTouchStartedTop = false;
@@ -651,7 +651,7 @@ public class MirrorNewActivity extends AppCompatActivity {
                     this.oldX = x;
                     this.oldY = y;
                     break;
-                case MirrorNewActivity.INDEX_MIRROR_RATIO /*2*/:
+                case MirrorActivity.INDEX_MIRROR_RATIO /*2*/:
                     moveGrid(this.mirrorModeList[this.currentModeIndex].getSrcRect(), x - this.oldX, y - this.oldY);
                     this.mirrorModeList[this.currentModeIndex].updateBitmapSrc();
                     this.oldX = x;
@@ -663,11 +663,11 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
 
         void moveGrid(RectF srcRect, float x, float y) {
-            if (this.mirrorModeList[this.currentModeIndex].touchMode == MirrorNewActivity.INDEX_MIRROR_3D || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorNewActivity.TAB_SIZE) {
-                if (this.mirrorModeList[this.currentModeIndex].touchMode == MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
+            if (this.mirrorModeList[this.currentModeIndex].touchMode == MirrorActivity.INDEX_MIRROR_3D || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorActivity.TAB_SIZE) {
+                if (this.mirrorModeList[this.currentModeIndex].touchMode == MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
                     x *= -1.0f;
                 }
-                if (this.isTouchStartedLeft && this.mirrorModeList[this.currentModeIndex].touchMode != MirrorNewActivity.TAB_SIZE) {
+                if (this.isTouchStartedLeft && this.mirrorModeList[this.currentModeIndex].touchMode != MirrorActivity.TAB_SIZE) {
                     x *= -1.0f;
                 }
                 if (srcRect.left + x < 0.0f) {
@@ -678,11 +678,11 @@ public class MirrorNewActivity extends AppCompatActivity {
                 }
                 srcRect.left += x;
                 srcRect.right += x;
-            } else if (this.mirrorModeList[this.currentModeIndex].touchMode == 0 || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorNewActivity.INDEX_MIRROR_EFFECT || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorNewActivity.INDEX_MIRROR_ADJUSTMENT) {
-                if (this.mirrorModeList[this.currentModeIndex].touchMode == MirrorNewActivity.INDEX_MIRROR_EFFECT) {
+            } else if (this.mirrorModeList[this.currentModeIndex].touchMode == 0 || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorActivity.INDEX_MIRROR_EFFECT || this.mirrorModeList[this.currentModeIndex].touchMode == MirrorActivity.INDEX_MIRROR_ADJUSTMENT) {
+                if (this.mirrorModeList[this.currentModeIndex].touchMode == MirrorActivity.INDEX_MIRROR_EFFECT) {
                     y *= -1.0f;
                 }
-                if (this.isTouchStartedTop && this.mirrorModeList[this.currentModeIndex].touchMode != MirrorNewActivity.INDEX_MIRROR_ADJUSTMENT) {
+                if (this.isTouchStartedTop && this.mirrorModeList[this.currentModeIndex].touchMode != MirrorActivity.INDEX_MIRROR_ADJUSTMENT) {
                     y *= -1.0f;
                 }
                 if (srcRect.top + y < 0.0f) {
@@ -722,9 +722,9 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
 
         public void onOk(TextData textData) {
-            MirrorNewActivity.this.canvasText.addTextView(textData);
-            MirrorNewActivity.this.getSupportFragmentManager().beginTransaction().remove(MirrorNewActivity.this.fontFragment).commit();
-            Log.e(MirrorNewActivity.TAG, "onOK called");
+            MirrorActivity.this.canvasText.addTextView(textData);
+            MirrorActivity.this.getSupportFragmentManager().beginTransaction().remove(MirrorActivity.this.fontFragment).commit();
+            Log.e(MirrorActivity.TAG, "onOK called");
         }
     }
 
@@ -736,7 +736,7 @@ public class MirrorNewActivity extends AppCompatActivity {
             stickerView.bringToFront();
             stickerView.bringToFront();
             if (Build.VERSION.SDK_INT < 19) {
-                MirrorNewActivity.this.stickerViewContainer.requestLayout();
+                MirrorActivity.this.stickerViewContainer.requestLayout();
             }
         }
 
@@ -749,13 +749,13 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
 
         public void onSingleTap(TextData textData) {
-            MirrorNewActivity.this.fontFragment = new FontFragment();
+            MirrorActivity.this.fontFragment = new FontFragment();
             Bundle arguments = new Bundle();
             arguments.putSerializable("text_data", textData);
-            MirrorNewActivity.this.fontFragment.setArguments(arguments);
-            MirrorNewActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.text_view_fragment_container, MirrorNewActivity.this.fontFragment, "FONT_FRAGMENT").commit();
-            Log.e(MirrorNewActivity.TAG, "replace fragment");
-            MirrorNewActivity.this.fontFragment.setFontChoosedListener(MirrorNewActivity.this.fontChoosedListener);
+            MirrorActivity.this.fontFragment.setArguments(arguments);
+            MirrorActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.text_view_fragment_container, MirrorActivity.this.fontFragment, "FONT_FRAGMENT").commit();
+            Log.e(MirrorActivity.TAG, "replace fragment");
+            MirrorActivity.this.fontFragment.setFontChoosedListener(MirrorActivity.this.fontChoosedListener);
         }
     }
 
@@ -766,21 +766,21 @@ public class MirrorNewActivity extends AppCompatActivity {
         public void onOk(ArrayList<TextData> tdList) {
             Iterator it = tdList.iterator();
             while (it.hasNext()) {
-                ((TextData) it.next()).setImageSaveMatrix(MirrorNewActivity.this.mirrorView.f510I);
+                ((TextData) it.next()).setImageSaveMatrix(MirrorActivity.this.mirrorView.f510I);
             }
-            MirrorNewActivity.this.textDataList = tdList;
-            MirrorNewActivity.this.showText = true;
-            if (MirrorNewActivity.this.mainLayout == null) {
-                MirrorNewActivity.this.mainLayout = (RelativeLayout) MirrorNewActivity.this.findViewById(R.id.layout_mirror_activity);
+            MirrorActivity.this.textDataList = tdList;
+            MirrorActivity.this.showText = true;
+            if (MirrorActivity.this.mainLayout == null) {
+                MirrorActivity.this.mainLayout = (RelativeLayout) MirrorActivity.this.findViewById(R.id.layout_mirror_activity);
             }
-            MirrorNewActivity.this.mainLayout.removeView(MirrorNewActivity.this.canvasText);
-            MirrorNewActivity.this.mirrorView.postInvalidate();
+            MirrorActivity.this.mainLayout.removeView(MirrorActivity.this.canvasText);
+            MirrorActivity.this.mirrorView.postInvalidate();
         }
 
         public void onCancel() {
-            MirrorNewActivity.this.showText = true;
-            MirrorNewActivity.this.mainLayout.removeView(MirrorNewActivity.this.canvasText);
-            MirrorNewActivity.this.mirrorView.postInvalidate();
+            MirrorActivity.this.showText = true;
+            MirrorActivity.this.mainLayout.removeView(MirrorActivity.this.canvasText);
+            MirrorActivity.this.mirrorView.postInvalidate();
         }
     }
 
@@ -789,8 +789,8 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
 
         public void onBitmapReady(Bitmap bitmap) {
-            MirrorNewActivity.this.filterBitmap = bitmap;
-            MirrorNewActivity.this.mirrorView.postInvalidate();
+            MirrorActivity.this.filterBitmap = bitmap;
+            MirrorActivity.this.mirrorView.postInvalidate();
         }
     }
 
@@ -807,7 +807,7 @@ public class MirrorNewActivity extends AppCompatActivity {
         }
 
         public void onIndexChanged(int position) {
-            MirrorNewActivity.this.mirrorView.setFrame(position);
+            MirrorActivity.this.mirrorView.setFrame(position);
         }
     }
 
@@ -817,20 +817,20 @@ public class MirrorNewActivity extends AppCompatActivity {
         int saveMode;
 
         private SaveImageTask() {
-            this.saveMode = MirrorNewActivity.INDEX_MIRROR;
+            this.saveMode = MirrorActivity.INDEX_MIRROR;
             this.resultPath = null;
         }
 
         protected Object doInBackground(Object... arg0) {
             if (arg0 != null) {
-                this.saveMode = ((Integer) arg0[MirrorNewActivity.INDEX_MIRROR]).intValue();
+                this.saveMode = ((Integer) arg0[MirrorActivity.INDEX_MIRROR]).intValue();
             }
-            this.resultPath = MirrorNewActivity.this.mirrorView.saveBitmap(true, MirrorNewActivity.this.screenWidthPixels, MirrorNewActivity.this.screenHeightPixels);
+            this.resultPath = MirrorActivity.this.mirrorView.saveBitmap(true, MirrorActivity.this.screenWidthPixels, MirrorActivity.this.screenHeightPixels);
             return null;
         }
 
         protected void onPreExecute() {
-            this.progressDialog = new ProgressDialog(MirrorNewActivity.this.context);
+            this.progressDialog = new ProgressDialog(MirrorActivity.this.context);
             this.progressDialog.setMessage("Saving image ...");
             this.progressDialog.show();
         }
@@ -844,16 +844,16 @@ public class MirrorNewActivity extends AppCompatActivity {
             } catch (Exception e) {
             }
             Toast msg;
-            if (this.saveMode == 0 || this.saveMode == MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
+            if (this.saveMode == 0 || this.saveMode == MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
                 super.onPostExecute(result);
-                msg = Toast.makeText(MirrorNewActivity.this.context, "Image has been saved to the /SD" + MirrorNewActivity.this.getString(R.string.directory) + " folder.", MirrorNewActivity.INDEX_MIRROR_3D);
-                msg.setGravity(17, msg.getXOffset() / MirrorNewActivity.INDEX_MIRROR_RATIO, msg.getYOffset() / MirrorNewActivity.INDEX_MIRROR_RATIO);
+                msg = Toast.makeText(MirrorActivity.this.context, "Image has been saved to the /SD" + MirrorActivity.this.getString(R.string.directory) + " folder.", MirrorActivity.INDEX_MIRROR_3D);
+                msg.setGravity(17, msg.getXOffset() / MirrorActivity.INDEX_MIRROR_RATIO, msg.getYOffset() / MirrorActivity.INDEX_MIRROR_RATIO);
                 msg.show();
-                MediaScannerConnection.MediaScannerConnectionClient client = new MyMediaScannerConnectionClient(MirrorNewActivity.this.getApplicationContext(), new File(this.resultPath), null);
-                if (this.saveMode == MirrorNewActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
-                    MirrorNewActivity.this.finish();
+                MediaScannerConnection.MediaScannerConnectionClient client = new MyMediaScannerConnectionClient(MirrorActivity.this.getApplicationContext(), new File(this.resultPath), null);
+                if (this.saveMode == MirrorActivity.INDEX_MIRROR_INVISIBLE_VIEW_ACTUAL_INDEX) {
+                    MirrorActivity.this.finish();
                 }
-            } else if (this.saveMode == MirrorNewActivity.INDEX_MIRROR_3D) {
+            } else if (this.saveMode == MirrorActivity.INDEX_MIRROR_3D) {
                 super.onPostExecute(result);
                 try {
                     Intent picMessageIntent = new Intent("android.intent.action.SEND");
@@ -861,44 +861,44 @@ public class MirrorNewActivity extends AppCompatActivity {
                     picMessageIntent.setType("image/jpeg");
                     if (this.resultPath != null) {
                         picMessageIntent.putExtra("android.intent.extra.STREAM", Uri.fromFile(new File(this.resultPath)));
-                        MirrorNewActivity.this.startActivity(picMessageIntent);
+                        MirrorActivity.this.startActivity(picMessageIntent);
                     }
                 } catch (Exception e2) {
-                    msg = Toast.makeText(MirrorNewActivity.this.context, "There is no email app installed on your device to handle this request.", MirrorNewActivity.INDEX_MIRROR_3D);
-                    msg.setGravity(17, msg.getXOffset() / MirrorNewActivity.INDEX_MIRROR_RATIO, msg.getYOffset() / MirrorNewActivity.INDEX_MIRROR_RATIO);
+                    msg = Toast.makeText(MirrorActivity.this.context, "There is no email app installed on your device to handle this request.", MirrorActivity.INDEX_MIRROR_3D);
+                    msg.setGravity(17, msg.getXOffset() / MirrorActivity.INDEX_MIRROR_RATIO, msg.getYOffset() / MirrorActivity.INDEX_MIRROR_RATIO);
                     msg.show();
                 }
-            } else if (this.saveMode == MirrorNewActivity.INDEX_MIRROR_RATIO) {
-//                fbIntent = new Intent(MirrorNewActivity.this.context, FacebookActivity.class);
+            } else if (this.saveMode == MirrorActivity.INDEX_MIRROR_RATIO) {
+//                fbIntent = new Intent(MirrorActivity.this.context, FacebookActivity.class);
 //                if (this.resultPath != null) {
 //                    fbIntent.putExtra("imagePath", this.resultPath);
-//                    MirrorNewActivity.this.startActivity(fbIntent);
+//                    MirrorActivity.this.startActivity(fbIntent);
 //                }
-            } else if (this.saveMode == MirrorNewActivity.INDEX_MIRROR_EFFECT) {
-                Intent fbIntent = new Intent(MirrorNewActivity.this.context, SaveImageActivity.class);
+            } else if (this.saveMode == MirrorActivity.INDEX_MIRROR_EFFECT) {
+                Intent fbIntent = new Intent(MirrorActivity.this.context, SaveImageActivity.class);
                 if (this.resultPath != null) {
                     boolean z2;
                     fbIntent.putExtra("imagePath", this.resultPath);
-                  // fbIntent.putExtra("urlFacebookLike", MirrorNewActivity.this.getString(R.string.facebook_like_url));
-                  //  fbIntent.putExtra("proVersionUrl", MirrorNewActivity.this.getString(R.string.pro_package));
-                    fbIntent.putExtra("folder", MirrorNewActivity.this.getString(R.string.directory));
-                  //  fbIntent.putExtra("twitter_message", new StringBuilder(String.valueOf(MirrorNewActivity.this.getString(R.string.hashtag_twitter))).append(" ").toString());
+                  // fbIntent.putExtra("urlFacebookLike", MirrorActivity.this.getString(R.string.facebook_like_url));
+                  //  fbIntent.putExtra("proVersionUrl", MirrorActivity.this.getString(R.string.pro_package));
+                    fbIntent.putExtra("folder", MirrorActivity.this.getString(R.string.directory));
+                  //  fbIntent.putExtra("twitter_message", new StringBuilder(String.valueOf(MirrorActivity.this.getString(R.string.hashtag_twitter))).append(" ").toString());
                     String str = "should_show_ads";
-//                    if (CommonLibrary.isAppPro(MirrorNewActivity.this.context)) {
+//                    if (CommonLibrary.isAppPro(MirrorActivity.this.context)) {
 //                        z2 = false;
 //                    } else {
 //                        z2 = true;
 //                    }
 //                    fbIntent.putExtra(str, z2);
 //                    String str2 = "show_inter_ad";
-//                    if (CommonLibrary.isAppPro(MirrorNewActivity.this.context) || !MirrorNewActivity.this.getResources().getBoolean(R.bool.showInterstitialAds)) {
+//                    if (CommonLibrary.isAppPro(MirrorActivity.this.context) || !MirrorActivity.this.getResources().getBoolean(R.bool.showInterstitialAds)) {
 //                        z = false;
 //                    }
 //                    fbIntent.putExtra(str2, z);
-                    MirrorNewActivity.this.startActivityForResult(fbIntent, MirrorNewActivity.SAVE_IMAGE_ID);
+                    MirrorActivity.this.startActivityForResult(fbIntent, MirrorActivity.SAVE_IMAGE_ID);
                 }
             }
-            MyMediaScannerConnectionClient myMediaScannerConnectionClient = new MyMediaScannerConnectionClient(MirrorNewActivity.this.getApplicationContext(), new File(this.resultPath), null);
+            MyMediaScannerConnectionClient myMediaScannerConnectionClient = new MyMediaScannerConnectionClient(MirrorActivity.this.getApplicationContext(), new File(this.resultPath), null);
         }
     }
 
@@ -910,7 +910,7 @@ public class MirrorNewActivity extends AppCompatActivity {
         return super.onCreateView(str, context, attributeSet);
     }
 
-    public MirrorNewActivity() {
+    public MirrorActivity() {
         this.context = this;
         this.matrix = new Matrix();
         this.matrixMirror1 = new Matrix();
@@ -1010,7 +1010,7 @@ public class MirrorNewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        AnalyticBasic.hitGoogleAnalytics(this, MirrorNewActivity.class.getName());
+        AnalyticBasic.hitGoogleAnalytics(this, MirrorActivity.class.getName());
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1371,47 +1371,47 @@ public class MirrorNewActivity extends AppCompatActivity {
         if (this.stickerGalleryListener == null) {
             this.stickerGalleryListener = new StickerGalleryListener() {
                 public void onGalleryOkSingleImage(int resId) {
-                    Bitmap bitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), resId);
-                    if (MirrorNewActivity.this.removeBitmap == null) {
-                        MirrorNewActivity.this.removeBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.remove_text);
+                    Bitmap bitmap = BitmapFactory.decodeResource(MirrorActivity.this.getResources(), resId);
+                    if (MirrorActivity.this.removeBitmap == null) {
+                        MirrorActivity.this.removeBitmap = BitmapFactory.decodeResource(MirrorActivity.this.getResources(), R.drawable.remove_text);
                     }
-                    if (MirrorNewActivity.this.scaleBitmap == null) {
-                        MirrorNewActivity.this.scaleBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.scale_text);
+                    if (MirrorActivity.this.scaleBitmap == null) {
+                        MirrorActivity.this.scaleBitmap = BitmapFactory.decodeResource(MirrorActivity.this.getResources(), R.drawable.scale_text);
                     }
-                    StickerView stickerView = new StickerView(MirrorNewActivity.this.context, bitmap, null, MirrorNewActivity.this.removeBitmap, MirrorNewActivity.this.scaleBitmap, resId);
-                    stickerView.setStickerViewSelectedListener(MirrorNewActivity.this.stickerViewSelectedListner);
-                    if (MirrorNewActivity.this.stickerViewContainer == null) {
-                        MirrorNewActivity.this.stickerViewContainer = (FrameLayout) MirrorNewActivity.this.findViewById(R.id.sticker_view_container);
+                    StickerView stickerView = new StickerView(MirrorActivity.this.context, bitmap, null, MirrorActivity.this.removeBitmap, MirrorActivity.this.scaleBitmap, resId);
+                    stickerView.setStickerViewSelectedListener(MirrorActivity.this.stickerViewSelectedListner);
+                    if (MirrorActivity.this.stickerViewContainer == null) {
+                        MirrorActivity.this.stickerViewContainer = (FrameLayout) MirrorActivity.this.findViewById(R.id.sticker_view_container);
                     }
-                    MirrorNewActivity.this.stickerViewContainer.addView(stickerView);
-                    Utility.logFreeMemory(MirrorNewActivity.this);
-                    FragmentManager fm = MirrorNewActivity.this.getSupportFragmentManager();
-                    if (MirrorNewActivity.this.galleryFragment == null) {
-                        MirrorNewActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
+                    MirrorActivity.this.stickerViewContainer.addView(stickerView);
+                    Utility.logFreeMemory(MirrorActivity.this);
+                    FragmentManager fm = MirrorActivity.this.getSupportFragmentManager();
+                    if (MirrorActivity.this.galleryFragment == null) {
+                        MirrorActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myStickerFragmentTag");
                     }
-                    fm.beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
+                    fm.beginTransaction().hide(MirrorActivity.this.galleryFragment).commit();
                 }
                 @Override
                 public void onGalleryOkImageArray(int[] ImageIdList) {
-                    Bitmap removeBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.remove_text);
-                    Bitmap scaleBitmap = BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), R.drawable.scale_text);
-                    for (int i = MirrorNewActivity.INDEX_MIRROR; i < ImageIdList.length; i += MirrorNewActivity.INDEX_MIRROR_3D) {
-                        StickerView stickerView = new StickerView(MirrorNewActivity.this.context, BitmapFactory.decodeResource(MirrorNewActivity.this.getResources(), ImageIdList[i]), null, removeBitmap, scaleBitmap, ImageIdList[i]);
-                        stickerView.setStickerViewSelectedListener(MirrorNewActivity.this.stickerViewSelectedListner);
-                        if (MirrorNewActivity.this.stickerViewContainer == null) {
-                            MirrorNewActivity.this.stickerViewContainer = (FrameLayout) MirrorNewActivity.this.findViewById(R.id.sticker_view_container);
+                    Bitmap removeBitmap = BitmapFactory.decodeResource(MirrorActivity.this.getResources(), R.drawable.remove_text);
+                    Bitmap scaleBitmap = BitmapFactory.decodeResource(MirrorActivity.this.getResources(), R.drawable.scale_text);
+                    for (int i = MirrorActivity.INDEX_MIRROR; i < ImageIdList.length; i += MirrorActivity.INDEX_MIRROR_3D) {
+                        StickerView stickerView = new StickerView(MirrorActivity.this.context, BitmapFactory.decodeResource(MirrorActivity.this.getResources(), ImageIdList[i]), null, removeBitmap, scaleBitmap, ImageIdList[i]);
+                        stickerView.setStickerViewSelectedListener(MirrorActivity.this.stickerViewSelectedListner);
+                        if (MirrorActivity.this.stickerViewContainer == null) {
+                            MirrorActivity.this.stickerViewContainer = (FrameLayout) MirrorActivity.this.findViewById(R.id.sticker_view_container);
                         }
-                        MirrorNewActivity.this.stickerViewContainer.addView(stickerView);
+                        MirrorActivity.this.stickerViewContainer.addView(stickerView);
                     }
-                    FragmentManager fm = MirrorNewActivity.this.getSupportFragmentManager();
-                    if (MirrorNewActivity.this.galleryFragment == null) {
-                        MirrorNewActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myFragmentTag");
+                    FragmentManager fm = MirrorActivity.this.getSupportFragmentManager();
+                    if (MirrorActivity.this.galleryFragment == null) {
+                        MirrorActivity.this.galleryFragment = (StickerGalleryFragment) fm.findFragmentByTag("myFragmentTag");
                     }
-                    fm.beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
+                    fm.beginTransaction().hide(MirrorActivity.this.galleryFragment).commit();
                 }
                 @Override
                 public void onGalleryCancel() {
-                    MirrorNewActivity.this.getSupportFragmentManager().beginTransaction().hide(MirrorNewActivity.this.galleryFragment).commit();
+                    MirrorActivity.this.getSupportFragmentManager().beginTransaction().hide(MirrorActivity.this.galleryFragment).commit();
                 }
             };
         }
@@ -1734,7 +1734,7 @@ public class MirrorNewActivity extends AppCompatActivity {
             }
         }).setNeutralButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                MirrorNewActivity.this.activity.finish();
+                MirrorActivity.this.activity.finish();
             }
         });
         this.saveImageAlert = builder.create();

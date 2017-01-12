@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.app.paddycameraeditior.R;
 import com.app.paddycameraeditior.bitmap.BitmapResizer;
+import com.app.paddycameraeditior.mirror.MirrorActivity;
 import com.app.paddycameraeditior.utils.CustomViews.BlurBuilder;
 
 public class CropView extends View {

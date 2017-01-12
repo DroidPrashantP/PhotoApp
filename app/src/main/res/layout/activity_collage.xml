@@ -14,7 +14,7 @@
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/collage_edit_ad_id"
+        android:id="@+id/adView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -25,7 +25,7 @@
         android:id="@+id/collage_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/collage_edit_ad_id"
+        android:layout_below="@+id/adView"
         android:background="@color/primary"
         android:orientation="horizontal">
 

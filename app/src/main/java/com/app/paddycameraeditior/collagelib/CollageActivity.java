@@ -267,6 +267,13 @@ public class CollageActivity extends FragmentActivity {
         horizontalScrollView.postDelayed(new C05728(horizontalScrollView), 600);
         new BitmapWorkerTask().execute(new Bundle[]{extras, bundle});
 
+        try {
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         AnalyticBasic.hitGoogleAnalytics(this, CollageActivity.class.getName());
 
     }

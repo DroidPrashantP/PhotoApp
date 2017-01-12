@@ -71,7 +71,7 @@
     <dimen name="lib_footer_button_padding">10dp</dimen>
     <dimen name="lib_button_style_min_width">80dp</dimen>
     <dimen name="lib_button_style_min_height">47dp</dimen>
-    <dimen name="collage_context_button_style_min_width">60dp</dimen>
+    <dimen name="collage_context_button_style_min_width">55dp</dimen>
     <dimen name="ratio_text_size">14sp</dimen>
     <dimen name="ratio_button_width">60dp</dimen>
     <dimen name="ratio_button_height">60dp</dimen>
